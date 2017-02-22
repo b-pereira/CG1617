@@ -7,6 +7,6 @@
 |-----------------|---------|--------------------------------|
 | Bruno Pereira   | a72628  | pereirabruno05[at]gmail.com    |
 | Ricardo Silva   | a60995  | ricardoasilva1992[at]gmail.com |
-| José Lima       | a67752  | xxxxxxxxxxxxxxx[at]yyyy.com    |
+| José Lima       | a67752  | high.pt[at]hotmail.com            |
 
 [logo]:http://www.forosperu.net/data/avatars/m/227/227793.jpg?1451243621
