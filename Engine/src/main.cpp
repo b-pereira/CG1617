@@ -5,6 +5,8 @@
 #endif
 
 #include <iostream>
+#include <fstream>
+#include <string>
 #include <math.h>
 #include <vector>
 
@@ -12,9 +14,7 @@
 using namespace std;
 using namespace tinyxml2;
 
-float alturaP = 2.0f, ladoP = 2.0f, mover_x = 0.0f, mover_z = 0.0f;
-GLfloat theta = 0;
-GLfloat phi = 0;
+GLfloat mover_x = 0, mover_z = 0, theta = 0, phi = 0;
 
 void changeSize(int w, int h) {
 
@@ -248,6 +248,19 @@ int main(int argc, char **argv) {
 		modelos.push_back(crawl->FirstAttribute()->Value());
 		cout << "Modelo:" << crawl->FirstAttribute()->Value() << endl;
 	}
+
+	string line;
+	  ifstream myfile (modelos[0]);
+	  if (myfile.is_open())
+	  {
+	    while ( getline (myfile,line) )
+	    {
+	      cout << line << '\n';
+	    }
+	    myfile.close();
+	  }
+
+	  else cout << "Unable to open file";
 
 // init GLUT and the window
 	glutInit(&argc, argv);
