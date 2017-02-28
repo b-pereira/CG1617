@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 # Project Name
 PROJECT(engine)
 
+set (CMAKE_CXX_STANDARD 11)
 find_package(GLUT REQUIRED)
 include_directories(${GLUT_INCLUDE_DIR})
 link_directories(${GLUT_LIBRARY_DIRS})
