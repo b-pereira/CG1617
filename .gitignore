@@ -27,3 +27,8 @@
 *.exe
 *.out
 *.app
+
+**/bin/Debug
+**/bin/Release/
+**/build
+
