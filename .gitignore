@@ -31,5 +31,5 @@
 **/bin/Debug/
 **/bin/Release/
 **/build/
-Engine/build/
-
+*.cproject
+*.project
