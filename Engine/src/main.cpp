@@ -9,12 +9,19 @@
 #include <string>
 #include <math.h>
 #include <vector>
+#include <map>
+#include "Triangle.h"
+#include "Point3d.h"
 
 #include "tinyxml2.h"
 using namespace std;
 using namespace tinyxml2;
 
 GLfloat mover_x = 0, mover_z = 0, theta = 0, phi = 0;
+
+map <string, vector<Triangle>> dict;
+
+
 
 void changeSize(int w, int h) {
 
@@ -83,81 +90,29 @@ void renderScene(void) {
 	// put drawing instructions here
 	glBegin(GL_TRIANGLES);
 	//lados
-	//ACE
-	//ponto E
-	glVertex3f(-1.0f, 0.0f, 1.0f);
 
-	//ponto C
-	glVertex3f(1.0f, 0.0f, -1.0f);
+	/** TODO: Para já só está a ler da primeira entrada do ficheiro XML */
+	/** TODO: Trabalhar iterador */
+	for (Triangle t : dict.begin()->second) {
 
-	//ponto A
-	glVertex3f(1.0f, 0.0f, 1.0f);
 
-	glColor3f(1, 1, 1);
+		Point3d a = t.getA();
+		Point3d b = t.getB();
+		Point3d c = t.getC();
 
-	//CDE
+		glVertex3f(a.getXCoord(), a.getYCoord(), a.getZCoord());
 
-	//ponto E
-	glVertex3f(-1.0f, 0.0f, 1.0f);
 
-	//ponto D
-	glVertex3f(-1.0f, 0.0f, -1.0f);
+		glVertex3f(b.getXCoord(), b.getYCoord(), b.getZCoord());
 
-	//ponto C
-	glVertex3f(1.0f, 0.0f, -1.0f);
+		//ponto A
+		glVertex3f(c.getXCoord(), c.getYCoord(), c.getZCoord());
 
-	glColor3f(1, 1, 0);
+		glColor3f(1, 1, 0);
 
-	//ACB
 
-	//ponto A
-	glVertex3f(1.0f, 0.0f, 1.0f);
+	}
 
-	//ponto C
-	glVertex3f(1.0f, 0.0f, -1.0f);
-
-	//ponto B
-	glVertex3f(0.0f, 1.0f, 0.0f);
-
-	glColor3f(1, 0, 1);
-
-	//CDB
-
-	//ponto C
-	glVertex3f(1.0f, 0.0f, -1.0f);
-
-	//ponto D
-	glVertex3f(-1.0f, 0.0f, -1.0f);
-
-	//ponto B
-	glVertex3f(0.0f, 1.0f, 0.0f);
-
-	glColor3f(1, 0, 0);
-
-	//DEB
-
-	//ponto D
-	glVertex3f(-1.0f, 0.0f, -1.0f);
-	//ponto E
-	glVertex3f(-1.0f, 0.0f, 1.0f);
-
-	//ponto B
-	glVertex3f(0.0f, 1.0f, 0.0f);
-
-	glColor3f(0, 1, 1);
-
-	//EAB
-
-	//ponto E
-	glVertex3f(-1.0f, 0.0f, 1.0f);
-
-	//ponto A
-	glVertex3f(1.0f, 0.0f, 1.0f);
-
-	//ponto B
-	glVertex3f(0.0f, 1.0f, 0.0f);
-
-	glColor3f(0, 1, 0);
 	glEnd();
 
 	// End of frame
@@ -234,6 +189,24 @@ void menu(int op) {
 	glutPostRedisplay();
 }
 
+const vector<string> explode(const string& s, const char& c) {
+	string buff { "" };
+	vector<string> v;
+
+	for (auto n : s) {
+		if (n != c)
+			buff += n;
+		else if (n == c && buff != "") {
+			v.push_back(buff);
+			buff = "";
+		}
+	}
+	if (buff != "")
+		v.push_back(buff);
+
+	return v;
+}
+
 int main(int argc, char **argv) {
 
 	XMLDocument doc;
@@ -249,18 +222,41 @@ int main(int argc, char **argv) {
 		cout << "Modelo:" << crawl->FirstAttribute()->Value() << endl;
 	}
 
-	string line;
-	  ifstream myfile (modelos[0]);
-	  if (myfile.is_open())
-	  {
-	    while ( getline (myfile,line) )
-	    {
-	      cout << line << '\n';
-	    }
-	    myfile.close();
-	  }
+	/** TODO: Para já só está a ler da primeira entrada do ficheiro XML */
 
-	  else cout << "Unable to open file";
+	for (int i = 0; i < modelos.size(); i++) {
+		string line;
+			cout << "Ficheiro: " << modelos[i] << endl;
+			vector<Triangle> lst;
+			ifstream myfile("resources/" + modelos[i]);
+			if (myfile.is_open()) {
+				while (getline(myfile, line)) {
+					vector<string> v { explode(line, ';') };
+					cout << v[0] << v[1] << v[2] << '\n';
+					vector<string> p1 { explode(v[0], ',') };
+					vector<string> p2 { explode(v[1], ',') };
+					vector<string> p3 { explode(v[2], ',') };
+
+					Triangle t(atof(p1[0].c_str()), atof(p1[1].c_str()),
+							atof(p1[2].c_str()), atof(p2[0].c_str()),
+							atof(p2[1].c_str()), atof(p2[2].c_str()),
+							atof(p3[0].c_str()), atof(p3[1].c_str()),
+							atof(p3[2].c_str()));
+
+
+					lst.push_back(t);
+
+				}
+				myfile.close();
+				dict[modelos[i]] = lst;
+
+			}
+
+
+			else
+				cout << "Unable to open file";
+	}
+
 
 // init GLUT and the window
 	glutInit(&argc, argv);
