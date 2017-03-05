@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 # Project Name
-PROJECT(engine)
+PROJECT(Engine)
 
 set (CMAKE_CXX_STANDARD 11)
 find_package(GLUT REQUIRED)
