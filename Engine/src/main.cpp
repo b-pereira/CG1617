@@ -113,6 +113,7 @@ void renderScene(void) {
 
 	}
 
+
 	glEnd();
 
 	// End of frame
@@ -232,7 +233,7 @@ int main(int argc, char **argv) {
 			if (myfile.is_open()) {
 				while (getline(myfile, line)) {
 					vector<string> v { explode(line, ';') };
-					cout << v[0] << v[1] << v[2] << '\n';
+					cout << v[0] << ", "<< v[1] << ", " << v[2] << '\n';
 					vector<string> p1 { explode(v[0], ',') };
 					vector<string> p2 { explode(v[1], ',') };
 					vector<string> p3 { explode(v[2], ',') };
