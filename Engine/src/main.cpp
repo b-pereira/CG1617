@@ -19,9 +19,16 @@ using namespace tinyxml2;
 
 GLfloat mover_x = 0, mover_z = 0, theta = 0, phi = 0;
 
-map <string, vector<Triangle>> dict;
+vector<vector<Triangle>> figures;
 
+int idx = 0;
 
+float alpha = 0, beta = 0, raio = 10;
+
+//
+//map <string, vector<Triangle>> dict;
+//
+//std::map <string, vector<Triangle>>::iterator it=dict.begin();
 
 void changeSize(int w, int h) {
 
@@ -59,7 +66,11 @@ void renderScene(void) {
 	 * Definição da camara anterior
 	 */
 	//gluLookAt(0.0, 10.0, 25.0, 0.0, 0.0, 0.0, 0.0f, 1.0f, 0.0f);
-	gluLookAt(5.0, 5.0, 5.0, 0.0, 0.0, 0.0, 0.0f, 1.0f, 0.0f);
+	gluLookAt(
+			cos(beta)*sin(alpha)*raio, sin(beta)*raio, cos(beta)*cos(alpha)*raio, //  coordenadas esfericas inicialmente (0,0,1)
+			0, 0, 0,
+			0, 1, 0);
+	//gluLookAt(5.0, 5.0, 5.0, 0.0, 0.0, 0.0, 0.0f, 1.0f, 0.0f);
 
 // put the geometric transformations here
 	glTranslatef(mover_x, 0.0, mover_z);
@@ -68,40 +79,19 @@ void renderScene(void) {
 
 	glRotatef(phi, 1.0f, 0.0f, 0.0f);
 
-// put drawing instructions here
-	//eixos
-	/*
-	 glColor3f(1,0,0);
-	 glBegin(GL_LINES);
-	 glVertex3f(100.0, 0.0, 0.0);
-	 glVertex3f(-100.0, 0.0, 0.0);
-	 glEnd();
-	 glColor3f(0, 1, 0);
-	 glBegin(GL_LINES);
-	 glVertex3f(0.0, 100.0, 0.0);
-	 glVertex3f(0.0, -100.0, 0.0);
-	 glEnd();
-	 glColor3f(0, 0, 1);
-	 glBegin(GL_LINES);
-	 glVertex3f(0.0, 0.0, 100.0);
-	 glVertex3f(0.0, 0.0, -100.0);
-	 glEnd();
-	 */
 	// put drawing instructions here
 	glBegin(GL_TRIANGLES);
 	//lados
 
 	/** TODO: Para já só está a ler da primeira entrada do ficheiro XML */
 	/** TODO: Trabalhar iterador */
-	for (Triangle t : dict.begin()->second) {
-
+	for (Triangle t : figures.at(idx)) {
 
 		Point3d a = t.getA();
 		Point3d b = t.getB();
 		Point3d c = t.getC();
 
 		glVertex3f(a.getXCoord(), a.getYCoord(), a.getZCoord());
-
 
 		glVertex3f(b.getXCoord(), b.getYCoord(), b.getZCoord());
 
@@ -110,9 +100,7 @@ void renderScene(void) {
 
 		glColor3f(1, 1, 0);
 
-
 	}
-
 
 	glEnd();
 
@@ -140,6 +128,26 @@ void keyboardR(unsigned char key, int x, int y) {
 		mover_x = 0;
 		phi = 0;
 		theta = 0;
+		break;
+	case 'n':
+		//++it;
+
+		idx = (idx + 1) % figures.size();
+
+		break;
+	case 'h':
+		alpha -= 0.1;
+		break;
+	case 'l':
+		alpha += 0.1;
+		break;
+	case 'k':
+		if (beta < M_PI / 2)
+			beta += 0.1;
+		break;
+	case 'j':
+		if (beta > -M_PI / 2)
+			beta -= 0.1;
 		break;
 
 	default:
@@ -227,37 +235,35 @@ int main(int argc, char **argv) {
 
 	for (int i = 0; i < modelos.size(); i++) {
 		string line;
-			cout << "Ficheiro: " << modelos[i] << endl;
-			vector<Triangle> lst;
-			ifstream myfile("resources/" + modelos[i]);
-			if (myfile.is_open()) {
-				while (getline(myfile, line)) {
-					vector<string> v { explode(line, ';') };
-					cout << v[0] << ", "<< v[1] << ", " << v[2] << '\n';
-					vector<string> p1 { explode(v[0], ',') };
-					vector<string> p2 { explode(v[1], ',') };
-					vector<string> p3 { explode(v[2], ',') };
 
-					Triangle t(atof(p1[0].c_str()), atof(p1[1].c_str()),
-							atof(p1[2].c_str()), atof(p2[0].c_str()),
-							atof(p2[1].c_str()), atof(p2[2].c_str()),
-							atof(p3[0].c_str()), atof(p3[1].c_str()),
-							atof(p3[2].c_str()));
+		vector<Triangle> lst;
+		ifstream myfile("resources/" + modelos[i]);
+		if (myfile.is_open()) {
+			while (getline(myfile, line)) {
+				vector<string> v { explode(line, ';') };
+				vector<string> p1 { explode(v[0], ',') };
+				vector<string> p2 { explode(v[1], ',') };
+				vector<string> p3 { explode(v[2], ',') };
 
+				Triangle t(atof(p1[0].c_str()), atof(p1[1].c_str()),
+						atof(p1[2].c_str()), atof(p2[0].c_str()),
+						atof(p2[1].c_str()), atof(p2[2].c_str()),
+						atof(p3[0].c_str()), atof(p3[1].c_str()),
+						atof(p3[2].c_str()));
 
-					lst.push_back(t);
-
-				}
-				myfile.close();
-				dict[modelos[i]] = lst;
+				lst.push_back(t);
 
 			}
+			myfile.close();
 
+			figures.push_back(lst);
 
-			else
-				cout << "Unable to open file";
+		}
+
+		else
+			cout << "Unable to open file";
+
 	}
-
 
 // init GLUT and the window
 	glutInit(&argc, argv);

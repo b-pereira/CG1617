@@ -21,6 +21,6 @@ if(NOT OPENGL_FOUND)
     message(ERROR " OPENGL not found!")
 endif(NOT OPENGL_FOUND)
 
-add_executable(${PROJECT_NAME} main.cpp  Point3d.cpp  Point3d.h  tinyxml2.cpp  tinyxml2.h  Triangle.cpp Triangle.h)
+add_executable(${PROJECT_NAME} main.cpp  Point3d.cpp  Point3d.h )
 
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} )

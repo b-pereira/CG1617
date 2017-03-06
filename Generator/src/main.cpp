@@ -1,292 +1,268 @@
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
-#include <GL/glut.h>
-#endif
-
-#include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
-#include <math.h>
-#include <vector>
-#include <map>
-#include "Triangle.h"
+#include <iostream>
+#include <cmath>
 #include "Point3d.h"
 
-#include "tinyxml2.h"
 using namespace std;
-using namespace tinyxml2;
 
-GLfloat mover_x = 0, mover_z = 0, theta = 0, phi = 0;
-
-map <string, vector<Triangle>> dict;
-
-
-
-void changeSize(int w, int h) {
-
-	// Prevent a divide by zero, when window is too short
-	// (you cant make a window with zero width).
-	if (h == 0)
-		h = 1;
-
-	// compute window's aspect ratio 
-	float ratio = w * 1.0 / h;
-
-	// Set the projection matrix as current
-	glMatrixMode(GL_PROJECTION);
-	// Load Identity Matrix
-	glLoadIdentity();
-
-	// Set the viewport to be the entire window
-	glViewport(0, 0, w, h);
-
-	// Set perspective
-	gluPerspective(45.0f, ratio, 1.0f, 1000.0f);
-
-	// return to the model view matrix mode
-	glMatrixMode(GL_MODELVIEW);
+std::string point3D_to_string(Point3d point) {
+	std::stringstream sstm;
+	sstm << point.getXCoord() << ", " << point.getYCoord() << ", "
+			<< point.getZCoord();
+	return sstm.str();
 }
 
-void renderScene(void) {
+std::string triangle_to_string(Point3d pointA, Point3d pointB, Point3d pointC) {
+	return point3D_to_string(pointA) + ";" + point3D_to_string(pointB) + ";"
+			+ point3D_to_string(pointC);
+}
 
-	// clear buffers
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+using namespace std;
 
-	// set the camera
-	glLoadIdentity();
-	/**
-	 * Definição da camara anterior
-	 */
-	//gluLookAt(0.0, 10.0, 25.0, 0.0, 0.0, 0.0, 0.0f, 1.0f, 0.0f);
-	gluLookAt(5.0, 5.0, 5.0, 0.0, 0.0, 0.0, 0.0f, 1.0f, 0.0f);
+//
+//  main.c
+//  Projecto
+//
 
-// put the geometric transformations here
-	glTranslatef(mover_x, 0.0, mover_z);
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
 
-	glRotatef(theta, 0.0f, 1.0f, 0.0f);
+void drawPlano(double length, double width, char* filename) {
 
-	glRotatef(phi, 1.0f, 0.0f, 0.0f);
+	//face superior
+	Point3d pontoA(-length / 2, 0, width / 2);
 
-// put drawing instructions here
-	//eixos
-	/*
-	 glColor3f(1,0,0);
-	 glBegin(GL_LINES);
-	 glVertex3f(100.0, 0.0, 0.0);
-	 glVertex3f(-100.0, 0.0, 0.0);
-	 glEnd();
-	 glColor3f(0, 1, 0);
-	 glBegin(GL_LINES);
-	 glVertex3f(0.0, 100.0, 0.0);
-	 glVertex3f(0.0, -100.0, 0.0);
-	 glEnd();
-	 glColor3f(0, 0, 1);
-	 glBegin(GL_LINES);
-	 glVertex3f(0.0, 0.0, 100.0);
-	 glVertex3f(0.0, 0.0, -100.0);
-	 glEnd();
-	 */
-	// put drawing instructions here
-	glBegin(GL_TRIANGLES);
-	//lados
+	Point3d pontoB(length / 2, 0, width / 2);
 
-	/** TODO: Para já só está a ler da primeira entrada do ficheiro XML */
-	/** TODO: Trabalhar iterador */
-	for (Triangle t : dict.begin()->second) {
+	Point3d pontoC(length / 2, 0, -width / 2);
 
+	Point3d pontoD(-width / 2, 0, -width / 2);
 
-		Point3d a = t.getA();
-		Point3d b = t.getB();
-		Point3d c = t.getC();
+	ofstream ficheiro;
+	ficheiro.open(filename);
+	if (ficheiro.is_open()) {
+		ficheiro << triangle_to_string(pontoD, pontoA, pontoB) << endl;
+		ficheiro << triangle_to_string(pontoB, pontoC, pontoD);
+		ficheiro.close();
+	} else
+		cout << "Unable to open file\n";
 
-		glVertex3f(a.getXCoord(), a.getYCoord(), a.getZCoord());
+}
 
+void drawBox(double length, double height, double width, char* filename) {
+	Point3d pontoA1(-length / 2, -height / 2, width / 2);
 
-		glVertex3f(b.getXCoord(), b.getYCoord(), b.getZCoord());
+	Point3d pontoB1(length / 2, -height / 2, width / 2);
 
-		//ponto A
-		glVertex3f(c.getXCoord(), c.getYCoord(), c.getZCoord());
+	Point3d pontoC1(length / 2, -height / 2, -width / 2);
 
-		glColor3f(1, 1, 0);
+	Point3d pontoD1(-length / 2, -height / 2, -width / 2);
 
+	Point3d pontoA2(-length / 2, height / 2, width / 2);
+
+	Point3d pontoB2(length / 2, height / 2, width / 2);
+
+	Point3d pontoC2(length / 2, height / 2, -width / 2);
+
+	Point3d pontoD2(-length / 2, height / 2, -width / 2);
+
+	ofstream ficheiro;
+	ficheiro.open(filename);
+	if (ficheiro.is_open()) {
+		ficheiro << triangle_to_string(pontoC1, pontoA1, pontoD1) << endl;
+		ficheiro << triangle_to_string(pontoA1, pontoC1, pontoB1) << endl;
+
+		ficheiro << triangle_to_string(pontoC2, pontoD2, pontoA2) << endl;
+		ficheiro << triangle_to_string(pontoA2, pontoB2, pontoC2) << endl;
+
+		ficheiro << triangle_to_string(pontoA1, pontoB1, pontoA2) << endl;
+		ficheiro << triangle_to_string(pontoB1, pontoB2, pontoA2) << endl;
+
+		ficheiro << triangle_to_string(pontoB1, pontoC1, pontoB2) << endl;
+		ficheiro << triangle_to_string(pontoC1, pontoC2, pontoB2) << endl;
+
+		ficheiro << triangle_to_string(pontoC1, pontoD1, pontoC2) << endl;
+		ficheiro << triangle_to_string(pontoD1, pontoD2, pontoC2) << endl;
+
+		ficheiro << triangle_to_string(pontoD1, pontoA1, pontoD2) << endl;
+		ficheiro << triangle_to_string(pontoA1, pontoA2, pontoD2) << endl;
+
+		ficheiro.close();
 
 	}
 
-	glEnd();
+	else
+		cout << "Unable to open file\n";
 
-	// End of frame
-	glutSwapBuffers();
 }
 
-// write function to process keyboard events
-void keyboardR(unsigned char key, int x, int y) {
-	switch (key) {
-	case 'a':
-		mover_x = mover_x - 0.1;
-		break;
-	case 'd':
-		mover_x = mover_x + 0.1;
-		break;
-	case 's':
-		mover_z = mover_z + 0.1;
-		break;
-	case 'w':
-		mover_z = mover_z - 0.1;
-		break;
-	case 'r':
-		mover_z = 0;
-		mover_x = 0;
-		phi = 0;
-		theta = 0;
-		break;
+void drawSphere(double radius, int slices, int stacks, char* filename) {
+	double step_theta = (2 * M_PI) / slices;
+	double step_phi = M_PI / stacks;
+	double prev_theta = 0.0;
+	double prev_phi = -1 * ( M_PI / 2);
+	int i, j;
+	double theta;
+	double phi;
 
-	default:
-		break;
-	}
-	glutPostRedisplay();
-}
+	ofstream ficheiro;
+	ficheiro.open(filename);
 
-void keyboardS(int key_code, int x, int y) {
-	switch (key_code) {
-	case GLUT_KEY_LEFT:
-		theta = theta - 5.0;
+	if (ficheiro.is_open()) {
 
-		break;
-	case GLUT_KEY_RIGHT:
-		theta = theta + 5.0;
+		for (i = 0, phi = -1 * step_phi; i < stacks; i++, phi += step_phi) {
+			for (j = 0, prev_theta = 0, theta = step_theta; j <= slices;
+					j++, theta += step_theta) {   // A B
 
-		break;
-	case GLUT_KEY_UP:
-		phi = phi + 5.0;
+				Point3d pointA(radius * cos(prev_phi) * sin(prev_theta),
+						radius * sin(prev_phi),
+						radius * cos(prev_phi) * cos(prev_theta));
 
-		break;
-	case GLUT_KEY_DOWN:
-		phi = phi - 5.0;
+				Point3d pointB(radius * cos(phi) * sin(prev_theta),
+						radius * sin(phi), radius * cos(phi) * cos(prev_theta));
 
-		break;
+				// C D
 
-	default:
-		break;
-	}
-	glutPostRedisplay();
-}
+				Point3d pointD(radius * cos(prev_phi) * sin(theta),
+						radius * sin(prev_phi),
+						radius * cos(prev_phi) * cos(theta));
 
-void menu(int op) {
-	switch (op) {
-	case 1:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-		break;
-	case 2:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		break;
-	case 3:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		break;
-	default:
-		break;
-	}
-	glutPostRedisplay();
-}
+				Point3d pointC(radius * cos(phi) * sin(theta),
+						radius * sin(phi), radius * cos(phi) * cos(theta));
 
-const vector<string> explode(const string& s, const char& c) {
-	string buff { "" };
-	vector<string> v;
+				ficheiro << triangle_to_string(pointA, pointB, pointD) << endl;
+				ficheiro << triangle_to_string(pointB, pointC, pointD) << endl;
 
-	for (auto n : s) {
-		if (n != c)
-			buff += n;
-		else if (n == c && buff != "") {
-			v.push_back(buff);
-			buff = "";
-		}
-	}
-	if (buff != "")
-		v.push_back(buff);
-
-	return v;
-}
-
-int main(int argc, char **argv) {
-
-	XMLDocument doc;
-	doc.LoadFile("resources/scene.xml");
-
-	vector<string> modelos;
-	XMLElement* modelNode = doc.FirstChildElement("scene")->FirstChildElement(
-			"model");
-
-	for (auto crawl = modelNode; crawl != nullptr;
-			crawl = crawl->NextSiblingElement("model")) {
-		modelos.push_back(crawl->FirstAttribute()->Value());
-		cout << "Modelo:" << crawl->FirstAttribute()->Value() << endl;
-	}
-
-	/** TODO: Para já só está a ler da primeira entrada do ficheiro XML */
-
-	for (int i = 0; i < modelos.size(); i++) {
-		string line;
-			cout << "Ficheiro: " << modelos[i] << endl;
-			vector<Triangle> lst;
-			ifstream myfile("resources/" + modelos[i]);
-			if (myfile.is_open()) {
-				while (getline(myfile, line)) {
-					vector<string> v { explode(line, ';') };
-					cout << v[0] << v[1] << v[2] << '\n';
-					vector<string> p1 { explode(v[0], ',') };
-					vector<string> p2 { explode(v[1], ',') };
-					vector<string> p3 { explode(v[2], ',') };
-
-					Triangle t(atof(p1[0].c_str()), atof(p1[1].c_str()),
-							atof(p1[2].c_str()), atof(p2[0].c_str()),
-							atof(p2[1].c_str()), atof(p2[2].c_str()),
-							atof(p3[0].c_str()), atof(p3[1].c_str()),
-							atof(p3[2].c_str()));
-
-
-					lst.push_back(t);
-
-				}
-				myfile.close();
-				dict[modelos[i]] = lst;
-
+				prev_theta = theta;
 			}
 
+			prev_phi = phi;
+		}
+		ficheiro.close();
 
-			else
-				cout << "Unable to open file";
 	}
 
-
-// init GLUT and the window
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-	glutInitWindowPosition(100, 100);
-	glutInitWindowSize(800, 800);
-	glutCreateWindow("CG@DI-UM");
-
-// Required callback registry 
-	glutDisplayFunc(renderScene);
-	glutReshapeFunc(changeSize);
-
-// put here the registration of the keyboard callbacks
-	glutKeyboardFunc(keyboardR);
-	glutSpecialFunc(keyboardS);
-
-// menu
-	glutCreateMenu(menu);
-	glutAddMenuEntry("GL POINT", 1);
-	glutAddMenuEntry("GL LINE", 2);
-	glutAddMenuEntry("GL FILL", 3);
-
-	glutAttachMenu(GLUT_RIGHT_BUTTON);
-
-//  OpenGL settings
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-
-// enter GLUT's main cycle
-	glutMainLoop();
-
-	return 1;
+	else
+		cout << "Unable to open file\n";
 }
+
+void drawCone(double radius, double height, int slices, int stacks,
+		char * filename) {
+	double step_theta = (2 * M_PI) / slices;
+	double prev_theta = 0.0;
+	double height_step = height / stacks;
+	int i, j;
+	double theta;
+	double radius_aux = (radius * 1) / stacks;
+	double height_aux;
+	double prev_radius_aux = (radius * 0) / stacks;
+	double prev_height_aux = -1 * height / 2;
+
+
+	ofstream ficheiro;
+	ficheiro.open(filename);
+	if (ficheiro.is_open()) {
+
+		for (i = 0, height_aux = prev_height_aux + height_step; i < stacks;
+				i++, height_aux += height_step) {
+			for (j = 0, prev_theta = 0, theta = step_theta; j <= slices;
+					j++, theta += step_theta) {
+
+				// A B
+
+				Point3d pointA(prev_radius_aux * sin(prev_theta),
+						prev_height_aux, prev_radius_aux * cos(prev_theta));
+
+				Point3d pointB(radius_aux * sin(prev_theta), height_aux,
+						radius_aux * cos(prev_theta));
+
+				Point3d pointD(prev_radius_aux * sin(theta), prev_height_aux,
+						prev_radius_aux * cos(theta));
+
+				// xC yC zC
+				Point3d pointC(radius_aux * sin(theta), height_aux,
+						radius_aux * cos(theta));
+
+				ficheiro << triangle_to_string(pointA, pointB, pointD) << endl;
+				ficheiro << triangle_to_string(pointB, pointC, pointD) << endl;
+
+				prev_theta = theta;
+			}
+
+			prev_height_aux = height_aux;
+			prev_radius_aux = radius_aux;
+			radius_aux = radius * (i + 2) / stacks;
+		}
+
+		Point3d pointO(0, height / 2, 0);
+
+		for (j = 0, prev_theta = 0, theta = step_theta; j <= slices;
+				j++, theta += step_theta) {
+			Point3d pointA2(radius * sin(prev_theta), height / 2,
+					radius * cos(prev_theta));
+
+			Point3d pointB2(radius * sin(theta), height / 2,
+					radius * cos(theta));
+
+			ficheiro << triangle_to_string(pointO, pointB2, pointA2) << endl;
+
+			prev_theta = theta;
+		}
+		ficheiro.close();
+
+	}
+
+	else
+		cout << "Unable to open file\n";
+}
+
+int main(int argc, char* argv[]) {
+//	if (argc <= 1) {
+//		printf("ERRO Opções: plano | paralelipipedo | cone \n");
+//	}
+//
+//	else if (!strcmp(argv[1], "plano")) {
+//		if (argc != 5) {
+//			printf(
+//					"ERRO Formato: 'plano' <comprimento> <largura> <nome do ficheiro>\n");
+//		} else {
+//			double length = atof(argv[2]);
+//			double width = atof(argv[3]);
+//			drawPlane(length, width, argv[4]);
+//		}
+//	}
+//
+//	else if (!strcmp(argv[1], "box")) {
+//		if (argc != 6) {
+//			printf(
+//					"ERRO Formato: 'box' <comprimento> <altura> <largura> <nome do ficheiro>\n");
+//			exit(0);
+//		} else {
+//			double length = atof(argv[2]);
+//			double height = atof(argv[3]);
+//			double width = atof(argv[4]);
+//			drawBox(length, height, width, argv[5]);
+//		}
+//	}
+//
+//	else if (!strcmp(argv[1], "cone")) {
+//		if (argc != 7) {
+//			printf(
+//					"ERRO Formato: 'cone' <raio> <altura> <fatias> <camadas> <nome do ficheiro>\n");
+//			exit(0);
+//		} else {
+//			double radius = atof(argv[2]);
+//			double height = atof(argv[3]);
+//			int slices = atoi(argv[4]);
+//			int stacks = atoi(argv[5]);
+//			drawCone(radius, height, slices, stacks, argv[6]);
+//		}
+//	}
+}
+
