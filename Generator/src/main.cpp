@@ -181,10 +181,10 @@ drawCone (double radius, double height, int slices, int stacks, char * filename)
   double delta_height = height / stacks;
 
   double prev_radius_aux = (radius * 0) / stacks;
-  double prev_height_aux = -1 * height / 2;
+  double prev_height_aux = height / 2;
 
   double radius_aux = (radius * 1) / stacks;
-  double height_aux = prev_height_aux + delta_height;
+  double height_aux = prev_height_aux - delta_height;
 
   ofstream ficheiro;
   ficheiro.open (filename);
@@ -229,20 +229,20 @@ drawCone (double radius, double height, int slices, int stacks, char * filename)
 	  prev_radius_aux = radius_aux;
 
 	  radius_aux = radius * (i + 2) / stacks;
-	  height_aux += delta_height;
+	  height_aux -= delta_height;
 	}
 
-      Point3d pointO (0, height / 2, 0);
+      Point3d pointO (0, -height / 2, 0);
 
       prev_theta = 0;
       current_theta = delta_theta;
 
       for (j = 0; j <= slices; j++)
 	{
-	  Point3d pointA2 (radius * sin (prev_theta), height / 2,
+	  Point3d pointA2 (radius * sin (prev_theta), -height / 2,
 			   radius * cos (prev_theta));
 
-	  Point3d pointB2 (radius * sin (current_theta), height / 2,
+	  Point3d pointB2 (radius * sin (current_theta), -height / 2,
 			   radius * cos (current_theta));
 
 	  ficheiro << triangle_to_string (pointO, pointB2, pointA2) << endl;
