@@ -131,7 +131,7 @@ keyboardR (unsigned char key, int x, int y)
       mover_x = 0;
       phi = 0;
       theta = 0;
-      idx = 0;
+      alpha = 0, beta = 0;
       break;
     case 'n':
 
