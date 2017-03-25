@@ -4,6 +4,7 @@
 #include <string.h>
 #include <iostream>
 #include <cmath>
+#include <stdlib.h>
 #include "Point3d.h"
 
 std::string

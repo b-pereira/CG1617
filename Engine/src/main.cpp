@@ -25,10 +25,6 @@ int idx = 0;
 
 float alpha = 0, beta = 0, raio = 10;
 
-//
-//map <string, vector<Triangle>> dict;
-//
-//std::map <string, vector<Triangle>>::iterator it=dict.begin();
 
 void
 changeSize (int w, int h)
@@ -234,6 +230,7 @@ int
 main (int argc, char **argv)
 {
 
+	/** Com MAKEFILE tem que ser ../resources*/
   XMLDocument doc;
   doc.LoadFile ("resources/scene.xml");
 
@@ -253,6 +250,7 @@ main (int argc, char **argv)
       string line;
 
       vector<Triangle> lst;
+      /** Com MAKEFILE tem que ser ../resources*/
       ifstream myfile ("resources/" + modelos[i]);
       if (myfile.is_open ())
 	{
