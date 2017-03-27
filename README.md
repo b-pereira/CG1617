@@ -11,5 +11,9 @@
 
 [logo]:http://www.forosperu.net/data/avatars/m/227/227793.jpg?1451243621
 
+## WIKI com Apontamentos para relatório
+
+* [FASE 2](https://github.com/b-p3r/CG1617/wiki/FASE-2)
+
 
 
