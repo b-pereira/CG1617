@@ -40,10 +40,6 @@ int idx = 0;
 
 float alpha = 0, beta = 0, raio = 10;
 
-//
-//map <string, vector<Triangle>> dict;
-//
-//std::map <string, vector<Triangle>>::iterator it=dict.begin();
 
 void
 changeSize (int w, int h)
@@ -328,6 +324,7 @@ int
 main (int argc, char **argv)
 {
 
+	/** Com MAKEFILE tem que ser ../resources*/
   XMLDocument doc;
   doc.LoadFile ("resources/scene4.xml");
   cout << "LOADING" << endl;
@@ -413,6 +410,7 @@ main (int argc, char **argv)
 //
 //// enter GLUT's main cycle
 //  glutMainLoop ();
+
 
   return 1;
 }
