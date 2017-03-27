@@ -17,6 +17,21 @@
 using namespace std;
 using namespace tinyxml2;
 
+#define TRANSLATE "translate"
+#define SCALE     "scale"
+#define ROTATE    "rotate"
+#define MODELS    "models"
+#define MODEL     "model"
+#define GROUP     "group"
+#define FILE      "file"
+#define ANGLE     "angle"
+#define AXIS_X    "axisX"
+#define AXIS_Y    "axisY"
+#define AXIS_Z    "axisZ"
+#define X         "X"
+#define Y         "Y"
+#define Z         "Z"
+
 GLfloat mover_x = 0, mover_z = 0, theta = 0, phi = 0;
 
 vector<vector<Triangle>> figures;
@@ -67,11 +82,9 @@ renderScene (void)
   // set the camera
   glLoadIdentity ();
 
-
   gluLookAt (cos (beta) * sin (alpha) * raio, sin (beta) * raio,
 	     cos (beta) * cos (alpha) * raio, //  coordenadas esfericas inicialmente (0,0,1)
 	     0, 0, 0, 0, 1, 0);
-
 
 // put the geometric transformations here
   glTranslatef (mover_x, 0.0, mover_z);
@@ -230,92 +243,176 @@ explode (const string& s, const char& c)
   return v;
 }
 
+void
+readGrupoFromXML (XMLElement * element)
+{
+
+  if (element == nullptr)
+    return;
+
+  string name (element->Name ());
+
+  cout << "name :" << name << endl;
+
+  if ((name.compare (TRANSLATE) == 0) || (name.compare (SCALE) == 0))
+    {
+
+      if (element->Attribute (X))
+	cout << "X :" << element->Attribute (X) << endl;
+      if (element->Attribute (Y))
+	cout << "Y :" << element->Attribute (Y) << endl;
+      if (element->Attribute (Z))
+	cout << "Z :" << element->Attribute (Z) << endl;
+
+      if (name.compare (TRANSLATE) == 0)
+	{
+	  /**
+	   * Criar Translação
+	   */
+	}
+      else
+	{
+	  /**
+	   * Criar Escala
+	   */
+	}
+
+    }
+  else if (name.compare (ROTATE) == 0)
+    {
+
+      cout << "Angle :" << element->Attribute (ANGLE) << endl;
+      if (element->Attribute (AXIS_X))
+	cout << "X :" << element->Attribute (AXIS_X) << endl;
+      if (element->Attribute (AXIS_Y))
+	cout << "Y :" << element->Attribute (AXIS_Y) << endl;
+      if (element->Attribute (AXIS_Z))
+	cout << "Z :" << element->Attribute (AXIS_Z) << endl;
+
+      /**
+       * Criar Rotação
+       */
+
+    }
+  else if (name.compare (MODELS) == 0)
+    {
+
+      for (auto crawl = element->FirstChildElement (MODEL); crawl != nullptr;
+	  crawl = crawl->NextSiblingElement (MODEL))
+	{
+
+	  cout << "MODELO : " << crawl->Attribute (FILE) << endl;
+
+	}
+    }
+  else if (name.compare (GROUP) == 0)
+    {
+
+      /**
+       * Guardar ler ficheiro (forma)
+       */
+
+      readGrupoFromXML (element->FirstChildElement ());
+    }
+
+  XMLElement * nextSibling = element->NextSiblingElement ();
+
+  // Chamada recursiva
+  if (element->NextSiblingElement () != nullptr)
+    {
+      readGrupoFromXML (element->NextSiblingElement ());
+    }
+}
+
 int
 main (int argc, char **argv)
 {
 
   XMLDocument doc;
-  doc.LoadFile ("resources/scene.xml");
+  doc.LoadFile ("resources/scene4.xml");
+  cout << "LOADING" << endl;
 
   vector<string> modelos;
-  XMLElement* modelNode = doc.FirstChildElement ("scene")->FirstChildElement (
-      "model");
+  XMLElement* modelNode = doc.FirstChildElement ("scene");
+  cout << "SCENE" << endl;
+  cout << "- - - - - - - - - - - - - - - - - - -" << endl << "GROUP" << endl;
+  readGrupoFromXML (modelNode->FirstChildElement ());
 
-  for (auto crawl = modelNode; crawl != nullptr;
-      crawl = crawl->NextSiblingElement ("model"))
-    {
-      modelos.push_back (crawl->FirstAttribute ()->Value ());
-      cout << "Modelo:" << crawl->FirstAttribute ()->Value () << endl;
-    }
+//  for (auto crawl = modelNode; crawl != nullptr;
+//      crawl = crawl->NextSiblingElement ("model"))
+//    {
+//      modelos.push_back (crawl->FirstAttribute ()->Value ());
+//      cout << "Modelo:" << crawl->FirstAttribute ()->Value () << endl;
+//    }
+//
+//  for (int i = 0; i < modelos.size (); i++)
+//    {
+//      string line;
+//
+//      vector<Triangle> lst;
+//      ifstream myfile ("resources/" + modelos[i]);
+//      if (myfile.is_open ())
+//	{
+//	  while (getline (myfile, line))
+//	    {
+//	      vector<string> v
+//		{ explode (line, ';') };
+//	      vector<string> p1
+//		{ explode (v[0], ',') };
+//	      vector<string> p2
+//		{ explode (v[1], ',') };
+//	      vector<string> p3
+//		{ explode (v[2], ',') };
+//
+//	      Triangle t (atof (p1[0].c_str ()), atof (p1[1].c_str ()),
+//			  atof (p1[2].c_str ()), atof (p2[0].c_str ()),
+//			  atof (p2[1].c_str ()), atof (p2[2].c_str ()),
+//			  atof (p3[0].c_str ()), atof (p3[1].c_str ()),
+//			  atof (p3[2].c_str ()));
+//
+//	      lst.push_back (t);
+//
+//	    }
+//	  myfile.close ();
+//
+//	  figures.push_back (lst);
+//
+//	}
+//
+//      else
+//	cout << "Unable to open file";
+//
+//    }
 
-  for (int i = 0; i < modelos.size (); i++)
-    {
-      string line;
-
-      vector<Triangle> lst;
-      ifstream myfile ("resources/" + modelos[i]);
-      if (myfile.is_open ())
-	{
-	  while (getline (myfile, line))
-	    {
-	      vector<string> v
-		{ explode (line, ';') };
-	      vector<string> p1
-		{ explode (v[0], ',') };
-	      vector<string> p2
-		{ explode (v[1], ',') };
-	      vector<string> p3
-		{ explode (v[2], ',') };
-
-	      Triangle t (atof (p1[0].c_str ()), atof (p1[1].c_str ()),
-			  atof (p1[2].c_str ()), atof (p2[0].c_str ()),
-			  atof (p2[1].c_str ()), atof (p2[2].c_str ()),
-			  atof (p3[0].c_str ()), atof (p3[1].c_str ()),
-			  atof (p3[2].c_str ()));
-
-	      lst.push_back (t);
-
-	    }
-	  myfile.close ();
-
-	  figures.push_back (lst);
-
-	}
-
-      else
-	cout << "Unable to open file";
-
-    }
-
-// init GLUT and the window
-  glutInit (&argc, argv);
-  glutInitDisplayMode (GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-  glutInitWindowPosition (100, 100);
-  glutInitWindowSize (800, 800);
-  glutCreateWindow ("CG@DI-UM");
-
-// Required callback registry 
-  glutDisplayFunc (renderScene);
-  glutReshapeFunc (changeSize);
-
-// put here the registration of the keyboard callbacks
-  glutKeyboardFunc (keyboardR);
-  glutSpecialFunc (keyboardS);
-
-// menu
-  glutCreateMenu (menu);
-  glutAddMenuEntry ("GL POINT", 1);
-  glutAddMenuEntry ("GL LINE", 2);
-  glutAddMenuEntry ("GL FILL", 3);
-
-  glutAttachMenu (GLUT_RIGHT_BUTTON);
-
-//  OpenGL settings
-  glEnable (GL_DEPTH_TEST);
-  glEnable (GL_CULL_FACE);
-
-// enter GLUT's main cycle
-  glutMainLoop ();
+//// init GLUT and the window
+//  glutInit (&argc, argv);
+//  glutInitDisplayMode (GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+//  glutInitWindowPosition (100, 100);
+//  glutInitWindowSize (800, 800);
+//  glutCreateWindow ("CG@DI-UM");
+//
+//// Required callback registry
+//  glutDisplayFunc (renderScene);
+//  glutReshapeFunc (changeSize);
+//
+//// put here the registration of the keyboard callbacks
+//  glutKeyboardFunc (keyboardR);
+//  glutSpecialFunc (keyboardS);
+//
+//// menu
+//  glutCreateMenu (menu);
+//  glutAddMenuEntry ("GL POINT", 1);
+//  glutAddMenuEntry ("GL LINE", 2);
+//  glutAddMenuEntry ("GL FILL", 3);
+//
+//  glutAttachMenu (GLUT_RIGHT_BUTTON);
+//
+////  OpenGL settings
+//  glEnable (GL_DEPTH_TEST);
+//  glEnable (GL_CULL_FACE);
+//
+//// enter GLUT's main cycle
+//  glutMainLoop ();
 
   return 1;
 }
