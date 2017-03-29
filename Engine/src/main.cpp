@@ -44,9 +44,9 @@ using namespace tinyxml2;
 
 GLfloat mover_x = 0, mover_z = 0, theta = 0, phi = 0;
 
-vector<vector<Triangle>> figures;
+//vector<vector<Triangle>> figures;
 
-int idx = 0;
+Grupo * g;
 
 float alpha = 0, beta = 0, raio = 10;
 
@@ -75,6 +75,67 @@ void changeSize(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
+void drawElement(Grupo * g) {
+
+	// put drawing instructions here
+	glBegin(GL_TRIANGLES);
+
+	for (int i = 0; i < g->modelos.size(); i++) {
+
+		for (Triangle t : g->modelos.at(i)) {
+
+			Point3d a = t.getA();
+			Point3d b = t.getB();
+			Point3d c = t.getC();
+
+			glVertex3f(a.getXCoord(), a.getYCoord(), a.getZCoord());
+
+			glVertex3f(b.getXCoord(), b.getYCoord(), b.getZCoord());
+
+			//ponto A
+			glVertex3f(c.getXCoord(), c.getYCoord(), c.getZCoord());
+
+			glColor3f(1, 1, 0);
+
+		}
+	}
+
+	glEnd();
+
+}
+
+void imprimir_t(Grupo *t) {
+
+	auto tmp = t;
+
+	if (tmp == NULL)
+		return;
+
+	glPushMatrix();
+	cout << "PUSH" << endl;
+
+	//cout << tmp->val << endl;
+
+	for (auto var : tmp->transformations) {
+
+		applyTransformation(tmp, var);
+
+	}
+
+	drawElement(tmp);
+
+	for (int nivel = 0; nivel < tmp->filhos.size(); nivel++) {
+		if (tmp->filhos[nivel] != NULL) {
+			imprimir_t(tmp->filhos[nivel]);
+			glPopMatrix();
+			cout << "POP" << endl;
+
+		}
+	}
+
+	return;
+}
+
 void renderScene(void) {
 
 	// clear buffers
@@ -94,28 +155,7 @@ void renderScene(void) {
 
 	glRotatef(phi, 1.0f, 0.0f, 0.0f);
 
-	// put drawing instructions here
-	glBegin(GL_TRIANGLES);
-	//lados
-
-	for (Triangle t : figures.at(idx)) {
-
-		Point3d a = t.getA();
-		Point3d b = t.getB();
-		Point3d c = t.getC();
-
-		glVertex3f(a.getXCoord(), a.getYCoord(), a.getZCoord());
-
-		glVertex3f(b.getXCoord(), b.getYCoord(), b.getZCoord());
-
-		//ponto A
-		glVertex3f(c.getXCoord(), c.getYCoord(), c.getZCoord());
-
-		glColor3f(1, 1, 0);
-
-	}
-
-	glEnd();
+	imprimir_t(g);
 
 	// End of frame
 	glutSwapBuffers();
@@ -143,9 +183,6 @@ void keyboardR(unsigned char key, int x, int y) {
 		theta = 0;
 		alpha = 0, beta = 0;
 		break;
-	case 'n':
-
-		idx = (idx + 1) % figures.size();
 
 		break;
 	case 'h':
@@ -227,6 +264,39 @@ const vector<string> explode(const string& s, const char& c) {
 		v.push_back(buff);
 
 	return v;
+}
+
+void lerFicheiro(Grupo *g, string file) {
+
+	string line;
+
+	vector<Triangle> lst;
+	ifstream myfile("resources/" + file);
+	if (myfile.is_open()) {
+		while (getline(myfile, line)) {
+			vector<string> v { explode(line, ';') };
+			vector<string> p1 { explode(v[0], ',') };
+			vector<string> p2 { explode(v[1], ',') };
+			vector<string> p3 { explode(v[2], ',') };
+
+			Triangle t(atof(p1[0].c_str()), atof(p1[1].c_str()),
+					atof(p1[2].c_str()), atof(p2[0].c_str()),
+					atof(p2[1].c_str()), atof(p2[2].c_str()),
+					atof(p3[0].c_str()), atof(p3[1].c_str()),
+					atof(p3[2].c_str()));
+
+			lst.push_back(t);
+
+		}
+		myfile.close();
+
+		g->modelos.push_back(lst);
+
+	}
+
+	else
+		cout << "Unable to open file";
+
 }
 
 void readXMLFromRootElement(XMLElement * root, Grupo * grupo) {
@@ -334,7 +404,9 @@ void readXMLFromRootElement(XMLElement * root, Grupo * grupo) {
 
 				string modelo(crawl->Attribute(FILE));
 
-				grupo->modelos.push_back(modelo);
+				lerFicheiro(tmp_gr, modelo);
+
+				//grupo->modelos.push_back(modelo);
 
 				//cout << "MODELO : " << crawl->Attribute(FILE) << endl;
 
@@ -356,40 +428,7 @@ void readXMLFromRootElement(XMLElement * root, Grupo * grupo) {
 
 }
 
-void imprimir_t(Grupo *t) {
-
-	auto tmp = t;
-
-	if (tmp == NULL)
-		return;
-	cout << "PUSH" << endl;
-
-	//cout << tmp->val << endl;
-
-	for (auto var: tmp->transformations) {
-
-	    applyTransformation(tmp, var);
-
-	}
-
-	for (auto var2: tmp->modelos) {
-
-	    cout << var2 << endl;
-
-		}
-
-	for (int nivel = 0; nivel < tmp->filhos.size(); nivel++) {
-		if (tmp->filhos[nivel] != NULL) {
-			imprimir_t(tmp->filhos[nivel]);
-			cout << "POP" << endl;
-
-		}
-	}
-
-	return;
-}
-
-void readXMLDoc(const char * path) {
+Grupo * readXMLDoc(const char * path) {
 
 	XMLDocument doc;
 	doc.LoadFile(path);
@@ -398,94 +437,46 @@ void readXMLDoc(const char * path) {
 	Grupo * parent = new Grupo;
 
 	readXMLFromRootElement(modelNode, parent);
-	cout << "PUSH" << endl;
-	imprimir_t(parent);
-	cout << "POP" << endl;
+
+	return parent;
+
 }
 
 int main(int argc, char **argv) {
 
 	/** Com MAKEFILE tem que ser ../resources*/
 
-	vector<string> modelos;
+	g = readXMLDoc("resources/planetas.xml");
 
-	readXMLDoc("resources/scene4.xml");
+// init GLUT and the window
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+	glutInitWindowPosition(100, 100);
+	glutInitWindowSize(800, 800);
+	glutCreateWindow("CG@DI-UM");
 
-//  for (auto crawl = modelNode; crawl != nullptr;
-//      crawl = crawl->NextSiblingElement ("model"))
-//    {
-//      modelos.push_back (crawl->FirstAttribute ()->Value ());
-//      cout << "Modelo:" << crawl->FirstAttribute ()->Value () << endl;
-//    }
-//
-//  for (int i = 0; i < modelos.size (); i++)
-//    {
-//      string line;
-//
-//      vector<Triangle> lst;
-//      ifstream myfile ("resources/" + modelos[i]);
-//      if (myfile.is_open ())
-//	{
-//	  while (getline (myfile, line))
-//	    {
-//	      vector<string> v
-//		{ explode (line, ';') };
-//	      vector<string> p1
-//		{ explode (v[0], ',') };
-//	      vector<string> p2
-//		{ explode (v[1], ',') };
-//	      vector<string> p3
-//		{ explode (v[2], ',') };
-//
-//	      Triangle t (atof (p1[0].c_str ()), atof (p1[1].c_str ()),
-//			  atof (p1[2].c_str ()), atof (p2[0].c_str ()),
-//			  atof (p2[1].c_str ()), atof (p2[2].c_str ()),
-//			  atof (p3[0].c_str ()), atof (p3[1].c_str ()),
-//			  atof (p3[2].c_str ()));
-//
-//	      lst.push_back (t);
-//
-//	    }
-//	  myfile.close ();
-//
-//	  figures.push_back (lst);
-//
-//	}
-//
-//      else
-//	cout << "Unable to open file";
-//
-//    }
+// Required callback registry
+	glutDisplayFunc(renderScene);
+	glutReshapeFunc(changeSize);
 
-//// init GLUT and the window
-//  glutInit (&argc, argv);
-//  glutInitDisplayMode (GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-//  glutInitWindowPosition (100, 100);
-//  glutInitWindowSize (800, 800);
-//  glutCreateWindow ("CG@DI-UM");
-//
-//// Required callback registry
-//  glutDisplayFunc (renderScene);
-//  glutReshapeFunc (changeSize);
-//
-//// put here the registration of the keyboard callbacks
-//  glutKeyboardFunc (keyboardR);
-//  glutSpecialFunc (keyboardS);
-//
-//// menu
-//  glutCreateMenu (menu);
-//  glutAddMenuEntry ("GL POINT", 1);
-//  glutAddMenuEntry ("GL LINE", 2);
-//  glutAddMenuEntry ("GL FILL", 3);
-//
-//  glutAttachMenu (GLUT_RIGHT_BUTTON);
-//
-////  OpenGL settings
-//  glEnable (GL_DEPTH_TEST);
-//  glEnable (GL_CULL_FACE);
-//
-//// enter GLUT's main cycle
-//  glutMainLoop ();
+// put here the registration of the keyboard callbacks
+	glutKeyboardFunc(keyboardR);
+	glutSpecialFunc(keyboardS);
+
+// menu
+	glutCreateMenu(menu);
+	glutAddMenuEntry("GL POINT", 1);
+	glutAddMenuEntry("GL LINE", 2);
+	glutAddMenuEntry("GL FILL", 3);
+
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+
+//  OpenGL settings
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+
+// enter GLUT's main cycle
+	glutMainLoop();
 
 	return 1;
 }
