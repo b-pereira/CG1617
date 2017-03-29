@@ -172,6 +172,59 @@ drawSphere (double radius, int slices, int stacks, char* filename)
 }
 
 void
+drawAnel(double raioIn, double raioOut, int slices, char* filename){
+	float slice = (360 / slices)*(M_PI / 180);
+	float doisPi = 2 * M_PI;
+	double delta_theta = (2 * M_PI) / slices;
+	double prev_theta = 0.0;
+	double current_theta = delta_theta;
+	int i = 0;
+
+	ofstream ficheiro;
+  	ficheiro.open (filename);
+
+	if(ficheiro.is_open ())
+	{
+      ficheiro.clear ();
+
+    	for (float i = 0; i < doisPi; i += slice)
+		{
+			for (i = 0; i < slices; i += slice) {
+
+				Point3d pontoA(raioOut*sin(prev_theta), 
+								0.0, 
+								raioOut*cos(prev_theta));
+			
+				Point3d pontoB(raioIn*sin(prev_theta), 
+								0.0, 
+								raioIn*cos(prev_theta));
+
+				Point3d pontoC(raioIn*sin(current_theta), 
+								0.0, 
+								raioIn*cos(current_theta));
+
+				Point3d pontoD(raioOut*sin(current_theta),
+							 	0.0, 
+							 	raioOut*cos(current_theta));
+
+				ficheiro << triangle_to_string (pontoA, pontoB, pontoD) << endl;
+	      		ficheiro << triangle_to_string (pontoD, pointB, pointC) << endl;
+
+		      	ficheiro << triangle_to_string (pontoD, pontoB, pontoA) << endl;
+		      	ficheiro << triangle_to_string (pontoC, pointB, pointD) << endl;
+
+				prev_theta = current_theta;
+				current_theta += delta_theta;
+			}
+		}
+		ficheiro.close ();
+	}
+	else
+    	cout << "Unable to open file\n";
+}
+
+
+void
 drawCone (double radius, double height, int slices, int stacks, char * filename)
 {
 
@@ -264,7 +317,7 @@ main (int argc, char* argv[])
 {
   if (argc <= 1)
     {
-      cout << "ERROR :: Options: plane | box | cone | sphere" << endl;
+      cout << "ERROR :: Options: plane | box | cone | sphere | anel" << endl;
     }
 
   else if (!strcmp (argv[1], "plane"))
@@ -334,6 +387,23 @@ main (int argc, char* argv[])
 	  drawSphere (radius, slices, stacks, argv[5]);
 
 	}
+    }
+    else if (!strcmp (argv[1], "anel"))
+    {
+    	if(argc != 6)
+    	{
+    		cout
+	      << "ERROR :: format: 'anel' <raio interior> <raio exterior> <slices> <file name>"
+	      << endl;
+	  return 0;
+    	}
+    	else
+    	{
+    		double raioIn = atof(argv[2]);
+    		double raioOut = atof(argv[3]);
+    		int slices = atoi(argv[4]);
+    		drawAnel(raioIn,raioOut,slices,argv[5]);
+    	}
     }
 
   return 0;
