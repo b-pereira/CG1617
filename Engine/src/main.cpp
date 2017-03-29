@@ -362,12 +362,26 @@ void imprimir_t(Grupo *t) {
 
 	if (tmp == NULL)
 		return;
+	cout << "PUSH" << endl;
 
-	cout << tmp->val << endl;
+	//cout << tmp->val << endl;
+
+	for (auto var: tmp->transformations) {
+
+	    applyTransformation(tmp, var);
+
+	}
+
+	for (auto var2: tmp->modelos) {
+
+	    cout << var2 << endl;
+
+		}
 
 	for (int nivel = 0; nivel < tmp->filhos.size(); nivel++) {
 		if (tmp->filhos[nivel] != NULL) {
 			imprimir_t(tmp->filhos[nivel]);
+			cout << "POP" << endl;
 
 		}
 	}
@@ -384,8 +398,9 @@ void readXMLDoc(const char * path) {
 	Grupo * parent = new Grupo;
 
 	readXMLFromRootElement(modelNode, parent);
-
+	cout << "PUSH" << endl;
 	imprimir_t(parent);
+	cout << "POP" << endl;
 }
 
 int main(int argc, char **argv) {
