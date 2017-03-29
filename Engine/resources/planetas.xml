@@ -4,49 +4,49 @@
 			<model file="sphere.3d" />
 		</models>
 		<group>
-			<translate X=1 />
+			<translate X="4" Y="1" Z="7" />
 			<models>
 				<model file="sphere.3d"/>
 			</models>
 		</group>
 		<group>
-			<translate X=4 />
+			<translate X="7" Y="3"  Z="14" />
 			<models>
 				<model file="sphere.3d"/>
 			</models>
 		</group>
 		<group>
-			<translate X=7 />
+			<translate X="10" Y="6"  Z="21"/>
 			<models>
 				<model file="sphere.3d"/>
 			</models>
 		</group>
 		<group>
-			<translate X=10 />
+			<translate X="13" Y="9"  Z="28"/>
 			<models>
 				<model file="sphere.3d"/>
 			</models>
 		</group>
 		<group>
-			<translate X=13 />
+			<translate X="16" Y="12"  Z="7"/>
 			<models>
 				<model file="sphere.3d"/>
 			</models>
 		</group>
 		<group>
-			<translate X=16 />
+			<translate X="19" Y="15"  Z="7"/>
 			<models>
 				<model file="sphere.3d"/>
 			</models>
 		</group>
 		<group>
-			<translate X=19 />
+			<translate X="22" Y="18"  Z="7"/>
 			<models>
 				<model file="sphere.3d"/>
 			</models>
 		</group>
 		<group>
-			<translate X=22 />
+			<translate X="25" Y="21"  Z="7" />
 			<models>
 				<model file="sphere.3d"/>
 			</models>
