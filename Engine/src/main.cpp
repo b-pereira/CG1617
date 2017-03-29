@@ -14,6 +14,14 @@
 #include "Point3d.h"
 #include "Group.h"
 
+#include "Rotation.h"
+
+#include "Translation.h"
+
+#include "Scale.h"
+
+#include "Group.h"
+
 #include "tinyxml2.h"
 using namespace std;
 using namespace tinyxml2;
@@ -42,346 +50,351 @@ int idx = 0;
 
 float alpha = 0, beta = 0, raio = 10;
 
-void
-changeSize (int w, int h)
-{
+void changeSize(int w, int h) {
 
-  // Prevent a divide by zero, when window is too short
-  // (you cant make a window with zero width).
-  if (h == 0)
-    h = 1;
+	// Prevent a divide by zero, when window is too short
+	// (you cant make a window with zero width).
+	if (h == 0)
+		h = 1;
 
-  // compute window's aspect ratio
-  float ratio = w * 1.0 / h;
+	// compute window's aspect ratio
+	float ratio = w * 1.0 / h;
 
-  // Set the projection matrix as current
-  glMatrixMode (GL_PROJECTION);
-  // Load Identity Matrix
-  glLoadIdentity ();
+	// Set the projection matrix as current
+	glMatrixMode(GL_PROJECTION);
+	// Load Identity Matrix
+	glLoadIdentity();
 
-  // Set the viewport to be the entire window
-  glViewport (0, 0, w, h);
+	// Set the viewport to be the entire window
+	glViewport(0, 0, w, h);
 
-  // Set perspective
-  gluPerspective (45.0f, ratio, 1.0f, 1000.0f);
+	// Set perspective
+	gluPerspective(45.0f, ratio, 1.0f, 1000.0f);
 
-  // return to the model view matrix mode
-  glMatrixMode (GL_MODELVIEW);
+	// return to the model view matrix mode
+	glMatrixMode(GL_MODELVIEW);
 }
 
-void
-renderScene (void)
-{
+void renderScene(void) {
 
-  // clear buffers
-  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// clear buffers
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // set the camera
-  glLoadIdentity ();
+	// set the camera
+	glLoadIdentity();
 
-  gluLookAt (cos (beta) * sin (alpha) * raio, sin (beta) * raio,
-	     cos (beta) * cos (alpha) * raio, //  coordenadas esfericas inicialmente (0,0,1)
-	     0, 0, 0, 0, 1, 0);
+	gluLookAt(cos(beta) * sin(alpha) * raio, sin(beta) * raio,
+			cos(beta) * cos(alpha) * raio, //  coordenadas esfericas inicialmente (0,0,1)
+			0, 0, 0, 0, 1, 0);
 
 // put the geometric transformations here
-  glTranslatef (mover_x, 0.0, mover_z);
+	glTranslatef(mover_x, 0.0, mover_z);
 
-  glRotatef (theta, 0.0f, 1.0f, 0.0f);
+	glRotatef(theta, 0.0f, 1.0f, 0.0f);
 
-  glRotatef (phi, 1.0f, 0.0f, 0.0f);
+	glRotatef(phi, 1.0f, 0.0f, 0.0f);
 
-  // put drawing instructions here
-  glBegin (GL_TRIANGLES);
-  //lados
+	// put drawing instructions here
+	glBegin(GL_TRIANGLES);
+	//lados
 
-  for (Triangle t : figures.at (idx))
-    {
+	for (Triangle t : figures.at(idx)) {
 
-      Point3d a = t.getA ();
-      Point3d b = t.getB ();
-      Point3d c = t.getC ();
+		Point3d a = t.getA();
+		Point3d b = t.getB();
+		Point3d c = t.getC();
 
-      glVertex3f (a.getXCoord (), a.getYCoord (), a.getZCoord ());
+		glVertex3f(a.getXCoord(), a.getYCoord(), a.getZCoord());
 
-      glVertex3f (b.getXCoord (), b.getYCoord (), b.getZCoord ());
+		glVertex3f(b.getXCoord(), b.getYCoord(), b.getZCoord());
 
-      //ponto A
-      glVertex3f (c.getXCoord (), c.getYCoord (), c.getZCoord ());
+		//ponto A
+		glVertex3f(c.getXCoord(), c.getYCoord(), c.getZCoord());
 
-      glColor3f (1, 1, 0);
+		glColor3f(1, 1, 0);
 
-    }
+	}
 
-  glEnd ();
+	glEnd();
 
-  // End of frame
-  glutSwapBuffers ();
+	// End of frame
+	glutSwapBuffers();
 }
 
 // write function to process keyboard events
-void
-keyboardR (unsigned char key, int x, int y)
-{
-  switch (key)
-    {
-    case 'a':
-      mover_x = mover_x - 0.1;
-      break;
-    case 'd':
-      mover_x = mover_x + 0.1;
-      break;
-    case 's':
-      mover_z = mover_z + 0.1;
-      break;
-    case 'w':
-      mover_z = mover_z - 0.1;
-      break;
-    case 'r':
-      mover_z = 0;
-      mover_x = 0;
-      phi = 0;
-      theta = 0;
-      alpha = 0, beta = 0;
-      break;
-    case 'n':
+void keyboardR(unsigned char key, int x, int y) {
+	switch (key) {
+	case 'a':
+		mover_x = mover_x - 0.1;
+		break;
+	case 'd':
+		mover_x = mover_x + 0.1;
+		break;
+	case 's':
+		mover_z = mover_z + 0.1;
+		break;
+	case 'w':
+		mover_z = mover_z - 0.1;
+		break;
+	case 'r':
+		mover_z = 0;
+		mover_x = 0;
+		phi = 0;
+		theta = 0;
+		alpha = 0, beta = 0;
+		break;
+	case 'n':
 
-      idx = (idx + 1) % figures.size ();
+		idx = (idx + 1) % figures.size();
 
-      break;
-    case 'h':
-      alpha -= 0.1;
-      break;
-    case 'l':
-      alpha += 0.1;
-      break;
-    case 'k':
-      if (beta < M_PI / 2)
-	beta += 0.1;
-      break;
-    case 'j':
-      if (beta > -M_PI / 2)
-	beta -= 0.1;
-      break;
+		break;
+	case 'h':
+		alpha -= 0.1;
+		break;
+	case 'l':
+		alpha += 0.1;
+		break;
+	case 'k':
+		if (beta < M_PI / 2)
+			beta += 0.1;
+		break;
+	case 'j':
+		if (beta > -M_PI / 2)
+			beta -= 0.1;
+		break;
 
-    default:
-      break;
-    }
-  glutPostRedisplay ();
-}
-
-void
-keyboardS (int key_code, int x, int y)
-{
-  switch (key_code)
-    {
-    case GLUT_KEY_LEFT:
-      theta = theta - 5.0;
-
-      break;
-    case GLUT_KEY_RIGHT:
-      theta = theta + 5.0;
-
-      break;
-    case GLUT_KEY_UP:
-      phi = phi + 5.0;
-
-      break;
-    case GLUT_KEY_DOWN:
-      phi = phi - 5.0;
-
-      break;
-
-    default:
-      break;
-    }
-  glutPostRedisplay ();
-}
-
-void
-menu (int op)
-{
-  switch (op)
-    {
-    case 1:
-      glPolygonMode (GL_FRONT_AND_BACK, GL_POINT);
-      break;
-    case 2:
-      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
-      break;
-    case 3:
-      glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
-      break;
-    default:
-      break;
-    }
-  glutPostRedisplay ();
-}
-
-const vector<string>
-explode (const string& s, const char& c)
-{
-  string buff
-    { "" };
-  vector<string> v;
-
-  for (auto n : s)
-    {
-      if (n != c)
-	buff += n;
-      else if (n == c && buff != "")
-	{
-	  v.push_back (buff);
-	  buff = "";
+	default:
+		break;
 	}
-    }
-  if (buff != "")
-    v.push_back (buff);
-
-  return v;
+	glutPostRedisplay();
 }
 
-void
-readXMLFromRootElement (XMLElement * root, Grupo * grupo)
-{
+void keyboardS(int key_code, int x, int y) {
+	switch (key_code) {
+	case GLUT_KEY_LEFT:
+		theta = theta - 5.0;
 
-  if (root == nullptr)
-    return;
+		break;
+	case GLUT_KEY_RIGHT:
+		theta = theta + 5.0;
 
-  auto tmp = root;
-  auto tmp_gr = grupo;
+		break;
+	case GLUT_KEY_UP:
+		phi = phi + 5.0;
 
-  /**
-   * Para cada irmão do elemento inicial: procurar atributos
-   */
-  for (auto element = tmp->FirstChildElement (); element;
-      element = element->NextSiblingElement ())
-    {
+		break;
+	case GLUT_KEY_DOWN:
+		phi = phi - 5.0;
 
-      string name (element->Name ());
+		break;
+
+	default:
+		break;
+	}
+	glutPostRedisplay();
+}
+
+void menu(int op) {
+	switch (op) {
+	case 1:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+		break;
+	case 2:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		break;
+	case 3:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		break;
+	default:
+		break;
+	}
+	glutPostRedisplay();
+}
+
+const vector<string> explode(const string& s, const char& c) {
+	string buff { "" };
+	vector<string> v;
+
+	for (auto n : s) {
+		if (n != c)
+			buff += n;
+		else if (n == c && buff != "") {
+			v.push_back(buff);
+			buff = "";
+		}
+	}
+	if (buff != "")
+		v.push_back(buff);
+
+	return v;
+}
+
+void readXMLFromRootElement(XMLElement * root, Grupo * grupo) {
+
+	if (root == nullptr)
+		return;
+
+	auto tmp = root;
+	auto tmp_gr = grupo;
+
+	/**
+	 * Para cada irmão do elemento inicial: procurar atributos
+	 */
+	for (auto element = tmp->FirstChildElement(); element;
+			element = element->NextSiblingElement()) {
+
+		string name(element->Name());
 
 //      cout << "name :" << name << endl;
 
-      tmp_gr->val = tmp_gr->val + name + "\n";
+		tmp_gr->val = tmp_gr->val + name + "\n";
 
-      if ((name.compare (TRANSLATE) == 0) || (name.compare (SCALE) == 0))
-	{
+		Transformation * tr = 0;
 
-//	  if (element->Attribute (X))
-//	    cout << "X :" << element->Attribute (X) << endl;
-//	  if (element->Attribute (Y))
-//	    cout << "Y :" << element->Attribute (Y) << endl;
-//	  if (element->Attribute (Z))
-//	    cout << "Z :" << element->Attribute (Z) << endl;
-//
-//	  if (name.compare (TRANSLATE) == 0)
-//	    {
-//	      /**
-//	       * Criar Translação
-//	       */
-//	    }
-//	  else
-//	    {
-//	      /**
-//	       * Criar Escala
-//	       */
-//	    }
+		if ((name.compare(TRANSLATE) == 0) || (name.compare(SCALE) == 0)) {
+			double x, y, z;
+			x = y = z = 0;
 
-	}
-      else if (name.compare (ROTATE) == 0)
-	{
+			if (element->Attribute(X)) {
+				//cout << "X :" << element->Attribute (X) << endl;
+				x = atof(element->Attribute(X));
+			}
+
+			if (element->Attribute(Y)) {
+				//cout << "Y :" << element->Attribute (Y) << endl;
+				y = atof(element->Attribute(Y));
+			}
+
+			if (element->Attribute(Z)) {
+				//cout << "Z :" << element->Attribute (Z) << endl;
+				z = atof(element->Attribute(Y));
+			}
+
+			if (name.compare(TRANSLATE) == 0) {
+				/**
+				 * Criar Translação
+				 */
+				Translation * t = new Translation(x, y, z);
+
+				tr = t;
+
+				tmp_gr->transformations.push_back(t);
+
+			} else {
+				/**
+				 * Criar Escala
+				 */
+				Scale * s = new Scale(x, y, z);
+				tr = s;
+
+				tmp_gr->transformations.push_back(tr);
+
+			}
+
+		} else if (name.compare(ROTATE) == 0) {
+			double axis_x, axis_y, axis_z, angle;
+			axis_x = axis_y = axis_z = 0;
+
+			angle = atof(element->Attribute(ANGLE));
 
 //	  cout << "Angle :" << element->Attribute (ANGLE) << endl;
-//	  if (element->Attribute (AXIS_X))
-//	    cout << "X :" << element->Attribute (AXIS_X) << endl;
-//	  if (element->Attribute (AXIS_Y))
-//	    cout << "Y :" << element->Attribute (AXIS_Y) << endl;
-//	  if (element->Attribute (AXIS_Z))
-//	    cout << "Z :" << element->Attribute (AXIS_Z) << endl;
-//
-//	  /**
-//	   * Criar Rotação
-//	   */
+			if (element->Attribute(AXIS_X)) {
+				//cout << "X :" << element->Attribute (AXIS_X) << endl;
+				axis_x = atof(element->Attribute(AXIS_X));
+			}
 
-	}
-      else if (name.compare (MODELS) == 0)
-	{
+			if (element->Attribute(AXIS_Y)) {
+				//cout << "Y :" << element->Attribute (AXIS_Y) << endl;
+				axis_y = atof(element->Attribute(AXIS_Y));
 
-	  /**
-	   //	   * Iterar sobre os ficheiros de modelos
-	   //	   */
-//	  for (auto crawl = element->FirstChildElement (MODEL);
-//	      crawl != nullptr; crawl = crawl->NextSiblingElement (MODEL))
-//	    {
-//
-//	      cout << "MODELO : " << crawl->Attribute (FILE) << endl;
-//
-//	    }
-	}
-      else if (name.compare (GROUP) == 0)
-	{
+			}
 
-	  /**
-	   * Guardar ler ficheiro (forma);
-	   * Adicionar bucket á estrutura
-	   */
+			if (element->Attribute(AXIS_Z)) {
+				//cout << "Z :" << element->Attribute (AXIS_Z) << endl;
+				axis_z = atof(element->Attribute(AXIS_Z));
+
+			}
+
+			/**
+			 * Criar Rotação
+			 */
+			Rotation * r = new Rotation(angle, axis_x, axis_y, axis_z);
+			tr = r;
+
+			tmp_gr->transformations.push_back(tr);
+
+		} else if (name.compare(MODELS) == 0) {
+
+			/**
+			 * Iterar sobre os ficheiros de modelos
+			 */
+			for (auto crawl = element->FirstChildElement(MODEL);
+					crawl != nullptr;
+					crawl = crawl->NextSiblingElement(MODEL)) {
+
+				string modelo(crawl->Attribute(FILE));
+
+				grupo->modelos.push_back(modelo);
+
+				//cout << "MODELO : " << crawl->Attribute(FILE) << endl;
+
+			}
+		} else if (name.compare(GROUP) == 0) {
+
+			/**
+			 * Guardar ler ficheiro (forma);
+			 * Adicionar bucket á estrutura
+			 */
 //	  cout << "GRUPO " << endl;
-	  Grupo * grupo = new Grupo;
-	  tmp_gr->filhos.push_back (grupo);
-	  readXMLFromRootElement (element, grupo);
+			Grupo * grupo = new Grupo;
+			tmp_gr->filhos.push_back(grupo);
+			readXMLFromRootElement(element, grupo);
+
+		}
 
 	}
 
-    }
-
 }
 
-int
-imprimir_t (Grupo *t, int index)
-{
+void imprimir_t(Grupo *t) {
 
-  auto tmp = t;
+	auto tmp = t;
 
-  if (tmp == NULL)
-    return index;
+	if (tmp == NULL)
+		return;
 
-  cout << tmp->val << endl;
+	cout << tmp->val << endl;
 
-  for (int nivel = 0; nivel < tmp->filhos.size (); nivel++)
-    {
-      if (tmp->filhos[nivel] != NULL)
-	{
-	  index = imprimir_t (tmp->filhos[nivel], index);
-	  index--;
+	for (int nivel = 0; nivel < tmp->filhos.size(); nivel++) {
+		if (tmp->filhos[nivel] != NULL) {
+			imprimir_t(tmp->filhos[nivel]);
+
+		}
 	}
-    }
 
-  return index;
+	return;
 }
 
-void
-readXMLDoc (const char * path)
-{
+void readXMLDoc(const char * path) {
 
-  XMLDocument doc;
-  doc.LoadFile (path);
+	XMLDocument doc;
+	doc.LoadFile(path);
 
-  XMLElement* modelNode = doc.FirstChildElement (SCENE);
-  Grupo * parent = new Grupo;
+	XMLElement* modelNode = doc.FirstChildElement(SCENE);
+	Grupo * parent = new Grupo;
 
-  readXMLFromRootElement (modelNode, parent);
+	readXMLFromRootElement(modelNode, parent);
 
-  imprimir_t (parent, 0);
+	imprimir_t(parent);
 }
 
-int
-main (int argc, char **argv)
-{
+int main(int argc, char **argv) {
 
-  /** Com MAKEFILE tem que ser ../resources*/
+	/** Com MAKEFILE tem que ser ../resources*/
 
-  vector<string> modelos;
+	vector<string> modelos;
 
-  readXMLDoc ("resources/scene4.xml");
+	readXMLDoc("resources/scene4.xml");
 
 //  for (auto crawl = modelNode; crawl != nullptr;
 //      crawl = crawl->NextSiblingElement ("model"))
@@ -459,5 +472,5 @@ main (int argc, char **argv)
 //// enter GLUT's main cycle
 //  glutMainLoop ();
 
-  return 1;
+	return 1;
 }
