@@ -1,0 +1,57 @@
+<scene>
+	<group>
+		<models>
+			<model file="sphere.3d" />
+		</models>
+		<group>
+			<translate X=1 />
+			<models>
+				<model file="sphere.3d"/>
+			</models>
+		</group>
+		<group>
+			<translate X=4 />
+			<models>
+				<model file="sphere.3d"/>
+			</models>
+		</group>
+		<group>
+			<translate X=7 />
+			<models>
+				<model file="sphere.3d"/>
+			</models>
+		</group>
+		<group>
+			<translate X=10 />
+			<models>
+				<model file="sphere.3d"/>
+			</models>
+		</group>
+		<group>
+			<translate X=13 />
+			<models>
+				<model file="sphere.3d"/>
+			</models>
+		</group>
+		<group>
+			<translate X=16 />
+			<models>
+				<model file="sphere.3d"/>
+			</models>
+		</group>
+		<group>
+			<translate X=19 />
+			<models>
+				<model file="sphere.3d"/>
+			</models>
+		</group>
+		<group>
+			<translate X=22 />
+			<models>
+				<model file="sphere.3d"/>
+			</models>
+		</group>
+	</group>
+</scene>
+
+
