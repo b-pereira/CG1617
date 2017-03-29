@@ -43,7 +43,15 @@ using namespace tinyxml2;
 #define Z         "Z"
 
 GLfloat mover_x = 0, mover_z = 0, theta = 0, phi = 0;
+float angle = 0.0;
+// actual vector representing the camera's direction
+float lx = 0.0f, lz = -1.0f;
+// XZ position of the camera
+float x = 0.0f, z = 5.0f;
 
+float camX = 00, camY = 30, camZ = 40;
+
+float xx = 0, zz = 0;
 //vector<vector<Triangle>> figures;
 
 Grupo * g;
@@ -144,9 +152,9 @@ void renderScene(void) {
 	// set the camera
 	glLoadIdentity();
 
-	gluLookAt(cos(beta) * sin(alpha) * raio, sin(beta) * raio,
-			cos(beta) * cos(alpha) * raio, //  coordenadas esfericas inicialmente (0,0,1)
-			0, 0, 0, 0, 1, 0);
+	gluLookAt(camX +  x, camY, camZ + z, 
+		x + lx, 1.0f, z + lz,
+			  0.0f,1.0f,0.0f);
 
 // put the geometric transformations here
 	glTranslatef(mover_x, 0.0, mover_z);
@@ -162,73 +170,107 @@ void renderScene(void) {
 }
 
 // write function to process keyboard events
-void keyboardR(unsigned char key, int x, int y) {
+void processNormalKeys(unsigned char key, int xx, int yy) {
 	switch (key) {
-	case 'a':
-		mover_x = mover_x - 0.1;
-		break;
-	case 'd':
-		mover_x = mover_x + 0.1;
-		break;
-	case 's':
-		mover_z = mover_z + 0.1;
-		break;
-	case 'w':
-		mover_z = mover_z - 0.1;
-		break;
-	case 'r':
-		mover_z = 0;
-		mover_x = 0;
-		phi = 0;
-		theta = 0;
-		alpha = 0, beta = 0;
-		break;
+	case 27: exit(0); break;
 
-		break;
-	case 'h':
-		alpha -= 0.1;
-		break;
-	case 'l':
-		alpha += 0.1;
-		break;
-	case 'k':
-		if (beta < M_PI / 2)
-			beta += 0.1;
-		break;
-	case 'j':
-		if (beta > -M_PI / 2)
-			beta -= 0.1;
-		break;
-
-	default:
-		break;
 	}
-	glutPostRedisplay();
+
+	
 }
 
-void keyboardS(int key_code, int x, int y) {
-	switch (key_code) {
+void processSpecialKeys(int key, int x1, int y1)
+{
+	float fraction = 2.1f;
+	switch (key) {
 	case GLUT_KEY_LEFT:
-		theta = theta - 5.0;
-
+		angle -= 2.01f;
+		lx = sin(angle);
+		lz = -cos(angle);
 		break;
 	case GLUT_KEY_RIGHT:
-		theta = theta + 5.0;
-
+		angle += 2.01f;
+		lx = sin(angle);
+		lz = -cos(angle);
 		break;
 	case GLUT_KEY_UP:
-		phi = phi + 5.0;
-
+		x += lx * fraction;
+		z += lz * fraction;
 		break;
 	case GLUT_KEY_DOWN:
-		phi = phi - 5.0;
-
+		x -= lx * fraction;
+		z -= lz * fraction;
 		break;
 
-	default:
-		break;
 	}
-	glutPostRedisplay();
+}
+
+
+
+void processMouseButtons(int button, int state, int xx, int yy) {
+	
+	if (state == GLUT_DOWN)  {
+		startX = xx;
+		startY = yy;
+		if (button == GLUT_LEFT_BUTTON)
+			tracking = 1;
+		else if (button == GLUT_RIGHT_BUTTON)
+			tracking = 2;
+		else
+			tracking = 0;
+	}
+	else if (state == GLUT_UP) {
+		if (tracking == 1) {
+			alpha += (xx - startX);
+			beta += (yy - startY);
+		}
+		else if (tracking == 2) {
+			
+			r -= yy - startY;
+			if (r < 3)
+				r = 3.0;
+		}
+		tracking = 0;
+	}
+}
+
+
+void processMouseMotion(int xx, int yy) {
+
+	int deltaX, deltaY;
+	int alphaAux, betaAux;
+	int rAux;
+
+	if (!tracking)
+		return;
+
+	deltaX = xx - startX;
+	deltaY = yy - startY;
+
+	if (tracking == 1) {
+
+
+		alphaAux = alpha + deltaX;
+		betaAux = beta + deltaY;
+
+		if (betaAux > 85.0)
+			betaAux = 85.0;
+		else if (betaAux < -85.0)
+			betaAux = -85.0;
+
+		rAux = r;
+	}
+	else if (tracking == 2) {
+
+		alphaAux = alpha;
+		betaAux = beta;
+		rAux = r - deltaY;
+		if (rAux < 3)
+			rAux = 3;
+	}
+	camX = rAux * sin(alphaAux * 3.14 / 180.0) * cos(betaAux * 3.14 / 180.0);
+	camZ = rAux * cos(alphaAux * 3.14 / 180.0) * cos(betaAux * 3.14 / 180.0);
+	camY = rAux * 							     sin(betaAux * 3.14 / 180.0);
 }
 
 void menu(int op) {
@@ -459,9 +501,11 @@ int main(int argc, char **argv) {
 	glutDisplayFunc(renderScene);
 	glutReshapeFunc(changeSize);
 
-// put here the registration of the keyboard callbacks
-	glutKeyboardFunc(keyboardR);
-	glutSpecialFunc(keyboardS);
+// put here the registration of the keyboard and mouse callbacks
+	glutKeyboardFunc(processNormalKeys);
+	glutSpecialFunc(processSpecialKeys);
+	glutMouseFunc(processMouseButtons);
+	glutMotionFunc(processMouseMotion);
 
 // menu
 	glutCreateMenu(menu);
