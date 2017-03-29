@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include "Triangle.h"
 #include "Transformation.h"
 #include "Rotation.h"
 
@@ -18,7 +19,9 @@ typedef struct gr
 
   string val;
 
-  vector<string> modelos;
+  vector<vector<Triangle>> modelos;
+
+  //vector<string> modelos;
 
   vector<Transformation*> transformations;
 
