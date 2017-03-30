@@ -29,6 +29,6 @@ typedef struct gr
 
 } Grupo;
 
-void applyTransformation(Grupo *, Transformation *);
+//void applyTransformation(Grupo *, Transformation *);
 
 #endif
