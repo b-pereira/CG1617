@@ -42,16 +42,8 @@ using namespace tinyxml2;
 #define Y         "Y"
 #define Z         "Z"
 
-float step = 0.0;
-
-float height = 2.0f;
-float x = 0.0f;
-float z = 0.0f;
-
-float camX = 00, camY = 30, camZ = 40;
-int startX, startY, tracking = 0;
-
-int alpha = 0, beta = 45, r = 50;
+double mover_x = 0, mover_z = 0, theta = 0, phi = 0;
+double alpha = 0, beta = 0, raio = 10;
 
 Grupo * g;
 
@@ -158,87 +150,86 @@ void renderScene(void)
     // set the camera
     glLoadIdentity();
 
-    gluLookAt(camX, camY, camZ, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+    gluLookAt(cos(beta) * sin(alpha) * raio, sin(beta) * raio,
+    			cos(beta) * cos(alpha) * raio, //  coordenadas esfericas inicialmente (0,0,1)
+    			0, 0, 0, 0, 1, 0);
 
     traverseTree(g);
 
     // End of frame
     glutSwapBuffers();
 }
-void processKeys(unsigned char key, int xx, int yy)
-{}
 
-void processMouseButtons(int button, int state, int xx, int yy)
-{
 
-    if (state == GLUT_DOWN)
-    {
-        startX = xx;
-        startY = yy;
-        if (button == GLUT_LEFT_BUTTON)
-            tracking = 1;
-        else if (button == GLUT_RIGHT_BUTTON)
-            tracking = 2;
-        else
-            tracking = 0;
-    }
-    else if (state == GLUT_UP)
-    {
-        if (tracking == 1)
-        {
-            alpha += (xx - startX);
-            beta += (yy - startY);
-        }
-        else if (tracking == 2)
-        {
+// write function to process keyboard events
+void keyboardR(unsigned char key, int x, int y) {
+	switch (key) {
+	case 'a':
+		mover_x = mover_x - 0.1;
+		break;
+	case 'd':
+		mover_x = mover_x + 0.1;
+		break;
+	case 's':
+		mover_z = mover_z + 0.1;
+		break;
+	case 'w':
+		mover_z = mover_z - 0.1;
+		break;
+	case 'r':
+		mover_z = 0;
+		mover_x = 0;
+		phi = 0;
+		theta = 0;
+		alpha = 0, beta = 0;
+		break;
 
-            r -= yy - startY;
-            if (r < 3)
-                r = 3.0;
-        }
-        tracking = 0;
-    }
+	case 'h':
+		alpha -= 0.1;
+		break;
+	case 'l':
+		alpha += 0.1;
+		break;
+	case 'k':
+		if (beta < M_PI / 2)
+			beta += 0.1;
+		break;
+	case 'j':
+		if (beta > -M_PI / 2)
+			beta -= 0.1;
+		break;
+
+	default:
+		break;
+	}
+	glutPostRedisplay();
 }
 
-void processMouseMotion(int xx, int yy)
-{
+void keyboardS(int key_code, int x, int y) {
+	switch (key_code) {
+	case GLUT_KEY_LEFT:
+		theta = theta - 5.0;
 
-    int deltaX, deltaY;
-    int alphaAux, betaAux;
-    int rAux;
+		break;
+	case GLUT_KEY_RIGHT:
+		theta = theta + 5.0;
 
-    if (!tracking)
-        return;
+		break;
+	case GLUT_KEY_UP:
+		phi = phi + 5.0;
 
-    deltaX = xx - startX;
-    deltaY = yy - startY;
+		break;
+	case GLUT_KEY_DOWN:
+		phi = phi - 5.0;
 
-    if (tracking == 1)
-    {
+		break;
 
-        alphaAux = alpha + deltaX;
-        betaAux = beta + deltaY;
-
-        if (betaAux > 85.0)
-            betaAux = 85.0;
-        else if (betaAux < -85.0)
-            betaAux = -85.0;
-
-        rAux = r;
-    }
-    else if (tracking == 2)
-    {
-
-        alphaAux = alpha;
-        betaAux = beta;
-        rAux = r - deltaY;
-        if (rAux < 3)
-            rAux = 3;
-    }
-    camX = rAux * sin(alphaAux * 3.14 / 180.0) * cos(betaAux * 3.14 / 180.0);
-    camZ = rAux * cos(alphaAux * 3.14 / 180.0) * cos(betaAux * 3.14 / 180.0);
-    camY = rAux * sin(betaAux * 3.14 / 180.0);
+	default:
+		break;
+	}
+	glutPostRedisplay();
 }
+
 
 void menu(int op)
 {
@@ -450,39 +441,36 @@ int main(int argc, char **argv)
 
     g = readXMLDoc("resources/planetas.xml");
 
-    // inicializa��o
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-    glutInitWindowPosition(100, 100);
-    glutInitWindowSize(320, 320);
-    glutCreateWindow("CG@DI-UM");
+    // init GLUT and the window
+      glutInit (&argc, argv);
+      glutInitDisplayMode (GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+      glutInitWindowPosition (100, 100);
+      glutInitWindowSize (800, 800);
+      glutCreateWindow ("CG@DI-UM");
 
-    // registo de fun��es
-    glutDisplayFunc(renderScene);
-    glutIdleFunc(renderScene);
-    glutReshapeFunc(changeSize);
+    // Required callback registry
+      glutDisplayFunc (renderScene);
+      glutReshapeFunc (changeSize);
 
-    // p�r aqui registo da fun��es do teclado e rato
+    // put here the registration of the keyboard callbacks
+      glutKeyboardFunc (keyboardR);
+      glutSpecialFunc (keyboardS);
 
-    glutKeyboardFunc(processKeys);
-    glutMouseFunc(processMouseButtons);
-    glutMotionFunc(processMouseMotion);
+    // menu
+      glutCreateMenu (menu);
+      glutAddMenuEntry ("GL POINT", 1);
+      glutAddMenuEntry ("GL LINE", 2);
+      glutAddMenuEntry ("GL FILL", 3);
 
-
-    //// menu
-    //glutCreateMenu(menu);
-    //glutAddMenuEntry("GL POINT", 1);
-    //glutAddMenuEntry("GL LINE", 2);
-    //glutAddMenuEntry("GL FILL", 3);
-
-    //glutAttachMenu(GLUT_KEY_F2);
+      glutAttachMenu (GLUT_RIGHT_BUTTON);
 
     //  OpenGL settings
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
+      glEnable (GL_DEPTH_TEST);
+      glEnable (GL_CULL_FACE);
 
     // enter GLUT's main cycle
-    glutMainLoop();
+      glutMainLoop ();
+
 
     return 1;
 }
