@@ -42,21 +42,18 @@ using namespace tinyxml2;
 #define Y         "Y"
 #define Z         "Z"
 
-GLfloat mover_x = 0, mover_z = 0, theta = 0, phi = 0;
-float angle = 0.0;
-// actual vector representing the camera's direction
-float lx = 0.0f, lz = -1.0f;
-// XZ position of the camera
-float x = 0.0f, z = 5.0f;
+float step = 0.0;
+
+float height = 2.0f;
+float x = 0.0f;
+float z = 0.0f;
 
 float camX = 00, camY = 30, camZ = 40;
+int startX, startY, tracking = 0;
 
-float xx = 0, zz = 0;
-//vector<vector<Triangle>> figures;
+int alpha = 0, beta = 45, r = 50;
 
 Grupo * g;
-
-float alpha = 0, beta = 0, raio = 10;
 
 void changeSize(int w, int h) {
 
@@ -126,7 +123,8 @@ void imprimir_t(Grupo *t) {
 
 	for (auto var : tmp->transformations) {
 
-		applyTransformation(tmp, var);
+		//applyTransformation(tmp, var);
+		var->applyTransformation();
 
 	}
 
@@ -152,64 +150,20 @@ void renderScene(void) {
 	// set the camera
 	glLoadIdentity();
 
-	gluLookAt(camX +  x, camY, camZ + z, 
-		x + lx, 1.0f, z + lz,
-			  0.0f,1.0f,0.0f);
-
-// put the geometric transformations here
-	glTranslatef(mover_x, 0.0, mover_z);
-
-	glRotatef(theta, 0.0f, 1.0f, 0.0f);
-
-	glRotatef(phi, 1.0f, 0.0f, 0.0f);
+	gluLookAt(camX, camY, camZ, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
 	imprimir_t(g);
 
 	// End of frame
 	glutSwapBuffers();
 }
+void processKeys(unsigned char key, int xx, int yy) {
 
-// write function to process keyboard events
-void processNormalKeys(unsigned char key, int xx, int yy) {
-	switch (key) {
-	case 27: exit(0); break;
-
-	}
-
-	
 }
-
-void processSpecialKeys(int key, int x1, int y1)
-{
-	float fraction = 2.1f;
-	switch (key) {
-	case GLUT_KEY_LEFT:
-		angle -= 2.01f;
-		lx = sin(angle);
-		lz = -cos(angle);
-		break;
-	case GLUT_KEY_RIGHT:
-		angle += 2.01f;
-		lx = sin(angle);
-		lz = -cos(angle);
-		break;
-	case GLUT_KEY_UP:
-		x += lx * fraction;
-		z += lz * fraction;
-		break;
-	case GLUT_KEY_DOWN:
-		x -= lx * fraction;
-		z -= lz * fraction;
-		break;
-
-	}
-}
-
-
 
 void processMouseButtons(int button, int state, int xx, int yy) {
-	
-	if (state == GLUT_DOWN)  {
+
+	if (state == GLUT_DOWN) {
 		startX = xx;
 		startY = yy;
 		if (button == GLUT_LEFT_BUTTON)
@@ -218,14 +172,12 @@ void processMouseButtons(int button, int state, int xx, int yy) {
 			tracking = 2;
 		else
 			tracking = 0;
-	}
-	else if (state == GLUT_UP) {
+	} else if (state == GLUT_UP) {
 		if (tracking == 1) {
 			alpha += (xx - startX);
 			beta += (yy - startY);
-		}
-		else if (tracking == 2) {
-			
+		} else if (tracking == 2) {
+
 			r -= yy - startY;
 			if (r < 3)
 				r = 3.0;
@@ -233,7 +185,6 @@ void processMouseButtons(int button, int state, int xx, int yy) {
 		tracking = 0;
 	}
 }
-
 
 void processMouseMotion(int xx, int yy) {
 
@@ -249,7 +200,6 @@ void processMouseMotion(int xx, int yy) {
 
 	if (tracking == 1) {
 
-
 		alphaAux = alpha + deltaX;
 		betaAux = beta + deltaY;
 
@@ -259,8 +209,7 @@ void processMouseMotion(int xx, int yy) {
 			betaAux = -85.0;
 
 		rAux = r;
-	}
-	else if (tracking == 2) {
+	} else if (tracking == 2) {
 
 		alphaAux = alpha;
 		betaAux = beta;
@@ -270,7 +219,7 @@ void processMouseMotion(int xx, int yy) {
 	}
 	camX = rAux * sin(alphaAux * 3.14 / 180.0) * cos(betaAux * 3.14 / 180.0);
 	camZ = rAux * cos(alphaAux * 3.14 / 180.0) * cos(betaAux * 3.14 / 180.0);
-	camY = rAux * 							     sin(betaAux * 3.14 / 180.0);
+	camY = rAux * sin(betaAux * 3.14 / 180.0);
 }
 
 void menu(int op) {
@@ -359,7 +308,7 @@ void readXMLFromRootElement(XMLElement * root, Grupo * grupo) {
 
 //      cout << "name :" << name << endl;
 
-		tmp_gr->val = tmp_gr->val + name + "\n";
+		//tmp_gr->val = tmp_gr->val + name + "\n";
 
 		Transformation * tr = 0;
 
@@ -388,7 +337,7 @@ void readXMLFromRootElement(XMLElement * root, Grupo * grupo) {
 				 */
 				Translation * t = new Translation(x, y, z);
 
-				tr = t;
+
 
 				tmp_gr->transformations.push_back(t);
 
@@ -397,9 +346,9 @@ void readXMLFromRootElement(XMLElement * root, Grupo * grupo) {
 				 * Criar Escala
 				 */
 				Scale * s = new Scale(x, y, z);
-				tr = s;
 
-				tmp_gr->transformations.push_back(tr);
+
+				tmp_gr->transformations.push_back(s);
 
 			}
 
@@ -431,9 +380,9 @@ void readXMLFromRootElement(XMLElement * root, Grupo * grupo) {
 			 * Criar Rotação
 			 */
 			Rotation * r = new Rotation(angle, axis_x, axis_y, axis_z);
-			tr = r;
 
-			tmp_gr->transformations.push_back(tr);
+
+			tmp_gr->transformations.push_back(r);
 
 		} else if (name.compare(MODELS) == 0) {
 
@@ -490,30 +439,32 @@ int main(int argc, char **argv) {
 
 	g = readXMLDoc("resources/planetas.xml");
 
-// init GLUT and the window
+	// inicializa��o
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 100);
-	glutInitWindowSize(800, 800);
+	glutInitWindowSize(320, 320);
 	glutCreateWindow("CG@DI-UM");
 
-// Required callback registry
+	// registo de fun��es
 	glutDisplayFunc(renderScene);
+	glutIdleFunc(renderScene);
 	glutReshapeFunc(changeSize);
 
-// put here the registration of the keyboard and mouse callbacks
-	glutKeyboardFunc(processNormalKeys);
-	glutSpecialFunc(processSpecialKeys);
+	// p�r aqui registo da fun��es do teclado e rato
+
+	glutKeyboardFunc(processKeys);
 	glutMouseFunc(processMouseButtons);
 	glutMotionFunc(processMouseMotion);
 
-// menu
-	glutCreateMenu(menu);
-	glutAddMenuEntry("GL POINT", 1);
-	glutAddMenuEntry("GL LINE", 2);
-	glutAddMenuEntry("GL FILL", 3);
 
-	glutAttachMenu(GLUT_RIGHT_BUTTON);
+//// menu
+	//glutCreateMenu(menu);
+	//glutAddMenuEntry("GL POINT", 1);
+	//glutAddMenuEntry("GL LINE", 2);
+	//glutAddMenuEntry("GL FILL", 3);
+
+	//glutAttachMenu(GLUT_KEY_F2);
 
 //  OpenGL settings
 	glEnable(GL_DEPTH_TEST);
