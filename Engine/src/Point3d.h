@@ -22,6 +22,8 @@ public:
 	void setYCoord(double coord);
 	double getZCoord() const;
 	void setZCoord(double coord);
+	Point3d getVectorD(Point3d pt);
+	Point3d getLookAt(Point3d pt);
 	~Point3d();
 
 private:

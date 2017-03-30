@@ -39,6 +39,19 @@ void Point3d::setZCoord(double coord) {
 	z_coord = coord;
 }
 
+
+
+//Point3d Point3d::getLookAt(Point3d pt)
+
+//	x_coord-=pt.getXCoord();
+//	y_coord-=pt.getYCoord();
+//	z_coord-=pt.getZCoord();
+
+//	return this;
+//}
+
+
+
 Point3d::~Point3d() {
 	// TODO Auto-generated destructor stub
 }
