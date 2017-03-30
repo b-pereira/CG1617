@@ -6,6 +6,8 @@
  */
 
 #include "Rotation.h"
+#include "GL/glut.h"
+#include <iostream>
 
 Rotation::Rotation(double ang, double x, double y, double z) :
 		point(x, y, z), angle(ang) {
@@ -16,14 +18,24 @@ Rotation::Rotation() :
 
 }
 
-Point3d Rotation::getPoint3d() const {
-
-	return point;
-
-}
 double Rotation::getAngle() const {
-
 	return angle;
+}
+
+const Point3d& Rotation::getPoint() const {
+	return point;
+}
+
+void Rotation::applyTransformation() const {
+
+	std::cout << "rotation"
+			  << " angle =" << angle
+			  << " axisX =" << point.getXCoord()
+			  << " axisY =" << point.getYCoord()
+			  << " axisZ =" << point.getZCoord()
+			  << std::endl;
+	glRotatef(angle, point.getXCoord(),
+			point.getYCoord(), point.getZCoord());
 }
 
 Rotation::~Rotation() {

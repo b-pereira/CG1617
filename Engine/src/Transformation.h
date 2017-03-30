@@ -12,6 +12,7 @@
 
 class Transformation {
 public:
+	virtual void applyTransformation() const = 0;
 	virtual ~Transformation();
 };
 

@@ -17,10 +17,16 @@ public:
 
 	Rotation();
 	Rotation(double angle, double x, double y, double z);
-	Point3d getPoint3d() const;
-	double getAngle() const;
 
+
+
+	void applyTransformation() const;
 	~Rotation();
+
+	double getAngle() const;
+	const Point3d& getPoint() const;
+
+
 
 private:
 	double angle;

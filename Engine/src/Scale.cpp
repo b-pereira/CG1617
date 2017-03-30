@@ -6,6 +6,8 @@
  */
 
 #include "Scale.h"
+#include "GL/glut.h"
+#include <iostream>
 
 Scale::Scale() :
 		point(0, 0, 0) {
@@ -17,10 +19,18 @@ Scale::Scale(double x, double y, double z) :
 
 }
 
-
-Point3d Scale::getPoint3d() const {
-
+const Point3d&Scale::getPoint() const {
 	return point;
+}
+void Scale::applyTransformation() const {
+
+	std::cout << "scale"
+			  << " X =" << point.getXCoord()
+			  << " Y =" << point.getYCoord()
+			  << " Z =" << point.getZCoord()
+			  << std::endl;
+			glScalef(point.getXCoord(), point.getYCoord(),
+					point.getZCoord());
 
 }
 

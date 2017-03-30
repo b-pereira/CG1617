@@ -17,7 +17,8 @@ class Scale: public Transformation {
 public:
 	Scale();
 	Scale(double x, double y, double z);
-	Point3d getPoint3d() const;
+	const Point3d& getPoint() const;
+	void applyTransformation() const;
 	~Scale();
 
 private:
