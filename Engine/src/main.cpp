@@ -1,543 +1,229 @@
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
+
 #include <GL/glut.h>
-#endif
+
+
 
 #include <iostream>
-#include <fstream>
-#include <string>
-#include <math.h>
-#include <vector>
-#include <map>
-#include "Triangle.h"
-#include "Point3d.h"
-#include "Group.h"
+#include <cmath>
 
-#include "Rotation.h"
-
-#include "Translation.h"
-
-#include "Scale.h"
 
 #include "Group.h"
 
-#include "tinyxml2.h"
 using namespace std;
-using namespace tinyxml2;
 
-#define TRANSLATE "translate"
-#define SCALE     "scale"
-#define ROTATE    "rotate"
-#define MODELS    "models"
-#define MODEL     "model"
-#define GROUP     "group"
-#define SCENE     "scene"
-#define FILE      "file"
-#define ANGLE     "angle"
-#define AXIS_X    "axisX"
-#define AXIS_Y    "axisY"
-#define AXIS_Z    "axisZ"
-#define X         "X"
-#define Y         "Y"
-#define Z         "Z"
 
-//double mover_x = 0, mover_z = 0, theta = 0, phi = 0;
 double alpha = 0, beta = 0, raio = 1;
 
 float k = 0.5;
 
-Point3d p(0.0f,0.0f,5.0f);
-Point3d l(0.0f,0.0f,0.0f);
-Point3d d(0.0f,0.0f,0.0f);
-Point3d r(0.0f,0.0f,0.0f);
-Point3d up(0.0f,1.0f,0.0f);
-
-Grupo * g;
+Point3d p(0.0f, 0.0f, 50.0f);
+Point3d l(0.0f, 0.0f, -10.0f);
+Point3d d(0.0f, 0.0f, 0.0f);
+Point3d r(0.0f, 0.0f, 0.0f);
+Point3d up(0.0f, 1.0f, 0.0f);
 
 
 
+Modelos * modelos;
 
+void changeSize(int w, int h) {
 
+	// Prevent a divide by zero, when window is too short
+	// (you cant make a window with zero width).
+	if (h == 0)
+		h = 1;
 
-void changeSize(int w, int h)
-{
+	// compute window's aspect ratio
+	float ratio = w * 1.0 / h;
 
-    // Prevent a divide by zero, when window is too short
-    // (you cant make a window with zero width).
-    if (h == 0)
-        h = 1;
+	// Set the projection matrix as current
+	glMatrixMode(GL_PROJECTION);
+	// Load Identity Matrix
+	glLoadIdentity();
 
-    // compute window's aspect ratio
-    float ratio = w * 1.0 / h;
+	// Set the viewport to be the entire window
+	glViewport(0, 0, w, h);
 
-    // Set the projection matrix as current
-    glMatrixMode(GL_PROJECTION);
-    // Load Identity Matrix
-    glLoadIdentity();
+	// Set perspective
+	gluPerspective(45.0f, ratio, 1.0f, 1000.0f);
 
-    // Set the viewport to be the entire window
-    glViewport(0, 0, w, h);
-
-    // Set perspective
-    gluPerspective(45.0f, ratio, 1.0f, 1000.0f);
-
-    // return to the model view matrix mode
-    glMatrixMode(GL_MODELVIEW);
+	// return to the model view matrix mode
+	glMatrixMode(GL_MODELVIEW);
 }
 
-void drawElement(Grupo * g)
-{
 
-    // put drawing instructions here
-    glBegin(GL_TRIANGLES);
+void renderScene(void) {
 
-    for (int i = 0; i < g->modelos.size(); i++)
-    {
+	// clear buffers
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        for (Triangle t : g->modelos.at(i))
-        {
+	// set the camera
+	glLoadIdentity();
 
-            Point3d a = t.getA();
-            Point3d b = t.getB();
-            Point3d c = t.getC();
+	//l = l.addTo(r.multiplyBy(k));
 
-            glVertex3f(a.getXCoord(), a.getYCoord(), a.getZCoord());
+	gluLookAt(    // Ponto da camara
+			p.getXCoord(), p.getYCoord(), p.getZCoord(),
+			// Ponto onde está olhar
+			l.getXCoord(), l.getYCoord(), l.getZCoord(),
+			//up
+			up.getXCoord(), up.getYCoord(), up.getZCoord());
 
-            glVertex3f(b.getXCoord(), b.getYCoord(), b.getZCoord());
+	traverseTree(modelos, modelos->g);
 
-            glVertex3f(c.getXCoord(), c.getYCoord(), c.getZCoord());
-
-            glColor3f(1, 1, 0);
-
-        }
-    }
-
-    glEnd();
-
+	// End of frame
+	glutSwapBuffers();
 }
-
-void traverseTree(Grupo *t)
-{
-
-    auto tmp = t;
-
-    if (tmp == nullptr)
-        return;
-
-    glPushMatrix();
-    cout << "PUSH" << endl;
-
-
-
-    for (auto var : tmp->transformations)
-    {
-
-
-        var->applyTransformation();
-
-    }
-
-    drawElement(tmp);
-
-    for (int nivel = 0; nivel < tmp->filhos.size(); nivel++)
-    {
-        if (tmp->filhos[nivel] != nullptr)
-        {
-            traverseTree(tmp->filhos[nivel]);
-            glPopMatrix();
-            cout << "POP" << endl;
-
-        }
-    }
-
-    return;
-}
-
-void renderScene(void)
-{
-
-    // clear buffers
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // set the camera
-    glLoadIdentity();
-
-
-
-
-
-
-    //l = l.addTo(r.multiplyBy(k));
-
-    gluLookAt(// Ponto da camara
-        p.getXCoord(),
-        p.getYCoord() ,
-        p.getZCoord(),
-        // Ponto onde está olhar
-        l.getXCoord(),
-        l.getYCoord() ,
-        l.getZCoord(),
-        //up
-        up.getXCoord(),
-        up.getYCoord() ,
-        up.getZCoord());
-
-    traverseTree(g);
-
-    // End of frame
-    glutSwapBuffers();
-}
-
 
 // write function to process keyboard events
-void keyboardR(unsigned char key, int x, int y)
-{
-    switch (key)
-    {
-    case 'w':
+void keyboardR(unsigned char key, int x, int y) {
+	switch (key) {
+	case 'w':
 
-    	d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
-        p = p.addTo(d.multiplyBy(k));
+		d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
+		p = p.addTo(d.multiplyBy(k));
 
-        l = l.addTo(d.multiplyBy(k));
+		l = l.addTo(d.multiplyBy(k));
 
-        break;
-    case 's':
+		break;
+	case 's':
 
-    	d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
-        p = p.addTo(d.multiplyBy(-k));
-        l = l.addTo(d.multiplyBy(-k));
+		d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
+		p = p.addTo(d.multiplyBy(-k));
+		l = l.addTo(d.multiplyBy(-k));
 
-        break;
-    case 'a':
-    	d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
-        r = r.crossProduct(d, up);
+		break;
+	case 'a':
+		d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
+		r = r.crossProduct(d, up);
 
-        p = p.addTo(r.multiplyBy(k));
+		p = p.addTo(r.multiplyBy(k));
 
-        l = l.addTo(r.multiplyBy(k));
+		l = l.addTo(r.multiplyBy(k));
+
+		break;
+	case 'd':
+		d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
+		r = r.crossProduct(d, up);
+		p = p.addTo(r.multiplyBy(-k));
+		l = l.addTo(r.multiplyBy(-k));
+
+		break;
+	case 'r':
+		p.setCoord(0.0f, 0.0f, 50.0f);
+		l.setCoord(0.0f, 0.0f, -10.0f);
+
+		alpha = 0, beta = 0;
+		k = 0.5;
+		break;
+	case 't':
+		alpha = 0, beta = 0;
+		d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
 
 
-        break;
-    case 'd':
-    	d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
-        r = r.crossProduct(d, up);
-        p = p.addTo(r.multiplyBy(-k));
-        l = l.addTo(r.multiplyBy(-k));
+			k = 0.5;
+			break;
+	case 'q':
+		k += 0.05;
+		break;
+	case 'e':
+		k -= 0.05;
+		break;
 
-
-        break;
-    case 'r':
-        p.setCoord(0,0,0);
-
-        alpha = 0, beta = 0;
-        k = 0.5;
-        break;
-    case 'q':
-        k+=0.05;
-        break;
-    case 'e':
-        k-=0.05;
-        break;
-
-    default:
-        break;
-    }
-    glutPostRedisplay();
+	default:
+		break;
+	}
+	glutPostRedisplay();
 }
 
-void keyboardS(int key_code, int x, int y)
-{
-    switch (key_code)
-    {
-    case GLUT_KEY_LEFT:
+void keyboardS(int key_code, int x, int y) {
+	switch (key_code) {
+	case GLUT_KEY_LEFT:
 
-        alpha = alpha + 5.0;
+		alpha = alpha + 5.0;
 
+		break;
+	case GLUT_KEY_RIGHT:
+		alpha = alpha - 5.0;
 
+		break;
+	case GLUT_KEY_UP:
+		if (beta > -M_PI / 2) {
+			beta -= 5.0;
 
-        break;
-    case GLUT_KEY_RIGHT:
-        alpha = alpha - 5.0;
+		}
 
+		break;
+	case GLUT_KEY_DOWN:
 
+		if (beta < M_PI / 2) {
+			beta += 5.0;
 
+		}
 
-        break;
-    case GLUT_KEY_UP:
-        if (beta > -M_PI / 2)
-        {
-            beta -= 5.0;
+		break;
 
+	default:
+		break;
+	}
 
+	glutPostRedisplay();
+}
 
-        }
-
-
-        break;
-    case GLUT_KEY_DOWN:
-
-        if (beta < M_PI / 2)
-        {
-            beta += 5.0;
-
-
-
-        }
-
-
-        break;
-
-    default:
-        break;
-    }
-
-
-    glutPostRedisplay();
+void menu(int op) {
+	switch (op) {
+	case 1:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+		break;
+	case 2:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		break;
+	case 3:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		break;
+	default:
+		break;
+	}
+	glutPostRedisplay();
 }
 
 
-void menu(int op)
-{
-    switch (op)
-    {
-    case 1:
-        glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-        break;
-    case 2:
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        break;
-    case 3:
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        break;
-    default:
-        break;
-    }
-    glutPostRedisplay();
-}
 
-const vector<string> explode(const string& s, const char& c)
-{
-    string buff { "" };
-    vector<string> v;
+int main(int argc, char **argv) {
 
-    for (auto n : s)
-    {
-        if (n != c)
-            buff += n;
-        else if (n == c && buff != "")
-        {
-            v.push_back(buff);
-            buff = "";
-        }
-    }
-    if (buff != "")
-        v.push_back(buff);
+	/** Com MAKEFILE tem que ser ../resources*/
 
-    return v;
-}
+	modelos = readXMLDoc("resources/planetas.xml");
 
-void lerFicheiro(Grupo *g, string file)
-{
+	// init GLUT and the window
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+	glutInitWindowPosition(100, 100);
+	glutInitWindowSize(800, 800);
+	glutCreateWindow("CG@DI-UM");
 
-    string line;
+	// Required callback registry
+	glutDisplayFunc(renderScene);
+	glutReshapeFunc(changeSize);
 
-    vector<Triangle> lst;
-    ifstream myfile("resources/" + file);
-    if (myfile.is_open())
-    {
-        while (getline(myfile, line))
-        {
-            vector<string> v { explode(line, ';') };
-            vector<string> p1 { explode(v[0], ',') };
-            vector<string> p2 { explode(v[1], ',') };
-            vector<string> p3 { explode(v[2], ',') };
+	// put here the registration of the keyboard callbacks
+	glutKeyboardFunc(keyboardR);
+	glutSpecialFunc(keyboardS);
 
-            Triangle t(atof(p1[0].c_str()), atof(p1[1].c_str()),
-                       atof(p1[2].c_str()), atof(p2[0].c_str()),
-                       atof(p2[1].c_str()), atof(p2[2].c_str()),
-                       atof(p3[0].c_str()), atof(p3[1].c_str()),
-                       atof(p3[2].c_str()));
+	// menu
+	glutCreateMenu(menu);
+	glutAddMenuEntry("GL POINT", 1);
+	glutAddMenuEntry("GL LINE", 2);
+	glutAddMenuEntry("GL FILL", 3);
 
-            lst.push_back(t);
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
-        }
-        myfile.close();
+	//  OpenGL settings
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 
-        g->modelos.push_back(lst);
+	// enter GLUT's main cycle
+	glutMainLoop();
 
-    }
-
-    else
-        cout << "Unable to open file";
-
-}
-
-void readXMLFromRootElement(XMLElement * root, Grupo * grupo)
-{
-
-    if (root == nullptr)
-        return;
-
-    auto tmp = root;
-    auto tmp_gr = grupo;
-
-    /**
-     * Para cada irmão do elemento inicial: procurar atributos
-     */
-    for (auto element = tmp->FirstChildElement();
-            element;
-            element = element->NextSiblingElement())
-    {
-
-        string name(element->Name());
-
-        Transformation * tr = 0;
-
-        if ((name.compare(TRANSLATE) == 0) || (name.compare(SCALE) == 0))
-        {
-            double x, y, z;
-
-
-            x = (element->Attribute(X))? atof(element->Attribute(X)): 0;
-            y = (element->Attribute(Y))? atof(element->Attribute(Y)): 0;
-            z = (element->Attribute(Z))? atof(element->Attribute(Y)): 0;
-
-            if (name.compare(TRANSLATE) == 0)
-            {
-                /**
-                 * Criar Translação
-                 */
-                Translation * t = new Translation(x, y, z);
-
-
-
-                tmp_gr->transformations.push_back(t);
-
-            }
-            else
-            {
-                /**
-                 * Criar Escala
-                 */
-                Scale * s = new Scale(x, y, z);
-
-                tmp_gr->transformations.push_back(s);
-
-            }
-
-        }
-        else if (name.compare(ROTATE) == 0)
-        {
-            double axis_x, axis_y, axis_z, angle;
-
-
-            angle  = (element->Attribute(ANGLE)) ? atof(element->Attribute(ANGLE)) : 0;
-
-            axis_x = (element->Attribute(AXIS_X))? atof(element->Attribute(AXIS_X)): 0;
-            axis_y = (element->Attribute(AXIS_Y))? atof(element->Attribute(AXIS_Y)): 0;
-            axis_z = (element->Attribute(AXIS_Z))? atof(element->Attribute(AXIS_Z)): 0;
-
-            /**
-             * Criar Rotação
-             */
-            Rotation * r = new Rotation(angle, axis_x, axis_y, axis_z);
-
-            tmp_gr->transformations.push_back(r);
-
-        }
-        else if (name.compare(MODELS) == 0)
-        {
-
-            /**
-             * Iterar sobre os ficheiros de modelos
-             */
-            for (auto crawl = element->FirstChildElement(MODEL);
-                    crawl != nullptr;
-                    crawl = crawl->NextSiblingElement(MODEL))
-            {
-
-                string modelo(crawl->Attribute(FILE));
-
-                lerFicheiro(tmp_gr, modelo);
-
-                //grupo->modelos.push_back(modelo);
-
-                //cout << "MODELO : " << crawl->Attribute(FILE) << endl;
-
-            }
-        }
-        else if (name.compare(GROUP) == 0)
-        {
-
-            /**
-             * Guardar ler ficheiro (forma);
-
-             */
-
-            Grupo * grupo = new Grupo;
-            tmp_gr->filhos.push_back(grupo);
-            readXMLFromRootElement(element, grupo);
-
-        }
-
-    }
-
-}
-
-Grupo * readXMLDoc(const char * path)
-{
-
-    XMLDocument doc;
-    doc.LoadFile(path);
-
-    XMLElement* modelNode = doc.FirstChildElement(SCENE);
-    Grupo * parent = new Grupo;
-
-    readXMLFromRootElement(modelNode, parent);
-
-    return parent;
-
-}
-
-int main(int argc, char **argv)
-{
-
-    /** Com MAKEFILE tem que ser ../resources*/
-
-    g = readXMLDoc("resources/planetas.xml");
-
-    // init GLUT and the window
-    glutInit (&argc, argv);
-    glutInitDisplayMode (GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-    glutInitWindowPosition (100, 100);
-    glutInitWindowSize (800, 800);
-    glutCreateWindow ("CG@DI-UM");
-
-    // Required callback registry
-    glutDisplayFunc (renderScene);
-    glutReshapeFunc (changeSize);
-
-    // put here the registration of the keyboard callbacks
-    glutKeyboardFunc (keyboardR);
-    glutSpecialFunc (keyboardS);
-
-    // menu
-    glutCreateMenu (menu);
-    glutAddMenuEntry ("GL POINT", 1);
-    glutAddMenuEntry ("GL LINE", 2);
-    glutAddMenuEntry ("GL FILL", 3);
-
-    glutAttachMenu (GLUT_RIGHT_BUTTON);
-
-    //  OpenGL settings
-    glEnable (GL_DEPTH_TEST);
-    glEnable (GL_CULL_FACE);
-
-    // enter GLUT's main cycle
-    glutMainLoop ();
-
-
-    return 1;
+	return 1;
 }
