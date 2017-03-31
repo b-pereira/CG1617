@@ -195,7 +195,7 @@ void keyboardR(unsigned char key, int x, int y)
 {
     switch (key)
     {
-    case 's':
+    case 'w':
 
     	d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
         p = p.addTo(d.multiplyBy(k));
@@ -203,14 +203,14 @@ void keyboardR(unsigned char key, int x, int y)
         l = l.addTo(d.multiplyBy(k));
 
         break;
-    case 'w':
+    case 's':
 
     	d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
         p = p.addTo(d.multiplyBy(-k));
         l = l.addTo(d.multiplyBy(-k));
 
         break;
-    case 'd':
+    case 'a':
     	d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
         r = r.crossProduct(d, up);
 
@@ -220,7 +220,7 @@ void keyboardR(unsigned char key, int x, int y)
 
 
         break;
-    case 'a':
+    case 'd':
     	d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
         r = r.crossProduct(d, up);
         p = p.addTo(r.multiplyBy(-k));
