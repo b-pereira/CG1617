@@ -42,10 +42,23 @@ using namespace tinyxml2;
 #define Y         "Y"
 #define Z         "Z"
 
-double mover_x = 0, mover_z = 0, theta = 0, phi = 0;
-double alpha = 0, beta = 0, raio = 10;
+//double mover_x = 0, mover_z = 0, theta = 0, phi = 0;
+double alpha = 0, beta = 0, raio = 1;
+
+float k = 0.5;
+
+Point3d p(0.0f,0.0f,5.0f);
+Point3d l(0.0f,0.0f,0.0f);
+Point3d d(0.0f,0.0f,0.0f);
+Point3d r(0.0f,0.0f,0.0f);
+Point3d up(0.0f,1.0f,0.0f);
 
 Grupo * g;
+
+
+
+
+
 
 void changeSize(int w, int h)
 {
@@ -150,9 +163,26 @@ void renderScene(void)
     // set the camera
     glLoadIdentity();
 
-    gluLookAt(cos(beta) * sin(alpha) * raio, sin(beta) * raio,
-    			cos(beta) * cos(alpha) * raio, //  coordenadas esfericas inicialmente (0,0,1)
-    			0, 0, 0, 0, 1, 0);
+
+    d.setCoord(cos(beta) * sin(alpha) * raio,
+               sin(beta) * raio,
+               cos(beta) * cos(alpha) * raio);
+
+
+    //l = l.addTo(r.multiplyBy(k));
+
+    gluLookAt(// Ponto da camara
+        p.getXCoord(),
+        p.getYCoord() ,
+        p.getZCoord(),
+        // Ponto onde está olhar
+        l.getXCoord(),
+        l.getYCoord() ,
+        l.getZCoord(),
+        //up
+        up.getXCoord(),
+        up.getYCoord() ,
+        up.getZCoord());
 
     traverseTree(g);
 
@@ -162,72 +192,108 @@ void renderScene(void)
 
 
 // write function to process keyboard events
-void keyboardR(unsigned char key, int x, int y) {
-	switch (key) {
-	case 'a':
-		mover_x = mover_x - 0.1;
-		break;
-	case 'd':
-		mover_x = mover_x + 0.1;
-		break;
-	case 's':
-		mover_z = mover_z + 0.1;
-		break;
-	case 'w':
-		mover_z = mover_z - 0.1;
-		break;
-	case 'r':
-		mover_z = 0;
-		mover_x = 0;
-		phi = 0;
-		theta = 0;
-		alpha = 0, beta = 0;
-		break;
+void keyboardR(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+    case 'a':
 
-	case 'h':
-		alpha -= 0.1;
-		break;
-	case 'l':
-		alpha += 0.1;
-		break;
-	case 'k':
-		if (beta < M_PI / 2)
-			beta += 0.1;
-		break;
-	case 'j':
-		if (beta > -M_PI / 2)
-			beta -= 0.1;
-		break;
+        p = p.addTo(r.multiplyBy(-0.25));
 
-	default:
-		break;
-	}
-	glutPostRedisplay();
+        break;
+    case 'd':
+
+        p = p.addTo(r.multiplyBy(0.25));
+
+        break;
+    case 's':
+
+        p = p.addTo(d.multiplyBy(-0.25));
+
+
+        break;
+    case 'w':
+
+        p = p.addTo(d.multiplyBy(0.25));
+
+        break;
+    case 'r':
+        p.setCoord(0,0,0);
+
+        alpha = 0, beta = 0;
+        k = 0.5;
+        break;
+    case 'q':
+        k+=0.05;
+        break;
+    case 'e':
+        k-=0.05;
+        break;
+
+    default:
+        break;
+    }
+    glutPostRedisplay();
 }
 
-void keyboardS(int key_code, int x, int y) {
-	switch (key_code) {
-	case GLUT_KEY_LEFT:
-		theta = theta - 5.0;
+void keyboardS(int key_code, int x, int y)
+{
+    switch (key_code)
+    {
+    case GLUT_KEY_LEFT:
+        alpha = alpha - 5.0;
+        d.setCoord(cos(beta) * sin(alpha) * raio,
+                   sin(beta) * raio,
+                   cos(beta) * cos(alpha) * raio);
+        l = l.addTo(r.multiplyBy(-0.25));
 
-		break;
-	case GLUT_KEY_RIGHT:
-		theta = theta + 5.0;
 
-		break;
-	case GLUT_KEY_UP:
-		phi = phi + 5.0;
 
-		break;
-	case GLUT_KEY_DOWN:
-		phi = phi - 5.0;
+        break;
+    case GLUT_KEY_RIGHT:
+        alpha = alpha + 5.0;
+        d.setCoord(cos(beta) * sin(alpha) * raio,
+                   sin(beta) * raio,
+                   cos(beta) * cos(alpha) * raio);
+        l = l.addTo(r.multiplyBy(0.25));
 
-		break;
 
-	default:
-		break;
-	}
-	glutPostRedisplay();
+        break;
+    case GLUT_KEY_UP:
+        if (beta < M_PI / 2)
+        {
+            beta += 5.0;
+            d.setCoord(cos(beta) * sin(alpha) * raio,
+                       sin(beta) * raio,
+                       cos(beta) * cos(alpha) * raio);
+            l = l.addTo(d.multiplyBy(-0.25));
+
+
+        }
+
+
+        break;
+    case GLUT_KEY_DOWN:
+        if (beta > -M_PI / 2)
+        {
+            beta -= 5.0;
+            d.setCoord(cos(beta) * sin(alpha) * raio,
+                       sin(beta) * raio,
+                       cos(beta) * cos(alpha) * raio);
+            l = l.addTo(d.multiplyBy(0.25));
+
+
+        }
+
+
+        break;
+
+    default:
+        break;
+    }
+
+
+    glutPostRedisplay();
 }
 
 
@@ -320,7 +386,7 @@ void readXMLFromRootElement(XMLElement * root, Grupo * grupo)
      * Para cada irmão do elemento inicial: procurar atributos
      */
     for (auto element = tmp->FirstChildElement();
-    		element;
+            element;
             element = element->NextSiblingElement())
     {
 
@@ -442,34 +508,34 @@ int main(int argc, char **argv)
     g = readXMLDoc("resources/planetas.xml");
 
     // init GLUT and the window
-      glutInit (&argc, argv);
-      glutInitDisplayMode (GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-      glutInitWindowPosition (100, 100);
-      glutInitWindowSize (800, 800);
-      glutCreateWindow ("CG@DI-UM");
+    glutInit (&argc, argv);
+    glutInitDisplayMode (GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+    glutInitWindowPosition (100, 100);
+    glutInitWindowSize (800, 800);
+    glutCreateWindow ("CG@DI-UM");
 
     // Required callback registry
-      glutDisplayFunc (renderScene);
-      glutReshapeFunc (changeSize);
+    glutDisplayFunc (renderScene);
+    glutReshapeFunc (changeSize);
 
     // put here the registration of the keyboard callbacks
-      glutKeyboardFunc (keyboardR);
-      glutSpecialFunc (keyboardS);
+    glutKeyboardFunc (keyboardR);
+    glutSpecialFunc (keyboardS);
 
     // menu
-      glutCreateMenu (menu);
-      glutAddMenuEntry ("GL POINT", 1);
-      glutAddMenuEntry ("GL LINE", 2);
-      glutAddMenuEntry ("GL FILL", 3);
+    glutCreateMenu (menu);
+    glutAddMenuEntry ("GL POINT", 1);
+    glutAddMenuEntry ("GL LINE", 2);
+    glutAddMenuEntry ("GL FILL", 3);
 
-      glutAttachMenu (GLUT_RIGHT_BUTTON);
+    glutAttachMenu (GLUT_RIGHT_BUTTON);
 
     //  OpenGL settings
-      glEnable (GL_DEPTH_TEST);
-      glEnable (GL_CULL_FACE);
+    glEnable (GL_DEPTH_TEST);
+    glEnable (GL_CULL_FACE);
 
     // enter GLUT's main cycle
-      glutMainLoop ();
+    glutMainLoop ();
 
 
     return 1;
