@@ -54,25 +54,34 @@ void Point3d::setCoord(double x, double y,double z)
 
 }
 
-Point3d & Point3d::addTo(Point3d &point)
+Point3d Point3d::addTo(Point3d point)
 {
+    double tmp_x, tmp_y, tmp_z;
+    tmp_x = x_coord + point.getXCoord();
+    tmp_y = y_coord + point.getYCoord();
+    tmp_z = z_coord + point.getZCoord();
+    Point3d p(tmp_x, tmp_y, tmp_z);
 
-    x_coord+=point.getXCoord();
-    y_coord+=point.getYCoord();
-    z_coord+=point.getZCoord();
+    return p;
 
-    return *this;
+
 
 }
 
-Point3d & Point3d::multiplyBy(double k)
+Point3d Point3d::multiplyBy(double k)
 {
 
-    x_coord*=k;
-    y_coord*=k;
-    z_coord*=k;
+    double tmp_x, tmp_y, tmp_z;
+    tmp_x = x_coord * k;
+    tmp_y = y_coord * k;
+    tmp_z = z_coord * k;
 
-    return *this;
+
+
+    Point3d p(tmp_x, tmp_y, tmp_z);
+
+    return p;
+
 }
 
 Point3d & Point3d::operator= (const Point3d & other)
@@ -88,22 +97,41 @@ Point3d & Point3d::operator= (const Point3d & other)
 }
 
 
-Point3d Point3d::crossProduct(Point3d& u, Point3d &v){
-	double x = (u.getYCoord()*v.getZCoord()) - (u.getZCoord()*v.getZCoord());
-	double y = (u.getXCoord()*v.getZCoord()) - (u.getZCoord()*v.getXCoord());
-	double z = (u.getXCoord()*v.getYCoord()) - (u.getYCoord()*v.getXCoord());
-	Point3d p(x, y, z);
+Point3d Point3d::crossProduct(Point3d& u, Point3d &v)
+{
+    double x = (u.getYCoord()*v.getZCoord()) - (u.getZCoord()*v.getZCoord());
+    double y = (u.getXCoord()*v.getZCoord()) - (u.getZCoord()*v.getXCoord());
+    double z = (u.getXCoord()*v.getYCoord()) - (u.getYCoord()*v.getXCoord());
+    Point3d p(x, y, z);
 
-	return p;
+    return p;
 }
 
 
-void Point3d::incrementXCoordBy(double value){x_coord+=value;}
-void Point3d::incrementYCoordBy(double value){y_coord+=value;}
-void Point3d::incrementZCoordBy(double value){z_coord+=value;}
-void Point3d::decrementXCoordBy(double value){x_coord-=value;}
-void Point3d::decrementYCoordBy(double value){y_coord-=value;}
-void Point3d::decrementZCoordBy(double value){z_coord-=value;}
+void Point3d::incrementXCoordBy(double value)
+{
+    x_coord+=value;
+}
+void Point3d::incrementYCoordBy(double value)
+{
+    y_coord+=value;
+}
+void Point3d::incrementZCoordBy(double value)
+{
+    z_coord+=value;
+}
+void Point3d::decrementXCoordBy(double value)
+{
+    x_coord-=value;
+}
+void Point3d::decrementYCoordBy(double value)
+{
+    y_coord-=value;
+}
+void Point3d::decrementZCoordBy(double value)
+{
+    z_coord-=value;
+}
 
 
 

@@ -30,8 +30,8 @@ public:
     void decrementXCoordBy(double value);
     void decrementYCoordBy(double value);
     void decrementZCoordBy(double value);
-    Point3d & addTo(Point3d &point);
-    Point3d & multiplyBy(double k);
+    Point3d addTo(Point3d point);;
+    Point3d multiplyBy(double k);
     Point3d & operator= (const Point3d & other);
     Point3d crossProduct(Point3d& u, Point3d &v);
     ~Point3d();

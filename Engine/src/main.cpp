@@ -164,9 +164,8 @@ void renderScene(void)
     glLoadIdentity();
 
 
-    d.setCoord(cos(beta) * sin(alpha) * raio,
-               sin(beta) * raio,
-               cos(beta) * cos(alpha) * raio);
+
+
 
 
     //l = l.addTo(r.multiplyBy(k));
@@ -196,25 +195,37 @@ void keyboardR(unsigned char key, int x, int y)
 {
     switch (key)
     {
-    case 'a':
-
-        p = p.addTo(r.multiplyBy(-0.25));
-
-        break;
-    case 'd':
-
-        p = p.addTo(r.multiplyBy(0.25));
-
-        break;
     case 's':
 
-        p = p.addTo(d.multiplyBy(-0.25));
+    	d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
+        p = p.addTo(d.multiplyBy(k));
 
+        l = l.addTo(d.multiplyBy(k));
 
         break;
     case 'w':
 
-        p = p.addTo(d.multiplyBy(0.25));
+    	d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
+        p = p.addTo(d.multiplyBy(-k));
+        l = l.addTo(d.multiplyBy(-k));
+
+        break;
+    case 'd':
+    	d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
+        r = r.crossProduct(d, up);
+
+        p = p.addTo(r.multiplyBy(k));
+
+        l = l.addTo(r.multiplyBy(k));
+
+
+        break;
+    case 'a':
+    	d.setCoord(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha));
+        r = r.crossProduct(d, up);
+        p = p.addTo(r.multiplyBy(-k));
+        l = l.addTo(r.multiplyBy(-k));
+
 
         break;
     case 'r':
@@ -241,32 +252,24 @@ void keyboardS(int key_code, int x, int y)
     switch (key_code)
     {
     case GLUT_KEY_LEFT:
-        alpha = alpha - 5.0;
-        d.setCoord(cos(beta) * sin(alpha) * raio,
-                   sin(beta) * raio,
-                   cos(beta) * cos(alpha) * raio);
-        l = l.addTo(r.multiplyBy(-0.25));
+
+        alpha = alpha + 5.0;
 
 
 
         break;
     case GLUT_KEY_RIGHT:
-        alpha = alpha + 5.0;
-        d.setCoord(cos(beta) * sin(alpha) * raio,
-                   sin(beta) * raio,
-                   cos(beta) * cos(alpha) * raio);
-        l = l.addTo(r.multiplyBy(0.25));
+        alpha = alpha - 5.0;
+
+
 
 
         break;
     case GLUT_KEY_UP:
-        if (beta < M_PI / 2)
+        if (beta > -M_PI / 2)
         {
-            beta += 5.0;
-            d.setCoord(cos(beta) * sin(alpha) * raio,
-                       sin(beta) * raio,
-                       cos(beta) * cos(alpha) * raio);
-            l = l.addTo(d.multiplyBy(-0.25));
+            beta -= 5.0;
+
 
 
         }
@@ -274,13 +277,11 @@ void keyboardS(int key_code, int x, int y)
 
         break;
     case GLUT_KEY_DOWN:
-        if (beta > -M_PI / 2)
+
+        if (beta < M_PI / 2)
         {
-            beta -= 5.0;
-            d.setCoord(cos(beta) * sin(alpha) * raio,
-                       sin(beta) * raio,
-                       cos(beta) * cos(alpha) * raio);
-            l = l.addTo(d.multiplyBy(0.25));
+            beta += 5.0;
+
 
 
         }
