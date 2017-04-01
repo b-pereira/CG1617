@@ -5,48 +5,66 @@
 		</models>
 		<group>
 			<translate X="4" Y="1" Z="7" />
+			<rotate angle="90" axisY="1" />
 			<models>
 				<model file="sphere.3d"/>
 			</models>
 		</group>
 		<group>
 			<translate X="7" Y="3"  Z="14" />
+			<rotate angle="90" axisY="1" />
 			<models>
 				<model file="sphere.3d"/>
 			</models>
 		</group>
 		<group>
 			<translate X="10" Y="6"  Z="21"/>
+			<rotate angle="90" axisY="1" />
 			<models>
 				<model file="sphere.3d"/>
 			</models>
 		</group>
 		<group>
 			<translate X="13" Y="9"  Z="28"/>
+			<rotate angle="90" axisY="1" />
 			<models>
 				<model file="sphere.3d"/>
 			</models>
 		</group>
 		<group>
 			<translate X="16" Y="12"  Z="7"/>
+			<rotate angle="90" axisY="1" />
 			<models>
 				<model file="sphere.3d"/>
 			</models>
 		</group>
 		<group>
 			<translate X="19" Y="15"  Z="7"/>
+			<rotate angle="90" axisY="1" />
 			<models>
 				<model file="sphere.3d"/>
 			</models>
+			<group>
+				<models>
+					<model file="disco.3d"/>
+				</models>
+			</group>
 		</group>
 		<group>
 			<translate X="22" Y="18"  Z="7"/>
+			<rotate angle="90" axisY="1" />
 			<models>
 				<model file="sphere.3d"/>
 			</models>
+			<group>
+				<models>
+					<model file="disco.3d"/>
+				</models>
+			</group>
 		</group>
 		<group>
 			<translate X="25" Y="21"  Z="7" />
+			<rotate angle="90" axisY="1" />
 			<models>
 				<model file="sphere.3d"/>
 			</models>

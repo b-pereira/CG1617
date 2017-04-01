@@ -63,7 +63,7 @@ void lerFicheiro(Modelos * models, string file) {
 	string line;
 
 	vector<Triangle> lst;
-	ifstream myfile("resources/" + file);
+	ifstream myfile("..\resources\" + file);
 	if (myfile.is_open()) {
 		while (getline(myfile, line)) {
 			vector<string> v { explode(line, ';') };

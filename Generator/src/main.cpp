@@ -233,7 +233,7 @@ drawAnel(double raioIn, double raioOut, int slices, char* filename)
                 ficheiro << triangle_to_string (pontoD, pontoB, pontoA) << endl;
                 ficheiro << triangle_to_string (pontoC, pontoB, pontoD) << endl;
 
-                // Disco de baixo
+                // Lado
                 ficheiro << triangle_to_string (pontoA2, pontoA, pontoD2) << endl;
                 ficheiro << triangle_to_string (pontoD2, pontoA2, pontoA) << endl;
 
