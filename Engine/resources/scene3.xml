@@ -2,7 +2,7 @@
 <group>
 	<translate X="1" />
 	<models>
-	<model file="sphere.3d" />
+	<model file="teste.3d" />
 	</models>
 		<group>
 			<translate Y="1" />
