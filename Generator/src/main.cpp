@@ -208,10 +208,10 @@ drawAnel(double raioIn, double raioOut, int slices, char* filename){
 							 	raioOut*cos(current_theta));
 
 				ficheiro << triangle_to_string (pontoA, pontoB, pontoD) << endl;
-	      		ficheiro << triangle_to_string (pontoD, pointB, pointC) << endl;
+	      		ficheiro << triangle_to_string (pontoD, pontoB, pontoC) << endl;
 
 		      	ficheiro << triangle_to_string (pontoD, pontoB, pontoA) << endl;
-		      	ficheiro << triangle_to_string (pontoC, pointB, pointD) << endl;
+		      	ficheiro << triangle_to_string (pontoC, pontoB, pontoD) << endl;
 
 				prev_theta = current_theta;
 				current_theta += delta_theta;
