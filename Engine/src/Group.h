@@ -36,11 +36,8 @@ using namespace std;
 typedef struct gr
 {
 
-  //string val;
 
   vector<vector<string>> modelos;
-
-  //vector<string> modelos;
 
   vector<Transformation*> transformations;
 
@@ -62,12 +59,12 @@ typedef struct modl
 } Modelos;
 
 
-void drawElement(Modelos * models, Grupo * g);
-const vector<string> explode(const string& s, const char& c);
-void lerFicheiro(Modelos * models, string file);
-Modelos * readXMLDoc(const char * path);
-void readXMLFromRootElement(XMLElement * root, Modelos * models, Grupo * grupo);
-void traverseTree(Modelos * models, Grupo *t);
+void drawElement(Modelos *, Grupo *);
+const vector<string> explode(const string&, const char&);
+void lerFicheiro(Modelos *, string file);
+Modelos * readXMLDoc(const char *);
+void readXMLFromRootElement(XMLElement *, Modelos *, Grupo *);
+void traverseTree(Modelos *, Grupo *);
 
 #endif
 
