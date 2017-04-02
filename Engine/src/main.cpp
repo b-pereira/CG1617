@@ -2,7 +2,6 @@
 #include <iostream>
 #include <cmath>
 
-
 #include "Group.h"
 
 using namespace std;
@@ -18,9 +17,7 @@ int startX, startY, tracking = 0;
 
 float xx = 0, zz = 0;
 
-
 float alpha = 0, beta = 0, r = 50;
-
 
 Modelos * modelos;
 
@@ -49,8 +46,6 @@ void changeSize(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
-
-
 void renderScene(void) {
 
 	// clear buffers
@@ -59,10 +54,7 @@ void renderScene(void) {
 	// set the camera
 	glLoadIdentity();
 
-	gluLookAt(camX +  x, camY, camZ + z, 
-		x + lx, 1.0f, z + lz,
-			  0.0f,1.0f,0.0f);
-
+	gluLookAt(camX + x, camY, camZ + z, x + lx, 1.0f, z + lz, 0.0f, 1.0f, 0.0f);
 
 	traverseTree(modelos, modelos->g);
 
@@ -73,25 +65,21 @@ void renderScene(void) {
 // write function to process keyboard events
 void processNormalKeys(unsigned char key, int xx, int yy) {
 	switch (key) {
-	case 27: exit(0); break;
+	case 27:
+		exit(0);
+		break;
 
 	}
 
-	
 }
 
-void processSpecialKeys(int key, int x1, int y1)
-{
+void processSpecialKeys(int key, int x1, int y1) {
 
-
-	
 }
-
-
 
 void processMouseButtons(int button, int state, int xx, int yy) {
-	
-	if (state == GLUT_DOWN)  {
+
+	if (state == GLUT_DOWN) {
 		startX = xx;
 		startY = yy;
 		if (button == GLUT_LEFT_BUTTON)
@@ -100,14 +88,12 @@ void processMouseButtons(int button, int state, int xx, int yy) {
 			tracking = 2;
 		else
 			tracking = 0;
-	}
-	else if (state == GLUT_UP) {
+	} else if (state == GLUT_UP) {
 		if (tracking == 1) {
 			alpha += (xx - startX);
 			beta += (yy - startY);
-		}
-		else if (tracking == 2) {
-			
+		} else if (tracking == 2) {
+
 			r -= yy - startY;
 			if (r < 3)
 				r = 3.0;
@@ -115,7 +101,6 @@ void processMouseButtons(int button, int state, int xx, int yy) {
 		tracking = 0;
 	}
 }
-
 
 void processMouseMotion(int xx, int yy) {
 
@@ -131,7 +116,6 @@ void processMouseMotion(int xx, int yy) {
 
 	if (tracking == 1) {
 
-
 		alphaAux = alpha + deltaX;
 		betaAux = beta + deltaY;
 
@@ -141,8 +125,7 @@ void processMouseMotion(int xx, int yy) {
 			betaAux = -85.0;
 
 		rAux = r;
-	}
-	else if (tracking == 2) {
+	} else if (tracking == 2) {
 
 		alphaAux = alpha;
 		betaAux = beta;
@@ -152,7 +135,7 @@ void processMouseMotion(int xx, int yy) {
 	}
 	camX = rAux * sin(alphaAux * 3.14 / 180.0) * cos(betaAux * 3.14 / 180.0);
 	camZ = rAux * cos(alphaAux * 3.14 / 180.0) * cos(betaAux * 3.14 / 180.0);
-	camY = rAux * 							     sin(betaAux * 3.14 / 180.0);
+	camY = rAux * sin(betaAux * 3.14 / 180.0);
 }
 
 void menu(int op) {
@@ -172,12 +155,23 @@ void menu(int op) {
 	glutPostRedisplay();
 }
 
-
 int main(int argc, char **argv) {
+
+
+	if(argv[1]==NULL){
+
+		modelos = readXMLDoc("resources/sistema.xml");
+	}else{
+
+		modelos = readXMLDoc(argv[1]);
+	}
+
+
+
 
 	/** Com MAKEFILE tem que ser ../resources*/
 
-	modelos = readXMLDoc("resources/sistema.xml");
+
 
 // init GLUT and the window
 	glutInit(&argc, argv);
@@ -214,5 +208,4 @@ int main(int argc, char **argv) {
 
 	return 1;
 }
-
 
