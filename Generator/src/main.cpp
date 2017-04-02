@@ -225,11 +225,11 @@ drawAnel(double raioIn, double raioOut, int slices, char* filename)
                                 -0.005,
                                 raioOut*cos(current_theta));
 
-                // Disco de cima
+                // Disco de baixo
                 ficheiro << triangle_to_string (pontoA2, pontoB2, pontoD2) << endl;
                 ficheiro << triangle_to_string (pontoD2, pontoB2, pontoC2) << endl;
 
-                // Disco de baixo
+                // Disco de cima
                 ficheiro << triangle_to_string (pontoD, pontoB, pontoA) << endl;
                 ficheiro << triangle_to_string (pontoC, pontoB, pontoD) << endl;
 
