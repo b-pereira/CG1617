@@ -171,29 +171,33 @@ drawSphere (double radius, int slices, int stacks, char* filename)
         cout << "Unable to open file\n";
 }
 
+
+
+
 void
-drawAnel(double raioIn, double raioOut, int slices, char* filename)
+drawAnel (double raioIn, double raioOut, int slices, char * filename)
 {
-    float slice = (360 / slices)*(M_PI / 180);
-    float doisPi = 2 * M_PI;
+
+    double prev_theta, current_theta;
+    int i, j;
+
     double delta_theta = (2 * M_PI) / slices;
-    double prev_theta = 0.0;
-    double current_theta = delta_theta;
-    int i = 0;
+
 
     ofstream ficheiro;
     ficheiro.open (filename);
-
-    if(ficheiro.is_open ())
+    if (ficheiro.is_open ())
     {
         ficheiro.clear ();
 
-        for (float i = 0; i < doisPi; i += slice)
-        {
-            for (i = 0; i < slices; i += slice)
-            {
 
-                Point3d pontoA(raioOut*sin(prev_theta),
+
+        prev_theta = 0;
+        current_theta = delta_theta;
+
+        for (j = 0; j <= slices; j++)
+        {
+              Point3d pontoA(raioOut*sin(prev_theta),
                                0.005,
                                raioOut*cos(prev_theta));
 
@@ -241,15 +245,18 @@ drawAnel(double raioIn, double raioOut, int slices, char* filename)
                 ficheiro << triangle_to_string (pontoB, pontoC2, pontoB2) << endl;
                 ficheiro << triangle_to_string (pontoC, pontoC2, pontoB) << endl;
 
-                prev_theta = current_theta;
-                current_theta += delta_theta;
-            }
+
+            prev_theta = current_theta;
+            current_theta += delta_theta;
         }
         ficheiro.close ();
+
     }
+
     else
         cout << "Unable to open file\n";
 }
+
 
 
 void
