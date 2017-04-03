@@ -34,42 +34,41 @@ void drawElement(Modelos * models, Grupo * g)
 
     glBegin(GL_TRIANGLES);
 
-    for (int i = 0; i < g->modelos.size(); i++)
+
+
+    for (string file : g->modelos)
     {
 
-        for (string file : g->modelos.at(i))
+
+
+
+        auto entry = models->figuras.find(file);
+
+        if(entry != models->figuras.end())
         {
-
-
-
-
-            auto entry = models->figuras.find(file);
-
-            if(entry != models->figuras.end())
+            for (Triangle t : entry->second)
             {
-                for (Triangle t : entry->second)
-                {
 
-                    Point3d a = t.getA();
-                    Point3d b = t.getB();
-                    Point3d c = t.getC();
+                Point3d a = t.getA();
+                Point3d b = t.getB();
+                Point3d c = t.getC();
 
-                    glVertex3f(a.getXCoord(), a.getYCoord(), a.getZCoord());
+                glVertex3f(a.getXCoord(), a.getYCoord(), a.getZCoord());
 
-                    glVertex3f(b.getXCoord(), b.getYCoord(), b.getZCoord());
+                glVertex3f(b.getXCoord(), b.getYCoord(), b.getZCoord());
 
-                    glVertex3f(c.getXCoord(), c.getYCoord(), c.getZCoord());
+                glVertex3f(c.getXCoord(), c.getYCoord(), c.getZCoord());
 
 
-                }
             }
-
-
-
-
-
         }
+
+
+
+
+
     }
+
 
     glEnd();
 
@@ -194,7 +193,7 @@ void readXMLFromRootElement(XMLElement * element, Modelos * models, Grupo * grup
         else if (name.compare(MODELS) == 0)
         {
 
-            vector<string> lst;
+            //vector<string> lst;
 
             /**
              * Iterar sobre os ficheiros de modelos
@@ -206,12 +205,13 @@ void readXMLFromRootElement(XMLElement * element, Modelos * models, Grupo * grup
 
                 string modelo(crawl->Attribute(FILE_D));
 
-                lst.push_back(modelo);
+                grupo->modelos.push_back(modelo);
+                //lst.push_back(modelo);
 
                 lerFicheiro(models, modelo);
 
             }
-            grupo->modelos.push_back(lst);
+
 
         }
         else if (name.compare(GROUP) == 0)

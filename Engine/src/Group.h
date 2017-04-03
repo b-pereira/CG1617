@@ -37,26 +37,28 @@ typedef struct gr
 {
 
 
-  vector<vector<string>> modelos;
+    vector<string> modelos;
 
-  vector<Transformation*> transformations;
+    vector<Transformation*> transformations;
 
-  vector<gr *> filhos;
+    vector<gr *> filhos;
 
-} Grupo;
+}
+Grupo;
 
 typedef struct modl
 {
 
 
 
-  Grupo * g;
+    Grupo * g;
 
-  map<string,vector<Triangle>> figuras;
+    map<string,vector<Triangle>> figuras;
 
 
 
-} Modelos;
+}
+Modelos;
 
 
 void drawElement(Modelos *, Grupo *);
