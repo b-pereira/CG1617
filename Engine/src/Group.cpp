@@ -206,7 +206,6 @@ void readXMLFromRootElement(XMLElement * element, Modelos * models, Grupo * grup
                 string modelo(crawl->Attribute(FILE_D));
 
                 grupo->modelos.push_back(modelo);
-                //lst.push_back(modelo);
 
                 lerFicheiro(models, modelo);
 
