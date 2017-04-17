@@ -37,7 +37,7 @@ typedef struct gr
 {
 
 
-  vector<vector<string>> modelos;
+  vector<string> modelos;
 
   vector<Transformation*> transformations;
 
@@ -52,7 +52,7 @@ typedef struct modl
 
   Grupo * g;
 
-  map<string,vector<Triangle>> figuras;
+  map<string,vector<double>> figuras;
 
 
 
