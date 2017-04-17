@@ -11,7 +11,7 @@ std::string
 point3D_to_string (Point3d point)
 {
     std::stringstream sstm;
-    sstm << point.getXCoord () << ", " << point.getYCoord () << ", "
+    sstm << point.getXCoord () << " " << point.getYCoord () << " "
     << point.getZCoord ();
     return sstm.str ();
 }
@@ -19,7 +19,7 @@ point3D_to_string (Point3d point)
 std::string
 triangle_to_string (Point3d pointA, Point3d pointB, Point3d pointC)
 {
-    return point3D_to_string (pointA) + ";" + point3D_to_string (pointB) + ";"
+    return point3D_to_string (pointA) + "\n" + point3D_to_string (pointB) + "\n"
            + point3D_to_string (pointC);
 }
 
