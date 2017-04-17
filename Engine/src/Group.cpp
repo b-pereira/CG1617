@@ -26,15 +26,15 @@ const vector<string> explode(const string& s, const char& c) {
 	return v;
 }
 
-void drawElement(Modelos * models, Grupo * g) {
+void drawElement(Models * models, Group * g) {
 
 	glBegin(GL_TRIANGLES);
 
-	for (auto file : g->modelos) {
+	for (auto file : g->models) {
 
-		auto entry = models->figuras.find(file);
+		auto entry = models->figures.find(file);
 
-		if (entry != models->figuras.end()) {
+		if (entry != models->figures.end()) {
 
 			for (int i = 0; i < entry->second.size(); i += 3) {
 				glVertex3f(entry->second[i], entry->second[i + 1],
@@ -49,7 +49,7 @@ void drawElement(Modelos * models, Grupo * g) {
 
 }
 
-void lerFicheiro(Modelos * models, string file) {
+void readFile(Models * models, string file) {
 
 	string line;
 
@@ -71,7 +71,7 @@ void lerFicheiro(Modelos * models, string file) {
 		}
 		myfile.close();
 
-		models->figuras.insert(std::pair<string, vector<double>>(file, lst));
+		models->figures.insert(std::pair<string, vector<double>>(file, lst));
 
 	}
 
@@ -80,8 +80,8 @@ void lerFicheiro(Modelos * models, string file) {
 
 }
 
-void readXMLFromRootElement(XMLElement * element, Modelos * models,
-		Grupo * grupo) {
+void readXMLFromRootElement(XMLElement * element, Models * models,
+		Group * group) {
 
 	if (element == nullptr)
 		return;
@@ -109,7 +109,7 @@ void readXMLFromRootElement(XMLElement * element, Modelos * models,
 				 */
 				Translation * t = new Translation(x, y, z);
 
-				grupo->transformations.push_back(t);
+				group->transformations.push_back(t);
 
 			} else {
 				/**
@@ -117,7 +117,7 @@ void readXMLFromRootElement(XMLElement * element, Modelos * models,
 				 */
 				Scale * s = new Scale(x, y, z);
 
-				grupo->transformations.push_back(s);
+				group->transformations.push_back(s);
 
 			}
 
@@ -142,7 +142,7 @@ void readXMLFromRootElement(XMLElement * element, Modelos * models,
 			 */
 			Rotation * r = new Rotation(angle, axis_x, axis_y, axis_z);
 
-			grupo->transformations.push_back(r);
+			group->transformations.push_back(r);
 
 		} else if (name.compare(MODELS) == 0) {
 
@@ -153,19 +153,19 @@ void readXMLFromRootElement(XMLElement * element, Modelos * models,
 					crawl != nullptr;
 					crawl = crawl->NextSiblingElement(MODEL)) {
 
-				string modelo(crawl->Attribute(FILE_D));
+				string model(crawl->Attribute(FILE_D));
 
-				grupo->modelos.push_back(modelo);
+				group->models.push_back(model);
 
-				lerFicheiro(models, modelo);
+				readFile(models, model);
 
 			}
 
 		} else if (name.compare(GROUP) == 0) {
 
-			Grupo * novo_grupo = new Grupo;
-			grupo->filhos.push_back(novo_grupo);
-			readXMLFromRootElement(element, models, novo_grupo);
+			Group * novo_group = new Group;
+			group->children.push_back(novo_group);
+			readXMLFromRootElement(element, models, novo_group);
 
 		}
 
@@ -173,14 +173,14 @@ void readXMLFromRootElement(XMLElement * element, Modelos * models,
 
 }
 
-Modelos * readXMLDoc(const char * path) {
+Models * readXMLDoc(const char * path) {
 
 	XMLDocument doc;
 	doc.LoadFile(path);
 
 	XMLElement* modelNode = doc.FirstChildElement(SCENE);
-	Modelos * models = new Modelos;
-	models->g = new Grupo;
+	Models * models = new Models;
+	models->g = new Group;
 
 	readXMLFromRootElement(modelNode, models, models->g);
 
@@ -188,22 +188,22 @@ Modelos * readXMLDoc(const char * path) {
 
 }
 
-void traverseTree(Modelos * models, Grupo *grupo) {
+void traverseTree(Models * models, Group *group) {
 
 	glPushMatrix();
 	cout << "PUSH" << endl;
 
-	for (auto transformation : grupo->transformations) {
+	for (auto transformation : group->transformations) {
 
 		transformation->applyTransformation();
 
 	}
 
-	drawElement(models, grupo);
+	drawElement(models, group);
 
-	for (int i = 0; i < grupo->filhos.size(); i++) {
+	for (int i = 0; i < group->children.size(); i++) {
 
-		traverseTree(models, grupo->filhos[i]);
+		traverseTree(models, group->children[i]);
 		glPopMatrix();
 		cout << "POP" << endl;
 
