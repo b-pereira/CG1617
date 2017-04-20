@@ -26,7 +26,7 @@ triangle_to_string (Point3d pointA, Point3d pointB, Point3d pointC)
 using namespace std;
 
 void
-drawPlane (double length, double width, char* filename)
+drawPlane (float length, float width, char* filename)
 {
 
     Point3d pontoA (-length / 2, 0, width / 2);
@@ -55,7 +55,7 @@ drawPlane (double length, double width, char* filename)
 }
 
 void
-drawBox (double length, double height, double width, char* filename)
+drawBox (float length, float height, float width, char* filename)
 {
     Point3d pontoA1 (-length / 2, -height / 2, width / 2);
 
@@ -106,19 +106,19 @@ drawBox (double length, double height, double width, char* filename)
 }
 
 void
-drawSphere (double radius, int slices, int stacks, char* filename)
+drawSphere (float radius, int slices, int stacks, char* filename)
 {
 
-    double delta_theta = (2 * M_PI) / slices;
-    double delta_phi = M_PI / stacks;
+    float delta_theta = (2 * M_PI) / slices;
+    float delta_phi = M_PI / stacks;
 
     int i, j;
 
-    double prev_theta = 0.0;
-    double current_theta;
+    float prev_theta = 0.0;
+    float current_theta;
 
-    double prev_phi = M_PI / 2;
-    double current_phi = prev_phi - delta_phi;
+    float prev_phi = M_PI / 2;
+    float current_phi = prev_phi - delta_phi;
 
     ofstream ficheiro;
     ficheiro.open (filename);
@@ -127,7 +127,7 @@ drawSphere (double radius, int slices, int stacks, char* filename)
     {
         ficheiro.clear ();
 
-        for (i = 0; i <= stacks; i++)
+        for (i = 0; i < stacks; i++)
         {
             prev_theta = 0;
             current_theta = delta_theta;
@@ -175,13 +175,13 @@ drawSphere (double radius, int slices, int stacks, char* filename)
 
 
 void
-drawAnel (double raioIn, double raioOut, int slices, char * filename)
+drawAnel (float raioIn, float raioOut, int slices, char * filename)
 {
 
-    double prev_theta, current_theta;
+    float prev_theta, current_theta;
     int i, j;
 
-    double delta_theta = (2 * M_PI) / slices;
+    float delta_theta = (2 * M_PI) / slices;
 
 
     ofstream ficheiro;
@@ -260,20 +260,20 @@ drawAnel (double raioIn, double raioOut, int slices, char * filename)
 
 
 void
-drawCone (double radius, double height, int slices, int stacks, char * filename)
+drawCone (float radius, float height, int slices, int stacks, char * filename)
 {
 
-    double prev_theta, current_theta;
+    float prev_theta, current_theta;
     int i, j;
 
-    double delta_theta = (2 * M_PI) / slices;
-    double delta_height = height / stacks;
+    float delta_theta = (2 * M_PI) / slices;
+    float delta_height = height / stacks;
 
-    double prev_radius_aux = (radius * 0) / stacks;
-    double prev_height_aux = height / 2;
+    float prev_radius_aux = (radius * 0) / stacks;
+    float prev_height_aux = height / 2;
 
-    double radius_aux = (radius * 1) / stacks;
-    double height_aux = prev_height_aux - delta_height;
+    float radius_aux = (radius * 1) / stacks;
+    float height_aux = prev_height_aux - delta_height;
 
     ofstream ficheiro;
     ficheiro.open (filename);
@@ -281,7 +281,7 @@ drawCone (double radius, double height, int slices, int stacks, char * filename)
     {
         ficheiro.clear ();
 
-        for (i = 0; i < stacks; i++)
+        for (i = 0; i <= stacks; i++)
         {
             prev_theta = 0;
             current_theta = delta_theta;
@@ -364,8 +364,8 @@ main (int argc, char* argv[])
         }
         else
         {
-            double length = atof (argv[2]);
-            double width = atof (argv[3]);
+            float length = atof (argv[2]);
+            float width = atof (argv[3]);
             drawPlane (length, width, argv[4]);
         }
     }
@@ -380,9 +380,9 @@ main (int argc, char* argv[])
         }
         else
         {
-            double length = atof (argv[2]);
-            double height = atof (argv[3]);
-            double width = atof (argv[4]);
+            float length = atof (argv[2]);
+            float height = atof (argv[3]);
+            float width = atof (argv[4]);
             drawBox (length, height, width, argv[5]);
         }
     }
@@ -398,8 +398,8 @@ main (int argc, char* argv[])
         }
         else
         {
-            double radius = atof (argv[2]);
-            double height = atof (argv[3]);
+            float radius = atof (argv[2]);
+            float height = atof (argv[3]);
             int slices = atoi (argv[4]);
             int stacks = atoi (argv[5]);
             drawCone (radius, height, slices, stacks, argv[6]);
@@ -416,26 +416,26 @@ main (int argc, char* argv[])
         }
         else
         {
-            double radius = atof (argv[2]);
+            float radius = atof (argv[2]);
             int slices = atoi (argv[3]);
             int stacks = atoi (argv[4]);
             drawSphere (radius, slices, stacks, argv[5]);
 
         }
     }
-    else if (!strcmp (argv[1], "anel"))
+    else if (!strcmp (argv[1], "ring"))
     {
         if(argc != 6)
         {
             cout
-            << "ERROR :: format: 'anel' <raio interior> <raio exterior> <slices> <file name>"
+            << "ERROR :: format: 'ring' <inner radius> <exterior radius> <slices> <file name>"
             << endl;
             return 0;
         }
         else
         {
-            double raioIn = atof(argv[2]);
-            double raioOut = atof(argv[3]);
+            float raioIn = atof(argv[2]);
+            float raioOut = atof(argv[3]);
             int slices = atoi(argv[4]);
             drawAnel(raioIn,raioOut,slices,argv[5]);
         }

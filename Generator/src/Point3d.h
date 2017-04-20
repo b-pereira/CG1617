@@ -14,21 +14,21 @@ public:
 
 	Point3d();
 
-	Point3d(double x, double y, double z);
+	Point3d(float x, float y, float z);
 
-	double getXCoord() const;
-	void setXCoord(double coord);
-	double getYCoord() const;
-	void setYCoord(double coord);
-	double getZCoord() const;
-	void setZCoord(double coord);
+	float getXCoord() const;
+	void setXCoord(float coord);
+	float getYCoord() const;
+	void setYCoord(float coord);
+	float getZCoord() const;
+	void setZCoord(float coord);
 	~Point3d();
 
 private:
 
-	double x_coord;
-	double y_coord;
-	double z_coord;
+	float x_coord;
+	float y_coord;
+	float z_coord;
 
 };
 

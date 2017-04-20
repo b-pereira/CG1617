@@ -11,31 +11,31 @@ Point3d::Point3d() :
 		x_coord(0), y_coord(0), z_coord(0) {
 }
 
-Point3d::Point3d(double x, double y, double z) :
+Point3d::Point3d(float x, float y, float z) :
 		x_coord(x), y_coord (y), z_coord (z) {
 }
 
-double Point3d::getXCoord() const {
+float Point3d::getXCoord() const {
 	return x_coord;
 }
 
-void Point3d::setXCoord(double coord) {
+void Point3d::setXCoord(float coord) {
 	x_coord = coord;
 }
 
-double Point3d::getYCoord() const {
+float Point3d::getYCoord() const {
 	return y_coord;
 }
 
-void Point3d::setYCoord(double coord) {
+void Point3d::setYCoord(float coord) {
 	y_coord = coord;
 }
 
-double Point3d::getZCoord() const {
+float Point3d::getZCoord() const {
 	return z_coord;
 }
 
-void Point3d::setZCoord(double coord) {
+void Point3d::setZCoord(float coord) {
 	z_coord = coord;
 }
 
