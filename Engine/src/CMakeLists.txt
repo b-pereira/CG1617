@@ -2,6 +2,17 @@ cmake_minimum_required(VERSION 2.8)
 
 # Project Name
 PROJECT(Engine)
+if (NOT APPLE)
+	if (WIN32)
+		set(GLEW_ROOT_FOLDER "" CACHE PATH "Path to GLEW folder")
+		include_directories(${GLEW_ROOT_FOLDER})
+		link_directories(${GLEW_ROOT_FOLDER})
+	else(WIN32)
+		find_package(GLEW REQUIRED)
+		include_directories(${GLEW_INCLUDE_DIRS})
+		link_libraries(${GLEW_LIBRARIES})
+	endif(WIN32)
+endif(NOT APPLE)
 
 set (CMAKE_CXX_STANDARD 11)
 find_package(GLUT REQUIRED)
@@ -24,5 +35,9 @@ endif(NOT OPENGL_FOUND)
 add_executable(${PROJECT_NAME} main.cpp Group.h   Point3d.cpp  Rotation.cpp
 	Scale.cpp  tinyxml2.cpp  Transformation.cpp  Translation.cpp  Translation.h  Triangle.h
 Group.cpp  Point3d.h    Rotation.h    Scale.h    tinyxml2.h    Transformation.h    Triangle.cpp)
+if (WIN32)
+	target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} glew32)
+else(WIN32)
+	target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+endif (WIN32)
 
-target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} )
