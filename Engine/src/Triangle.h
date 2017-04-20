@@ -14,8 +14,8 @@ public:
 
 	Triangle();
 
-	Triangle(double xA, double yA, double zA, double xB, double yB, double zB,
-			double xC, double yC, double zC);
+	Triangle(float xA, float yA, float zA, float xB, float yB, float zB,
+			float xC, float yC, float zC);
 
 	const Point3d& getA() const;
 	void setA(const Point3d& a);

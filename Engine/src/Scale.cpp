@@ -14,7 +14,7 @@ Scale::Scale() :
 
 }
 
-Scale::Scale(double x, double y, double z) :
+Scale::Scale(float x, float y, float z) :
 		point(x, y, z) {
 
 }
@@ -24,11 +24,11 @@ const Point3d&Scale::getPoint() const {
 }
 void Scale::applyTransformation() const {
 
-	std::cout << "scale"
+	/*std::cout << "scale"
 			  << " X =" << point.getXCoord()
 			  << " Y =" << point.getYCoord()
 			  << " Z =" << point.getZCoord()
-			  << std::endl;
+			  << std::endl;*/
 			glScalef(point.getXCoord(), point.getYCoord(),
 					point.getZCoord());
 

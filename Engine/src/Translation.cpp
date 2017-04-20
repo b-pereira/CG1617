@@ -14,7 +14,7 @@ Translation::Translation() :
 
 }
 
-Translation::Translation(double x, double y, double z) :
+Translation::Translation(float x, float y, float z) :
 		point(x, y, z) {
 
 }
@@ -24,11 +24,11 @@ const Point3d&Translation::getPoint() const {
 }
 
 void Translation::applyTransformation() const {
-	std::cout << "translate"
+	/*std::cout << "translate"
 			  << " X =" << point.getXCoord()
 			  << " Y =" << point.getYCoord()
 			  << " Z =" << point.getZCoord()
-			  << std::endl;
+			  << std::endl;*/
 			glTranslatef(point.getXCoord(), point.getYCoord(),
 					point.getZCoord());
 }

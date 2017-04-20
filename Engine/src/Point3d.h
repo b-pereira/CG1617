@@ -15,32 +15,32 @@ public:
 
     Point3d();
 
-    Point3d(double x, double y, double z);
+    Point3d(float x, float y, float z);
 
-    double getXCoord() const;
-    void setXCoord(double coord);
-    double getYCoord() const;
-    void setYCoord(double coord);
-    double getZCoord() const;
-    void setZCoord(double coord);
-    void setCoord(double x, double y,double z);
-    void incrementXCoordBy(double value);
-    void incrementYCoordBy(double value);
-    void incrementZCoordBy(double value);
-    void decrementXCoordBy(double value);
-    void decrementYCoordBy(double value);
-    void decrementZCoordBy(double value);
+    float getXCoord() const;
+    void setXCoord(float coord);
+    float getYCoord() const;
+    void setYCoord(float coord);
+    float getZCoord() const;
+    void setZCoord(float coord);
+    void setCoord(float x, float y,float z);
+    void incrementXCoordBy(float value);
+    void incrementYCoordBy(float value);
+    void incrementZCoordBy(float value);
+    void decrementXCoordBy(float value);
+    void decrementYCoordBy(float value);
+    void decrementZCoordBy(float value);
     Point3d addTo(Point3d point);;
-    Point3d multiplyBy(double k);
+    Point3d multiplyBy(float k);
     Point3d & operator= (const Point3d & other);
     Point3d crossProduct(Point3d& u, Point3d &v);
     ~Point3d();
 
 private:
 
-    double x_coord;
-    double y_coord;
-    double z_coord;
+    float x_coord;
+    float y_coord;
+    float z_coord;
 
 };
 
