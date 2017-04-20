@@ -1,4 +1,6 @@
+#include <GL/glew.h>
 #include <GL/glut.h>
+
 #include <iostream>
 #include <cmath>
 
@@ -19,7 +21,8 @@ float xx = 0, zz = 0;
 
 float alpha = 0, beta = 0, r = 50;
 
-Modelos * modelos;
+Models * models;
+
 
 void changeSize(int w, int h) {
 
@@ -56,7 +59,9 @@ void renderScene(void) {
 
 	gluLookAt(camX + x, camY, camZ + z, x + lx, 1.0f, z + lz, 0.0f, 1.0f, 0.0f);
 
-	traverseTree(modelos, modelos->g);
+
+
+	traverseTree(models, models->g);
 
 	// End of frame
 	glutSwapBuffers();
@@ -158,13 +163,6 @@ void menu(int op) {
 int main(int argc, char **argv) {
 
 
-	if(argv[1]==NULL){
-
-		modelos = readXMLDoc("resources/sistema.xml");
-	}else{
-
-		modelos = readXMLDoc(argv[1]);
-	}
 
 
 
@@ -174,11 +172,34 @@ int main(int argc, char **argv) {
 
 
 // init GLUT and the window
+//	glewInit();
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(800, 800);
 	glutCreateWindow("CG@DI-UM");
+
+	GLenum err = glewInit();
+	if (GLEW_OK != err)
+	{
+	  /* Problem: glewInit failed, something is seriously wrong. */
+	  fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+
+	}
+	fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+
+
+
+
+
+
+	if(argv[1]==NULL){
+
+		models = readXMLDoc("resources/sistema.xml");
+	}else{
+
+		models = readXMLDoc(argv[1]);
+	}
 
 // Required callback registry
 	glutDisplayFunc(renderScene);
