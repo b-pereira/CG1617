@@ -7,12 +7,42 @@
 #include <sstream>
 #include "Group.h"
 #include "Constantes.h"
+#include <GL/glew.h>
+#include <GL/glut.h>
+#include <stdio.h>
+
+void initBuffers(Models * models, VBO vbo, vector<float> array) {
+
+	float *a = &array[0];
+
+	/**
+	 * Buffer Initialization
+	 */
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glGenBuffers(1, &models->buffers[vbo.index]);
+	glBindBuffer(GL_ARRAY_BUFFER, models->buffers[vbo.index]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vbo.size, a, GL_STATIC_DRAW);
 
 
+
+
+
+}
+
+void drawVBO(Models * models, VBO vbo) {
+
+	/**
+	 * VBOs - Drawing
+	 */
+
+	glBindBuffer(GL_ARRAY_BUFFER, models->buffers[vbo.index]);
+	glVertexPointer(3, GL_FLOAT, 0, 0);
+	glDrawArrays(GL_TRIANGLES, 0, vbo.size);
+
+}
 
 void drawElement(Models * models, Group * g) {
-
-	glBegin(GL_TRIANGLES);
 
 	for (auto file : g->models) {
 
@@ -20,16 +50,11 @@ void drawElement(Models * models, Group * g) {
 
 		if (entry != models->figures.end()) {
 
-			for (int i = 0; i < entry->second.size(); i += 3) {
-				glVertex3f(entry->second[i], entry->second[i + 1],
-						entry->second[i + 2]);
+			drawVBO(models, entry->second);
 
-			}
 		}
 
 	}
-
-	glEnd();
 
 }
 
@@ -37,13 +62,16 @@ void readFile(Models * models, string file) {
 
 	string line;
 
-	vector<double> lst;
+	vector<float> lst;
+	VBO vbo;
+	vbo.size = 0;
+
 	ifstream myfile("resources/" + file, ios::in);
 	if (myfile.is_open()) {
 		while (getline(myfile, line)) {
 
 			std::stringstream is(line);
-			double x, y, z;
+			float x, y, z;
 			is >> x;
 			is >> y;
 			is >> z;
@@ -55,8 +83,19 @@ void readFile(Models * models, string file) {
 		}
 		myfile.close();
 
-		models->figures.insert(std::pair<string, vector<double>>(file, lst));
+		auto entry = models->figures.find(file);
 
+		if (entry == models->figures.end()) {
+			vbo.size = lst.size();
+			vbo.index = models->n_buffers;
+			models->buffers.push_back(0);
+
+			models->figures.insert(std::pair<string, VBO>(file, vbo));
+
+			initBuffers(models, vbo, lst);
+			models->n_buffers++;
+
+		}
 	}
 
 	else
@@ -81,7 +120,7 @@ void readXMLFromRootElement(XMLElement * element, Models * models,
 		Transformation * tr = 0;
 
 		if ((name.compare(TRANSLATE) == 0) || (name.compare(SCALE) == 0)) {
-			double x, y, z;
+			float x, y, z;
 
 			x = (element->Attribute(X)) ? atof(element->Attribute(X)) : 0;
 			y = (element->Attribute(Y)) ? atof(element->Attribute(Y)) : 0;
@@ -106,7 +145,7 @@ void readXMLFromRootElement(XMLElement * element, Models * models,
 			}
 
 		} else if (name.compare(ROTATE) == 0) {
-			double axis_x, axis_y, axis_z, angle;
+			float axis_x, axis_y, axis_z, angle;
 
 			angle = (element->Attribute(ANGLE)) ?
 					atof(element->Attribute(ANGLE)) : 0;
@@ -164,6 +203,7 @@ Models * readXMLDoc(const char * path) {
 
 	XMLElement* modelNode = doc.FirstChildElement(SCENE);
 	Models * models = new Models;
+	models->n_buffers = 0;
 	models->g = new Group;
 
 	readXMLFromRootElement(modelNode, models, models->g);
@@ -175,7 +215,7 @@ Models * readXMLDoc(const char * path) {
 void traverseTree(Models * models, Group *group) {
 
 	glPushMatrix();
-	cout << "PUSH" << endl;
+
 
 	for (auto transformation : group->transformations) {
 
@@ -189,7 +229,7 @@ void traverseTree(Models * models, Group *group) {
 
 		traverseTree(models, group->children[i]);
 		glPopMatrix();
-		cout << "POP" << endl;
+
 
 	}
 

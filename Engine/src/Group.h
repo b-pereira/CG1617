@@ -2,6 +2,7 @@
 #define SRC_GROUP_H_
 
 #include <iostream>
+#include <GL/glew.h>
 #include <GL/glut.h>
 
 #include <map>
@@ -16,7 +17,13 @@
 
 #include "Constantes.h"
 
-#include "Triangle.h"
+
+
+
+
+#define BUFFER_OFFSET(bytes) ((GLubyte*) NULL + (bytes))
+#define VERTICES 0
+#define NUM_BUFFERS 5
 
 #include "Transformation.h"
 #include "Rotation.h"
@@ -39,13 +46,28 @@ typedef struct gr {
 
 } Group;
 
+
+typedef struct vbos {
+
+
+
+	int index;
+	int size;
+
+
+} VBO;
+
 typedef struct modl {
 
 	Group * g;
-
-	map<string, vector<double>> figures;
+	int n_buffers;
+	vector<GLuint> buffers ;
+	map<string, VBO> figures;
 
 } Models;
+
+void initBuffers(Models *, VBO, vector<float>);
+void drawVBO(Models *, VBO);
 
 void drawElement(Models *, Group *);
 const vector<string> explode(const string&, const char&);
