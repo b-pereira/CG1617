@@ -9,17 +9,17 @@
 #include "GL/glut.h"
 #include <iostream>
 
-Rotation::Rotation(double ang, double x, double y, double z) :
-		point(x, y, z), angle(ang) {
+Rotation::Rotation(double tim, double x, double y, double z) :
+		point(x, y, z), time(tim) {
 
 }
 Rotation::Rotation() :
-		point(0, 0, 0), angle(0) {
+		point(0, 0, 0), time(0) {
 
 }
 
-double Rotation::getAngle() const {
-	return angle;
+double Rotation::getTime() const {
+	return time;
 }
 
 const Point3d& Rotation::getPoint() const {
@@ -29,12 +29,12 @@ const Point3d& Rotation::getPoint() const {
 void Rotation::applyTransformation() const {
 
 	std::cout << "rotation"
-			  << " angle =" << angle
+			  << " time =" << time
 			  << " axisX =" << point.getXCoord()
 			  << " axisY =" << point.getYCoord()
 			  << " axisZ =" << point.getZCoord()
 			  << std::endl;
-	glRotatef(angle, point.getXCoord(),
+	glRotatef(time, point.getXCoord(),
 			point.getYCoord(), point.getZCoord());
 }
 

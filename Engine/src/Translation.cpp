@@ -10,21 +10,22 @@
 #include <iostream>
 
 Translation::Translation() :
-		point(0, 0, 0) {
+	time(0) {
 
 }
 
-Translation::Translation(double x, double y, double z) :
-		point(x, y, z) {
-
+Translation::Translation(double tim, vector<Point3d> pts) :
+		time(tim), points(pts) {
 }
 
-const Point3d&Translation::getPoint() const {
-	return point;
+
+const vector&Translation::getVector() const {
+	return points;
 }
 
-void Translation::applyTransformation() const {
+void Translation::applyTransformation() const { //como é que crio um subgrupo para os pontos??
 	std::cout << "translate"
+			  << " time =" << time
 			  << " X =" << point.getXCoord()
 			  << " Y =" << point.getYCoord()
 			  << " Z =" << point.getZCoord()
