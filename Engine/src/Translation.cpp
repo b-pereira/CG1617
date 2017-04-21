@@ -10,26 +10,25 @@
 #include <iostream>
 
 Translation::Translation() :
-	time(0) {
+		point(0, 0, 0) {
 
 }
 
-Translation::Translation(double tim, vector<Point3d> pts) :
-		time(tim), points(pts) {
+Translation::Translation(double x, double y, double z) :
+		point(x, y, z) {
+
 }
 
-
-const vector&Translation::getVector() const {
-	return points;
+const Point3d&Translation::getPoint() const {
+	return point;
 }
 
-void Translation::applyTransformation() const { //como é que crio um subgrupo para os pontos??
-	std::cout << "translate"
-			  << " time =" << time
-			  << " X =" << point.getXCoord()
-			  << " Y =" << point.getYCoord()
-			  << " Z =" << point.getZCoord()
-			  << std::endl;
+void Translation::applyTransformation() const {
+//	std::cout << "translate"
+//			  << " X =" << point.getXCoord()
+//			  << " Y =" << point.getYCoord()
+//			  << " Z =" << point.getZCoord()
+//			  << std::endl;
 			glTranslatef(point.getXCoord(), point.getYCoord(),
 					point.getZCoord());
 }

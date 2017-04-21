@@ -16,20 +16,20 @@ class Rotation: public Transformation {
 public:
 
 	Rotation();
-	Rotation(double time, double x, double y, double z);
+	Rotation(double angle, double x, double y, double z);
 
 
 
 	void applyTransformation() const;
 	~Rotation();
 
-	double getTime() const;
+	double getAngle() const;
 	const Point3d& getPoint() const;
 
 
 
 private:
-	double time;
+	double angle;
 	Point3d point;
 
 };
