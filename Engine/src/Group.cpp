@@ -145,6 +145,21 @@ void readXMLFromRootElement(XMLElement * element, Modelos * models, Grupo * grup
 
             if (name.compare(TRANSLATE) == 0)
             {
+
+            	if(element->Attribute(TIME)){
+
+
+
+
+            	}else
+            	{
+
+
+
+            	}
+
+
+
                 /**
                  * Criar Translação
                  */

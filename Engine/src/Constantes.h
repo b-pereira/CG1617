@@ -24,6 +24,8 @@
 #define X         "X"
 #define Y         "Y"
 #define Z         "Z"
+#define TIME      "time"
+#define POINT     "point"
 
 
 

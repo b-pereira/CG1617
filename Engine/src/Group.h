@@ -1,4 +1,3 @@
-
 #ifndef SRC_GROUP_H_
 #define SRC_GROUP_H_
 
@@ -15,16 +14,15 @@
 #include <string>
 #include <map>
 
-
-
+#include "AnimatedRotation.h"
+#include "AnimatedTranslation.h"
+#include "Rotation.h"
+#include "Translation.h"
 #include "Constantes.h"
-
 
 #include "Triangle.h"
 
 #include "Transformation.h"
-#include "Rotation.h"
-#include "Translation.h"
 #include "Scale.h"
 
 #include "tinyxml2.h"
@@ -33,33 +31,23 @@ using namespace tinyxml2;
 
 using namespace std;
 
-typedef struct gr
-{
+typedef struct gr {
 
+	vector<string> modelos;
 
-    vector<string> modelos;
+	vector<Transformation*> transformations;
 
-    vector<Transformation*> transformations;
+	vector<gr *> filhos;
 
-    vector<gr *> filhos;
+} Grupo;
 
-}
-Grupo;
+typedef struct modl {
 
-typedef struct modl
-{
+	Grupo * g;
 
+	map<string, vector<Triangle>> figuras;
 
-
-    Grupo * g;
-
-    map<string,vector<Triangle>> figuras;
-
-
-
-}
-Modelos;
-
+} Modelos;
 
 void drawElement(Modelos *, Grupo *);
 const vector<string> explode(const string&, const char&);
@@ -69,5 +57,4 @@ void readXMLFromRootElement(XMLElement *, Modelos *, Grupo *);
 void traverseTree(Modelos *, Grupo *);
 
 #endif
-
 
