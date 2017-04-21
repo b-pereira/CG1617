@@ -23,6 +23,7 @@ endif(NOT OPENGL_FOUND)
 
 add_executable(${PROJECT_NAME} main.cpp Group.h   Point3d.cpp  Rotation.cpp
 	Scale.cpp  tinyxml2.cpp  Transformation.cpp  Translation.cpp  Translation.h  Triangle.h
-Group.cpp  Point3d.h    Rotation.h    Scale.h    tinyxml2.h    Transformation.h    Triangle.cpp)
+Group.cpp  Point3d.h    Rotation.h    Scale.h    tinyxml2.h    Transformation.h    Triangle.cpp 
+AnimatedRotation.h AnimatedRotation.cpp AnimatedTranslation.cpp  AnimatedTranslation.h Catmull-Rom.cpp Catmull-Rom.h)
 
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} )
