@@ -1,0 +1,37 @@
+<scene>
+ <!-- Earth -->
+  <group>
+    <rotate angle="23.44" axisZ="1"/>
+    <scale X="0.5" Y="0.5" Z="0.5"/>
+    <models>
+      <model file="sphere.3d"/>
+    </models>
+    <!-- Moon  -->
+    <group>
+      <scale X="0.25" Y="0.25" Z="0.25"/>
+      <translate time="10" >
+			<point X="0" Y="0" Z="8" />
+			<point X="3.0615" Y="0" Z="7.391" />
+			<point X="5.6569" Y="0" Z="5.6569" />
+			<point X="7.391" Y="0" Z="3.0615" />
+			<point X="8" Y="0" Z="0" />
+			<point X="7.391" Y="0" Z="-3.0615" />
+			<point X="5.6569" Y="0" Z="-5.6569" />
+			<point X="3.0615" Y="0" Z="-7.391" />
+			<point X="0" Y="0" Z="-8" />
+			<point X="-3.0615" Y="0" Z="-7.391" />
+			<point X="-5.6569" Y="0" Z="-5.6569" />
+			<point X="-7.391" Y="0" Z="-3.0615" />
+			<point X="-8" Y="0" Z="0" />
+			<point X="-7.391" Y="0" Z="3.0615" />
+			<point X="-5.6569" Y="0" Z="5.6569" />
+			<point X="-3.0615" Y="0" Z="7.391" />
+	  </translate>
+      <rotate angle="6.68" axisX="1"/>
+      <models>
+        <model file="sphere.3d"/>
+      </models>
+    </group>
+   
+  </group>
+</scene>
