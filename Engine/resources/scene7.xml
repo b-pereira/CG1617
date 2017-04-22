@@ -1,0 +1,21 @@
+<scene>
+ <!-- Earth -->
+  <group>
+    <rotate angle="23.44" axisZ="1"/>
+    <scale X="0.5" Y="0.5" Z="0.5"/>
+    <rotate time="10" axisY="1"/>
+    <models>
+      <model file="sphere.3d"/>
+    </models>
+    <!-- Moon  -->
+    <group>
+     <translate X="8" />
+     <rotate angle="6.68" axisX="1"/>
+      <scale X="0.25" Y="0.25" Z="0.25"/>
+      <models>
+        <model file="sphere.3d"/>
+      </models>
+    </group>
+   
+  </group>
+</scene>
