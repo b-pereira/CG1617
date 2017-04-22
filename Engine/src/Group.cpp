@@ -24,10 +24,6 @@ void initBuffers(Models * models, VBO vbo, vector<float> array) {
 	glBindBuffer(GL_ARRAY_BUFFER, models->buffers[vbo.index]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vbo.size, a, GL_STATIC_DRAW);
 
-
-
-
-
 }
 
 void drawVBO(Models * models, VBO vbo) {
@@ -122,19 +118,62 @@ void readXMLFromRootElement(XMLElement * element, Models * models,
 		if ((name.compare(TRANSLATE) == 0) || (name.compare(SCALE) == 0)) {
 			float x, y, z;
 
-			x = (element->Attribute(X)) ? atof(element->Attribute(X)) : 0;
-			y = (element->Attribute(Y)) ? atof(element->Attribute(Y)) : 0;
-			z = (element->Attribute(Z)) ? atof(element->Attribute(Y)) : 0;
+
 
 			if (name.compare(TRANSLATE) == 0) {
-				/**
-				 * Criar Translação
-				 */
-				Translation * t = new Translation(x, y, z);
 
-				group->transformations.push_back(t);
+
+
+				if (element->Attribute(TIME)) {
+
+					float time = atof(element->Attribute(TIME));
+
+					AnimatedTranslation * at = new AnimatedTranslation(time);
+
+					cout << "TIME: " << time << endl;
+
+					for (auto crawlPoint = element->FirstChildElement(POINT);
+							crawlPoint != nullptr;
+							crawlPoint = crawlPoint->NextSiblingElement(
+							POINT)) {
+
+						x = (crawlPoint->Attribute(X)) ?
+								atof(crawlPoint->Attribute(X)) : 0;
+						y = (crawlPoint->Attribute(Y)) ?
+								atof(crawlPoint->Attribute(Y)) : 0;
+						z = (crawlPoint->Attribute(Z)) ?
+								atof(crawlPoint->Attribute(Z)) : 0;
+
+						cout << "X: "  << x  << "Y: "  << y << "Z: " << z << endl;
+
+						at->addPointCoords(x, y, z);
+
+					}
+					group->transformations.push_back(at);
+
+				} else {
+
+					x = (element->Attribute(X)) ?
+							atof(element->Attribute(X)) : 0;
+					y = (element->Attribute(Y)) ?
+							atof(element->Attribute(Y)) : 0;
+					z = (element->Attribute(Z)) ?
+							atof(element->Attribute(Z)) : 0;
+
+					/**
+					 * Criar Translação
+					 */
+					Translation * t = new Translation(x, y, z);
+
+					group->transformations.push_back(t);
+
+				}
 
 			} else {
+
+				x = (element->Attribute(X)) ? atof(element->Attribute(X)) : 0;
+				y = (element->Attribute(Y)) ? atof(element->Attribute(Y)) : 0;
+				z = (element->Attribute(Z)) ? atof(element->Attribute(Z)) : 0;
 				/**
 				 * Criar Escala
 				 */
@@ -147,25 +186,45 @@ void readXMLFromRootElement(XMLElement * element, Models * models,
 		} else if (name.compare(ROTATE) == 0) {
 			float axis_x, axis_y, axis_z, angle;
 
-			angle = (element->Attribute(ANGLE)) ?
-					atof(element->Attribute(ANGLE)) : 0;
+			if (element->Attribute(TIME)) {
 
-			axis_x =
-					(element->Attribute(AXIS_X)) ?
-							atof(element->Attribute(AXIS_X)) : 0;
-			axis_y =
-					(element->Attribute(AXIS_Y)) ?
-							atof(element->Attribute(AXIS_Y)) : 0;
-			axis_z =
-					(element->Attribute(AXIS_Z)) ?
-							atof(element->Attribute(AXIS_Z)) : 0;
+				float time = atof(element->Attribute(TIME));
 
-			/**
-			 * Criar Rotação
-			 */
-			Rotation * r = new Rotation(angle, axis_x, axis_y, axis_z);
+				axis_x =
+						(element->Attribute(AXIS_X)) ?
+								atof(element->Attribute(AXIS_X)) : 0;
+				axis_y =
+						(element->Attribute(AXIS_Y)) ?
+								atof(element->Attribute(AXIS_Y)) : 0;
+				axis_z =
+						(element->Attribute(AXIS_Z)) ?
+								atof(element->Attribute(AXIS_Z)) : 0;
 
-			group->transformations.push_back(r);
+				AnimatedRotation *ar = new AnimatedRotation(time, axis_x,
+						axis_y, axis_z);
+				group->transformations.push_back(ar);
+
+			} else {
+
+				angle = (element->Attribute(ANGLE)) ?
+						atof(element->Attribute(ANGLE)) : 0;
+
+				axis_x =
+						(element->Attribute(AXIS_X)) ?
+								atof(element->Attribute(AXIS_X)) : 0;
+				axis_y =
+						(element->Attribute(AXIS_Y)) ?
+								atof(element->Attribute(AXIS_Y)) : 0;
+				axis_z =
+						(element->Attribute(AXIS_Z)) ?
+								atof(element->Attribute(AXIS_Z)) : 0;
+
+				/**
+				 * Criar Rotação
+				 */
+				Rotation * r = new Rotation(angle, axis_x, axis_y, axis_z);
+				group->transformations.push_back(r);
+			}
 
 		} else if (name.compare(MODELS) == 0) {
 
@@ -216,7 +275,6 @@ void traverseTree(Models * models, Group *group) {
 
 	glPushMatrix();
 
-
 	for (auto transformation : group->transformations) {
 
 		transformation->applyTransformation();
@@ -229,7 +287,6 @@ void traverseTree(Models * models, Group *group) {
 
 		traverseTree(models, group->children[i]);
 		glPopMatrix();
-
 
 	}
 

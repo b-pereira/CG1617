@@ -30,6 +30,9 @@
 #include "Translation.h"
 #include "Scale.h"
 
+#include "AnimatedRotation.h"
+#include "AnimatedTranslation.h"
+
 #include "tinyxml2.h"
 
 using namespace tinyxml2;
