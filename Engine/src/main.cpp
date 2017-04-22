@@ -2,6 +2,7 @@
 #include <GL/glut.h>
 
 #include <iostream>
+#include <sstream>
 #include <cmath>
 
 #include "Group.h"
@@ -21,8 +22,29 @@ float xx = 0, zz = 0;
 
 float alpha = 0, beta = 0, r = 50;
 
+int frame, fps;
+float timebase, timec;
+
 Models * models;
 
+void printInfo() {
+
+	frame++;
+	timec = glutGet(GLUT_ELAPSED_TIME);
+	if (timec - timebase > 1000) {
+		fps = frame * 1000.0 / (timec - timebase);
+		timebase = timec;
+		frame = 0;
+	}
+
+	std::stringstream sstm;
+
+	sstm << "FPS: " << fps << "\t" << "TIME: " << timec / 1000 << "s\t"
+			<< "TIMEBASE: " << timebase / 1000 << "s\t";
+
+	glutSetWindowTitle(sstm.str().c_str());
+
+}
 
 void changeSize(int w, int h) {
 
@@ -57,9 +79,9 @@ void renderScene(void) {
 	// set the camera
 	glLoadIdentity();
 
+	printInfo();
+
 	gluLookAt(camX + x, camY, camZ + z, x + lx, 1.0f, z + lz, 0.0f, 1.0f, 0.0f);
-
-
 
 	traverseTree(models, models->g);
 
@@ -162,14 +184,7 @@ void menu(int op) {
 
 int main(int argc, char **argv) {
 
-
-
-
-
-
 	/** Com MAKEFILE tem que ser ../resources*/
-
-
 
 // init GLUT and the window
 //	glewInit();
@@ -180,23 +195,17 @@ int main(int argc, char **argv) {
 	glutCreateWindow("CG@DI-UM");
 
 	GLenum err = glewInit();
-	if (GLEW_OK != err)
-	{
-	  /* Problem: glewInit failed, something is seriously wrong. */
-	  fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+	if (GLEW_OK != err) {
+		/* Problem: glewInit failed, something is seriously wrong. */
+		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
 
 	}
 	fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
-
-
-
-
-
-	if(argv[1]==NULL){
+	if (argv[1] == NULL) {
 
 		models = readXMLDoc("resources/sistema.xml");
-	}else{
+	} else {
 
 		models = readXMLDoc(argv[1]);
 	}
@@ -223,6 +232,10 @@ int main(int argc, char **argv) {
 //  OpenGL settings
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+
+	printf("Vendor: %s\n", glGetString(GL_VENDOR));
+	printf("Renderer: %s\n", glGetString(GL_RENDERER));
+	printf("Version: %s\n", glGetString(GL_VERSION));
 
 // enter GLUT's main cycle
 	glutMainLoop();
