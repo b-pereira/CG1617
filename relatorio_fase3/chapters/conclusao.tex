@@ -1,0 +1,36 @@
+%---------------------------------------------------------------------------------------------------------------%
+\section*{Conclusão\markboth{\MakeUppercase{Conclusão}}{}}
+\addcontentsline{toc}{section}{Conclusão}
+\label{concl}
+
+Em suma, pode-se afirmar que a maioria dos objetivos foram cumpridos, ou seja
+existe um modelo do sistema solar que pode ser \emph{renderizado} com primitivas
+gráficas personalizadas, a partir da leitura de um ficheiro XML, cujo os dados
+são carregados numa estrutura em memória. Além do mais, existe a possibilidade
+de aplicar transformações a essa primitiva, tais como rotações, translações
+e escalas.
+
+
+Com efeito, na primeira secção, relativa ao programa \texttt{Generator} que
+calcula os vértices de triângulos, foram implementas duas funções para desenhar
+esferas e discos com determinada espessura, para serem utilizados na construção
+do sistema solar. Adicionalmente, nesta secção são apresentados os algoritmos
+para o cálculos dos vértices, bem como diagramas explicativos, como também
+resultados da implementação desse algoritmos, e por último, fórmulas.\
+
+Na segunda secção, relativa ao programa \texttt{Engine}, que \emph{renderiza} os
+vértices guardados em ficheiros, foram implementadas rotinas para a leitura de
+dados, sendo, este processo, feito apenas uma vez, guardando os dados lidos em
+estruturas de dados adequadas. De igual modo criou-se um algoritmo para iteração
+nessas estruturas de dados, durante o processo de \emph{rendering}.
+À semelhança, com a secção anterior, este secção apresenta resultados,
+algoritmos e diagramas.
+
+
+No entanto ficaram duas coias por fazer: otimização da função de leitura
+(\emph{parsing} de linhas), uma vez que este processo tem várias iterações em
+cada resultado da linha obtida, e a implementação da câmara em primeira pessoa
+não foi possível, uma vez que, não houve tempo para amadurecer conhecimentos.
+
+
+
