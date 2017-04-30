@@ -1,0 +1,10 @@
+<scene>
+
+<rotate time="10" axisZ="1"/>
+<scale X="2" Y="2" Z="2"/>
+   
+    <models>
+      <model file="teapot.3d"/>
+    </models>
+   
+</scene>
