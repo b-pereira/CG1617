@@ -3,34 +3,13 @@
 \addcontentsline{toc}{section}{Conclusão}
 \label{concl}
 
-Em suma, pode-se afirmar que a maioria dos objetivos foram cumpridos, ou seja
-existe um modelo do sistema solar que pode ser \emph{renderizado} com primitivas
-gráficas personalizadas, a partir da leitura de um ficheiro XML, cujo os dados
-são carregados numa estrutura em memória. Além do mais, existe a possibilidade
-de aplicar transformações a essa primitiva, tais como rotações, translações
-e escalas.
-
-
-Com efeito, na primeira secção, relativa ao programa \texttt{Generator} que
-calcula os vértices de triângulos, foram implementas duas funções para desenhar
-esferas e discos com determinada espessura, para serem utilizados na construção
-do sistema solar. Adicionalmente, nesta secção são apresentados os algoritmos
-para o cálculos dos vértices, bem como diagramas explicativos, como também
-resultados da implementação desse algoritmos, e por último, fórmulas.\
-
-Na segunda secção, relativa ao programa \texttt{Engine}, que \emph{renderiza} os
-vértices guardados em ficheiros, foram implementadas rotinas para a leitura de
-dados, sendo, este processo, feito apenas uma vez, guardando os dados lidos em
-estruturas de dados adequadas. De igual modo criou-se um algoritmo para iteração
-nessas estruturas de dados, durante o processo de \emph{rendering}.
-À semelhança, com a secção anterior, este secção apresenta resultados,
-algoritmos e diagramas.
-
-
-No entanto ficaram duas coias por fazer: otimização da função de leitura
-(\emph{parsing} de linhas), uma vez que este processo tem várias iterações em
-cada resultado da linha obtida, e a implementação da câmara em primeira pessoa
-não foi possível, uma vez que, não houve tempo para amadurecer conhecimentos.
 
 
 
+Para concluir este relatório, pode-se dizer que todos os objetivos a cumprir foram concluídos sem grandes precalços nem atrasos. Isto é, o modelo bule a desenvolver com superfícies Bezier, as órbitas serem feitas sobre curvas Catmull-Rom e desenhar os modelos com VBOs foi tudo conseguido com sucesso. 
+
+Quanto ao bule desenvolvido que presta o papel de asteróide no sistema solar, apesar de ser o que causou mais receio numa primeira fase, foi algo que surpreendemente não causou grande empasse. O resultado obtido relativamente a esta matéria ficou o que seria expectável, e o grupo espera que a explicação sobre o processo de desenvolvimento tenha sido ilucidativo e conciso para que até o leitor que não esteja confortável com este tema, lhe seja feita uma breve introdução à teoria por trás.
+
+Relativamente às órbitas sobre o Catmull-rom optou-se por usar por cada órbita 16 pontos de controlo de modo a que o produto final fosse uma curva suave. Nesta secção a maior dificuldade foi chegar a um consentimento de como se ia fazer a lua orbitas sobre o seu planete correspondente, mas como foi explicado em cima, também se ultrapassou esta dificuldade.
+
+Quanto à mudança do modo de desenho dos modelos, passando agora os modelos a serem desenhados com VBOs, também foi algo que necessitou de consiliação de conhecimentos com estudo antes de se conseguir abordar esta matéria, no entanto, aqui a aula prática onde VBOs foi lecionado prestou um papel fulcral.
