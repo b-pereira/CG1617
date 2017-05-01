@@ -4,7 +4,6 @@
   <group>
     <rotate angle="162.26" axisX="1"/>
     <translate Z="100"/>
-    <rotate angle="90" axisY="1"/>
     <group>
       <translate time="81.45">
         <point X="0" Y="0" Z="133"/>
