@@ -4,26 +4,10 @@
 \label{intro}
 
 
-Para este projeto é requerido que se criem cenas hierárquicas com transformações
-geométricas descritas num ficheiro XML.\ Cada cena é uma árvore onde cada nodo
-contem um conjunto de transformações geométricas e conjuntos de modelos com os
-nomes de ficheiros onde estão vértices para a criação da cena. O resultado final
-é  \emph{renderização} de um modelo do sistema solar.  
+Para esta fase deste projecto é requerido o desenvolvimento de um novo tipo de modelo geométrico baseado em superfícies de Bezier, este novo modelo vai desempenhar o papel de um asterioide no sistema solar já desenvolvido na segunda fase. Este asteroide vai ter por si só uma órbita sua, consistente com a de um asteróide real, isto é, embora elíptica, a diferença entre a distância ao sol no momento da órbita de maior proximidade e a de maior distância irá ser maior do que qualquer planeta, dando assim um toque de realismo.
 
-Adicionalmente, os objetivos passam por criar uma função de leitura dos dados
-a partir de ficheiros, com a criação de uma estrutura ou estruturas de
-estruturas para armazenamento dos dados, sendo este processo feito apenas uma
-vez. Também é necessário definir primitivas gráficas e um processo de leitura
-das estruturas para ser incluído no processo de \emph{rendering}.  
+Adicionalmente, outra novidade irá ser as alterações relativas à translação e rotação dos planetas. As órbitas dos planetas agora irão ser sobre curvas Catmull-Rom, e as tranlações referentes a cada planeta deverão ser interpretadas do ficheiro XML em função de um ``time'' e dos seus pontos de controlo necessários para a curvatura Catmull-Rom. Quanto à rotação, nesta fase é subtituída a leitura pelo seu ``angle'' e passa ser igualmente por um ``time''. 
 
+Finalmente, nesta fase todos os modelos apresentados irão ser desenhados com VBOs, em oposição ao modo imediato usado nas fases prévias.
 
-Este relatório está divido em duas secções: a secção que documenta o processo de
-criação e programação de algoritmos para criação de objetos para o sistema
-solar, no programa \texttt{Engine}, e uma segunda secção que documenta
-o processo de leitura dos dados gerados pelo primeiro programa, estrutura
-utilizadas para guardar esse dados, e processo de \emph{rendering} iterando
-sobre as estruturas de dados e aplicando transformações, de forma a construir
-o sistema solar.
-
-
-
+Todas estas funcionalidades irão ser faladas em detalhe mais abaixo, dando ao leitor uma breve introdução teórica sobre cada tópico de modo a serem melhor compreendidas as decisões tomadas pelo grupo.
