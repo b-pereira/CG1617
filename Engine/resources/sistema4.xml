@@ -118,7 +118,7 @@
       <group>
         <scale X="2" Y="2" Z="2"/>
         <rotate angle="6.68" axisX="1"/>
-        <rotate time="2.72" axisY="1"/>
+        <rotate time="2" axisY="1"/>
         <models>
           <model file="sphere.3d"/>
         </models>
@@ -146,7 +146,7 @@
       </translate>
       <group>
         <rotate angle="5.14" axisZ="1"/>
-        <translate time="4.06">
+        <translate time="50">
           <point X="0" Y="0" Z="5"/>
           <point X="1.9134" Y="0" Z="4.6194"/>
           <point X="3.5355" Y="0" Z="3.5355"/>
