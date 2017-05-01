@@ -187,7 +187,6 @@ int main(int argc, char **argv) {
 	/** Com MAKEFILE tem que ser ../resources*/
 
 // init GLUT and the window
-//	glewInit();
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 100);
@@ -196,7 +195,6 @@ int main(int argc, char **argv) {
 
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {
-		/* Problem: glewInit failed, something is seriously wrong. */
 		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
 
 	}
@@ -204,7 +202,7 @@ int main(int argc, char **argv) {
 
 	if (argv[1] == NULL) {
 
-		models = readXMLDoc("resources/sistema.xml");
+		models = readXMLDoc("resources/sistema3.xml");
 	} else {
 
 		models = readXMLDoc(argv[1]);

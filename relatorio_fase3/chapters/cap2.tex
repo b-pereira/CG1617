@@ -1,10 +1,63 @@
 \section{Motor}
 
 Nesta secção pretende-se descrever três pontos essenciais desta fase: as
-estruturas de dados, algoritmos e processos de \emph{rendering}.
+estruturas de dados, algoritmos e processos de \emph{rendering}. Note-se que
+o foco do \emph{rendering} será o uso de \emph{vertex array objects} por
+oposição ao modo imediato de forma a obter uma maior eficiência.  
 
 
-\subsection{Estruturas de Dados}
+\subsection{\emph{Vertex Array Objects}}
+
+O OpenGL possibilita dois modos de renderização: o modo imediato
+e o \emph{vertex buffer objects} (VBOs). Os VBOs permitem um ganho substancial
+de performance, uma vez que os dados são logo enviados para a memória da placa
+gráfica onde residem, e por isso podem ser renderizados diretamente da placa
+gráfica. O modo imediato usa a memória do sistema onde os dados são inseridos
+\emph{frame} a \emph{frame}, usando uma API de renderização, o que causa peso
+computacional sobre o processador.
+
+Para a utilização das VBO's é necessário recorrer a criação de \emph{arrays} com os
+dados para renderizar geometria. Com efeito, é necessário, em primeiro lugar,
+ativar os \emph{arrays} com os diferentes tipos de dados e colocar os dados num
+\emph{buffer object}. Estes \emph{arrays} são acedidos pelo seu endereço individual da
+sua localização em memória, sendo então desenhadas as figuras geométricas dos
+respetivos conteúdos dos \emph{arrays}.
+
+Note-se que, no OpenGl, qualquer inteiro sem sinal pode ser usado como um
+identificador de \emph{buffer objecto}. Estes identificadores podem-se
+armazenados numa estrutura, sendo necessário, em seguida, gerar \emph{buffers} para os
+vértices (um \emph{buffer} para cada \emph{array} com vértices ---
+\texttt{glGenBuffers}) e ativar cada \emph{buffer} pelo seu identificador
+(\texttt{glBindBuffer}) e preencher o \emph{buffer} com os dados de cada
+\emph{array} de vértices previamente mencionados.
+
+Para desenhar, a figura geométrica é necessário definir a semântica, ou seja,
+definir o \emph{offset} relativo ao inicio do buffer (\texttt{glVertexPoint}),
+consoante o tipo de dados, fazer o bind do objecto apropriado para fazer
+a renderização e renderizar os arrays de vertices usando a função adequada
+(\texttt{glDrawArrays} ou \texttt{glDrawElements}).
+
+Para utilizar a tecnologia dos VBO's criou-se uma estrutura \texttt{Models}, que
+para além de ser composta por um apontador para a raiz da árvore
+\emph{n-ária} que será mencionada na próxima secção, possui um vetor de
+\texttt{GLuint} para armazenar os identificadores e uma tabela com os nomes dos
+ficheiros com os vértices para a geometria associadas a um tipo \texttt{VBO},
+que é constituído pelo número de vértices do \emph{vertex array} e o índice do
+\emph{vertex array} no vetor de identificadores.  
+
+Para utilizar os VBO's, como descrito acima inicializou-se \emph{buffer}  com função
+\texttt{initBuffers}, após da leitura do ficheiro de vértices,  ativando-o,
+gerando um \emph{buffer} para um identificador, fazendo o \emph{bind} de
+seguida e preenchendo o \emph{buffer} com os dados.   
+
+Para renderizar os VBO's criou-se a função \texttt{drawVBO}, que faz
+o \emph{bind} do \emph{buffer} pelo índice do \emph{buffer} no tipo
+\texttt{VBO}, define a semântica, com o tamanho no tipo \texttt{VBO}.
+A função \texttt{drawElement}, procura um nome de ficheiro na tabela mencionada
+acima, e caso exista, aplica a função \texttt{drawVBO}.
+
+
+\subsection{Estruturas de Dados para Transformações}
 \label{subsec:sec2}
 
 Como a estrutura do ficheiro XML é uma árvore \emph{n-ária} escolheu-se uma
@@ -25,28 +78,26 @@ geométrica.
 \label{fig:ssec2:strut} 
 \end{center}
 
-Para a representação genérica de qualquer transformação geométrica, criou-se
-uma estrutura de classes, onde a classe \texttt{Transformation} funciona como
-superclasse abstrata, com três subclasses: \texttt{Rotation},
-\texttt{Translation} e \texttt{Scale}. A superclasse possui um método virtual
-para aplicação da transformação (\texttt{applyTrasformation}), que é aplicado no
-contexto das suas subclasses quando invado diretamente, ou como parte da
+Para a representação genérica de qualquer transformação geométrica, criou-se uma
+estrutura de classes, onde a classe \texttt{Transformation} funciona como
+superclasse abstrata, com cinco subclasses: \texttt{Rotation},
+\texttt{Translation}, \texttt{Scale}, \texttt{AnimatedTranslation}
+e \texttt{AnimatedRotation}. A superclasse possui um método virtual para
+aplicação da transformação (\texttt{applyTrasformation}), que é aplicado no
+contexto das suas subclasses quando invocado diretamente, ou como parte da
 estrutura da hierarquia, à custa do polimorfismo que a linguagem de programação
 C++ permite. Esta hierarquia pode ser vista com mais detalhe na
 \emph{Figura~\ref{fig:ssec2:class}}. Parte da estrutura de classes é a classe
-\texttt{Point3d} que representa um triplo de \texttt{doubles} para as
+\texttt{Point3d} que representa um triplo de \texttt{floats} para as
 coordenadas geométricas de um ponto em 3 dimensões. Adicionalmente a classe
 implementa alguns métodos para cálculos de pontos e vetores, embora
-o significado seja diferente entre estes dois conceitos.
+o significado seja diferente entre estes dois conceitos. Algumas classes
+implementam vetores deste tipo.
 
-Por último criou-se uma outra estrutura, em que se denominou o tipo
-\texttt{Modelos}, que é composta por um apontador para a raiz da árvore
-\emph{n-ária} já mencionada, um vetor de \texttt{Triangles}, que
-possuirão os dados dos pontos a serem desenhados. A classe \texttt{Triangles}
-é composta por três \texttt{Point3d}, representando os três vértices de um
-triângulo. O uso daquele vetor é uma medida de eficiência em memória, uma vez
-que uma cena pode ser composta por objetos criados com o mesmo conjunto de
-pontos, sendo aplicadas transformações para o efeito desejado.
+Posteriormente as classes \texttt{AnimatedTranslation}
+e \texttt{AnimatedRotation} serão descritas com maior detalhe.
+
+
 
 \begin{center} 	
 \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{resources/classes.png}
@@ -54,6 +105,8 @@ pontos, sendo aplicadas transformações para o efeito desejado.
 \caption{Hieraquia de classes de transformações geométricas}
 \label{fig:ssec2:class} 
 \end{center}
+
+
 \subsection{Descrição do processo de leitura}
 
 A função principal de leitura é a que está demonstrada no
@@ -63,17 +116,16 @@ estruturas e afins. Esta função serve-se da estrutura de apontadores da árvor
 que compõem a estrutura do documento XML para navegar na estrutura
 recursivamente. 
 
-Para além do apontador para o estrutura XML, passou-se por
-parâmetro um apontador para a estrutura \texttt{Modelos}, que contem um
-apontador para a raiz da árvore \emph{n-ária} e uma tabela (ou mapa) com os
-valores dos pontos para \emph{rendering} com o nome do ficheiro associado
+Para além do apontador para o estrutura XML, passou-se por parâmetro um
+apontador para a estrutura \texttt{Models}, que contem um apontador para a raiz
+da árvore \emph{n-ária} e uma tabela (ou mapa) com os valores dos instâncias do
+tipo \texttt{VBO}  para \emph{rendering} com o nome do ficheiro associado
 (chave).Note-se que as estruturas em que se guardam valores dos elementos fazem
-todas parte de um \texttt{Group}, tanto como o vetor de
-\emph{strings} com o valor dos ficheiro, bem como o vetor de transformações
-e outros \texttt{Group} no vetor de grupo, o seu acesso é por uma apontador
-para \texttt{Group}, exceto os pares chave/valor guardados numa tabela na
-estrutura \texttt{Modelos}, com o acesso feito a estrutura por apontador para
-a mesma.  
+todas parte de um \texttt{Group}, tanto como o vetor de \emph{strings} com
+o valor dos ficheiro, bem como o vetor de transformações e outros \texttt{Group}
+no vetor de grupo, o seu acesso é por uma apontador para \texttt{Group}, exceto
+os pares chave/valor guardados numa tabela na estrutura \texttt{Modelos}, com
+o acesso feito a estrutura por apontador para a mesma.  
 
 \begin{algorithm}
 
@@ -94,12 +146,30 @@ $Group * grupo$}
 
 \If{$elem = TRANSLATION \lor elems = SCALE$} 
 
-\Comment{os atributos $x$, $y$, $z$ são alternativos.Se aparecerem é lhes
-atribuído um valor. Caso contrário ficam com o valor $0$}
+
 
 \If{$elem = TRANSLATION$} 
 
+
+\If{$elem = Attribute(TIME)$} 
+
+\Comment{Obter o atributo $time$ e os valor dos pontos de controlo para animação
+da translação}
+\Comment{os atributos $x$, $y$, $z$ são alternativos.Se aparecerem é lhes
+atribuído um valor. Caso contrário ficam com o valor $0$}
+
+\State{\texttt{Guardar $x$, $y$, $z$ numa transformação como translação animada
+com órbita}} 
+ 
+\Else{} 
+  
+
+\Comment{os atributos $x$, $y$, $z$ são alternativos.Se aparecerem é lhes
+atribuído um valor. Caso contrário ficam com o valor $0$}
+
 \State{\texttt{Guardar $x$, $y$, $z$ numa transformação como translação}} 
+
+\EndIf{}
  
 \Else{} 
 
@@ -109,9 +179,23 @@ atribuído um valor. Caso contrário ficam com o valor $0$}
 
 \ElsIf{$elem = ROTATION$} 
 
+
+\If{$elem = Attribute(TIME)$} 
+
+\Comment{Obter o atributo $time$ e os atributos $axis_{x, y, z}$. Para estes
+últimos, se aparecerem é lhes atribuído um valor. Caso contrário ficam com o valor $0$}
+
+
+\Comment{os atributos $x$, $y$, $z$ são alternativos.Se aparecerem é lhes
+atribuído um valor. Caso contrário ficam com o valor $0$}
+\State{\texttt{Guardar $x$, $y$, $z$ numa transformação como rotação animada}} 
+ 
+\Else{} 
+
 \Comment{os atributos $axis_{x, y, z}$ e $angle$ são alternativos. Se aparecerem
 é lhes atribuído um valor. Caso contrário ficam com o valor $0$}
 
+\EndIf{}
 \State{\texttt{Guardar $axis_{x, y, z}$ e $angle$ numa transformação como
 rotação}}
 
@@ -151,38 +235,29 @@ documento XML.\ podendo o elemento representar uma rotação, uma escala, uma
 translação, um modelos ou grupos de modelos, e por fim um grupo.
 
 Com efeito, se o elemento encontrado representar uma escala ou uma
-translação obtêm-se os atributos \emph{x}, \emph{y} e \emph{z} e cria-se um
-apontador, alocando memória para um instância da classe \texttt{Translation} ou
-\texttt{Rotation} com esse valores, conforme a sua existência. Note-se que no
-algoritmo, se descreveu de forma breve como se processa cada atributo, ou seja,
-cada a existência de cada atributo é verificada, sendo lhe atribuído o valor que
-figura na \emph{tag} caso exista, ou \emph{0} caso contrário. 
+translação caso for um translação e encontrar um atributo \texttt{time}, lê
+o valor nesse atributo e itera pelos elementos \texttt{point}, verificando os
+atributos x, y e z de cada ponto adicionando ao vetor de pontos da translação
+animada (\texttt{AnimatedTranslation}) e adiciona a transformação ao vetor de
+transformações. Caso contráriovobtêm-se os atributos \emph{x}, \emph{y} e \emph{z} e cria-se um
+apontador, alocando memória para um instância da classe \texttt{Translation}
+conforme a sua existência.
+Caso for uma rotação e encontrar um atributo \texttt{time}, lê
+o valor nesse atributo e os os valores \emph{axisX}, \emph{axisY}
+e \emph{axisZ}, e guarda uma \texttt{AnimatedRotation}.Caso contrário
+cria um  \texttt{Rotation} com \emph{axisX}, \emph{axisY}, \emph{axisZ}
+e \emph{angle}, conforme a sua existência. Em ambos os casos a transformação
+é adicionada ao vetor de transformações.
 
-Por outro lado, se o elemento XML representar uma rotação, cria-se um apontador
-alocando memória para um instância da classe \texttt{Rotation}, com os valores
-\emph{axisX}, \emph{axisY}, \emph{axisZ} e \emph{angle}. Uma vez mais,
-a existência deste atributos é verificada, sendo o valor por defeito \emph{0},
-o valor contido na \emph{tag}. 
-
-Há que fazer notar que, um objeto \texttt{Rotation}, \texttt{Translation} ou
-\texttt{Scale} são guardados, imediatamente a serem criados, no vetor de
-\texttt{Transformation}, que é a superclasse dos tipos anteriores.
-O \emph{upcast} é imediato e é uma das caraterísticas da linguagem e de uma
-hierarquia de classes. 
 
 Se o elemento representar um conjunto de modelos, é efetuada uma navegação por
 apontador para todos os elementos desse conjunto, obtendo o valor do atributo
 \emph{file}. Este é guardado no vetor de vetor de \emph{strings} de
 \texttt{Group}. De igual modo, através do valor do ficheiro é feita uma leitura
 do mesmo, que tem os valores dos pontos dos vértices dos triângulos para
-\emph{rendering}. Note-se que cada linha do ficheiro representa um triângulo,
-dado que cada linha tem os valores dos vértices separados por ponto e vírgula,
-e cada vértice tem as coordenadas \emph{x}, \emph{y} e \emph{z} separadas por
-vírgula. Após o \emph{parsing} da linha os valores são inseridos em instâncias
-de objetos \texttt{Triangle}, que por sua vez serão adicionados a um vetor.
-Aqui é verificada a existência do nome do ficheiro no conjunto de chaves da
-tabela, e inserido o par nome do ficheiro/vetor de triângulos no \emph{map} ou
-tabela.      
+\emph{rendering}. Note-se que cada linha do ficheiro representa um vértice,
+dado que cada linha tem os valores dos vértices separados por espaço,
+e cada vértice tem as coordenadas \emph{x}, \emph{y} e \emph{z}. 
 
 Por último, caso seja encontrado um elemento grupo, podem ocorrer uma de duas
 situações: se o grupo está ao mesmo nível do grupo que antecedeu, ou seja é um
@@ -244,7 +319,10 @@ conforme o contexto, como já foi explicado.
 Em seguida, é invocada a função \texttt{drawElement}, descrita no
 \emph{Algoritmo~\ref{alg:ssec2:rendering}}. Esta função especifica a primitiva
 para que será criada com os vértices em memória, neste caso com um triplo de
-vértices. Os vértices estão contidos, em objetos do tipo \texttt{Triangle} que
+vértices. 
+
+
+Os vértices estão contidos, em objetos do tipo \texttt{Triangle} que
 por sua vez, contêm objetos do tipo \texttt{Point3d} com as coordenadas de cada
 vértice. Para obter estes vértices e criar a primitiva com \texttt{glVertex3f},
 é necessário obtêm todas as \emph{strings} com o nome dos ficheiros no vetor de
@@ -306,47 +384,132 @@ faz-lo na mesma chamada recursiva da função.
 \end{algorithm}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{algorithm}
+\subsection{Classe \texttt{AnimatedRotation}}
 
-\caption{Função de \emph{rendering} dos pontos}
-\label{alg:ssec2:rendering} 
-\footnotesize %% Smaller font size.
-\begin{algorithmic}[1]
+A classe \texttt{AnimatedRotation}, no método \texttt{applyTrasformation}
+divide 360 graus pelo valor de \texttt{time} obtendo um $\Delta_{\text{grau}}$.
+Em seguida é obtido o tempo global da aplicação com
+\texttt{glutGet (GLUT\_ELAPSED\_TIME)}, sendo calculado um valor de $t$, através
+do módulo do tempo global da aplicação, com a variável \texttt{time}*1000 (este
+calculo é para apresentar o time nas mesma unidades do tempo global, ou seja
+ms), sendo que o valor do módulo é divido por \texttt{time}*1000 para obter um
+valor entre 0 e 1. O tempo global funciona como contador global, e quando
+dividido pelo tempo da animação torna-se circular.
 
-\Procedure{drawElement}{$Modelos * models$, $Group *grupo$}
-
-\State{\Call{glBegin}{GL\_TRIANGLES}} 
-
+Para aplicar a animação de rotação basta multiplicar $t$ por 360 para obter um
+valor entre 0 e 360.
 
 
-\ForAll{\emph{String} $\in$ vetor de \emph{strings} pontado
-por $grupo$} 
+\subsection{Classe \texttt{AnimatedTranslation}}
 
-\State{Procurar $entry$ com a \emph{string} (nome do ficheiro), no $map$
-apontado por $models$} 
+A classe \texttt{AnimatedTranslation} aplica o mesmo conceito do parâmetro
+$t$ como descrito na secção anterior, para obter um valor entre 0 e 1. Note-se
+que esta classe possui um vetor com os pontos de controlo para para curva cúbica
+de \emph{Catmull-Rom}. Note-se que são no mínimo são 4 pontos, por que é o que
+está na definição da curva, podendo ser mais, mas sempre iterando de 4 em
+4 pontos (3 pontos anteriores mais um novo ponto do vetor).
 
-\If{$entry$ existe}
+O método \texttt{applyTrasformation} aplica a função
+\texttt{renderCatmullRomCurve} e \texttt{getGlobalCatmullRomPoint} fazendo
+a translação do ponto obtido desta.   
 
-\ForAll{Triângulo $ABC$ $\in$ valores (\texttt{vetor} de triângulos) associado
-à chave} 
- 
-\State{Obter vértices do triângulo $ABC$}
+\paragrap\texttt{AnimatedRotation}h{\emph{Splines} cúbicas \emph{Catmull-Rom}}
 
-\State{\Call{glVertex3f}{$xA$, $yA$, $zA$}}
+A curva cúbica \emph{Catmull-Rom} para dados pontos de controlo $P_{0}, P_{1},
+P_{2} e P_{3}$, está definida de modo a que a tangente em cada ponto $P_{i}$
+possa ser encontrada através da diferença entre os seus pontos vizinhos
+$P_{i-1}$ e $P_{i+1}$
 
-\State{\Call{glVertex3f}{$xB$, $yB$, $zB$}}
+\begin{center}
+ 	
+ 	\includegraphics[scale=0.5,keepaspectratio]{resources/catmullDeriv.png}
+ 	\captionsetup{type=figure, width=0.8\linewidth}
+	\caption{\emph{Spline} cúbica Catmull-Rom para os pontos $P_{0}, P_{1}, P_{2} e P_{3}$}
+\label{fig:ssec1:diagram:plane:to:sphere} 
+\end{center}
 
-\State{\Call{glVertex3f}{$xC$, $yC$,$zC$}}
- 
-\EndFor{}
+Esta curva pode ser escrita em forma de matriz:
 
-\EndIf{}
- 
-\EndFor{}
+\begin{gather*}
+\frac{P_{2}-P_{0}}{2} = P_{1}^{'} = P^{'}(0) = c  \\
+P_{1}                 = P(0)      = d        		  \\
+P_{2}                 =P(1)       =a+b+c+d    		\\
+\frac{P_{3}-P_{1}}{2} = P_{2}^{'} = P^{'}(1) = 3a+2b+c 
+\end{gather*}
 
-\State{\Call{glEnd}{$~$}} 
 
-\EndProcedure{}
-\end{algorithmic}
-\end{algorithm}
+O que é equivalente a:
+
+\begin{gather*}
+P_{0} = a+b-c+d 		\\
+P_{1} = P{0} = d 		\\
+P_{2}=P(1)=a+b+c+d 	\\
+P_{3}=6a+4b+2c+1
+\end{gather*}
+
+Este conjunto de equações pode-se representar na seguinte operação de matrizes:
+\begin{equation}	
+P=\begin{bmatrix}
+		       P_{0} \\
+		       P_{1} \\
+		       P_{2} \\
+		       P_{3}
+		     \end{bmatrix}
+= \begin{bmatrix}
+ 1 & 1 & -1 & 1 \\
+ 0 & 0 & 0 & 1 \\
+ 1 & 1 & 1 & 1 \\
+ 6 & 4 & 2 & 1
+\end{bmatrix}
+\begin{bmatrix}
+a_{x} & a_{y} & a_{z}    \\
+b_{x} & b_{y} & b_{z}    \\
+c_{x} & c_{y} & c_{z}    \\
+d_{x} & d_{y} & d_{z} 
+\end{bmatrix} = C \times A
+\label{eq:catmullmatrix}
+\end{equation}
+\begin{equation}
+A = C^{-1}P
+\label{eq:catmullmatrixa}
+\end{equation}
+
+Estes cálculos até agora demonstrados irão ser aplicados algoritmicamente no programa da seguinte maneira:
+\begin{equation}	
+\begin{bmatrix}
+       x(u) & y(u) & z(u)             \\
+\end{bmatrix} = 
+\begin{bmatrix}
+       t^{3} & t^{2} & t & 1          \\
+\end{bmatrix}
+\begin{bmatrix}
+-0.5 & 1.5 & -1.5 & 0.5 \\
+1 & -2.5 & 2 & -0.5     \\
+-0.5 & 0 & 0.5 & 0      \\
+0 & 1 & 0 & 0
+\end{bmatrix}
+\begin{bmatrix}
+P_{0} \\
+P_{1} \\
+P_{2} \\
+P_{3}
+\end{bmatrix}
+\label{eq:formula}
+\end{equation}
+
+
+
+\paragraph{\texttt{getGlobalCatmullRomPoint}}
+
+Esta função aplica a fórmula da \emph{Equação~\ref{eq:formula}}, obtendo os
+4 pontos de controlo, com os vetores com as coordenadas de forma similar ao
+descrito nos \emph{patches} de Bézier  
+
+\paragraph{\texttt{renderCatmullRomCurve}}
+
+Itera de forma circular sobre os pontos armazenados no vetor de pontos com um
+$t$ global obtendo todos os pontos da curva de Catmull-Rom
+
+
+
 

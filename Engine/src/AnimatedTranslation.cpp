@@ -64,21 +64,7 @@ void AnimatedTranslation::applyTransformation() const {
 	getGlobalCatmullRomPoint(t, pos, points);
 	glTranslatef(pos[0], pos[1], pos[2]);
 
-//	cross(deriv, y, z);
-//	cross(z, deriv, y);
-//	normalize(deriv);
-//	normalize(y);
-//	normalize(z);
-//	buildRotMatrix(deriv, y, z, m_rot);
-//	glMultMatrixf(m_rot);
-//	std::cout << "translate"
-//			  << " time =" << time
-//			  << " X =" << pos[0]
-//			  << " Y =" << pos[1]
-//			  << " Z =" << pos[2]
-//			  << std::endl;
 
-	//t+=(t/1000);
 
 }
 
