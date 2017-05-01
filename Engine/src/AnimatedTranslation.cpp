@@ -57,15 +57,11 @@ void AnimatedTranslation::applyTransformation() const {
 	float t = ((glutGet(GLUT_ELAPSED_TIME))%(int)(time*1000))/(time*1000);
 
 
-	float res[3];
-	float y[3] = { 0, 1, 0 };
 
-	float pos[3], deriv[3];
+	float pos[3];
 
-	float z[3];
-	float m_rot[16];
 	renderCatmullRomCurve(points);
-	getGlobalCatmullRomPoint(t, pos, deriv, points);
+	getGlobalCatmullRomPoint(t, pos, points);
 	glTranslatef(pos[0], pos[1], pos[2]);
 
 //	cross(deriv, y, z);
