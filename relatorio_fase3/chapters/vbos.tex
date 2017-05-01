@@ -1,0 +1,9 @@
+\section(VBOs)
+
+O opwnGL possibilidta dois modos de renderização: o modo imediato e o vertex buffer objects (VBOs). VBOs permitem um ganho substancial de performance, uma vez que os dados são logo enviados para a memória da placa gráfica onde residem, e por isso podem ser renderizados diretamente da placa gráfica. O modo imediato usa a memória do sistema onde os dados são inseridos frame a frame, usando uma API de renderização, o que causa peso computacional sobre o processador.
+
+Para a utilização das VBOs é preciso a criação de arrays com os dados para renderizar geometria. para o efeito é necessário ativar os arrays com os diferentes tipos de dados e colocar os dados num buffer de objectos. Estes arrays são acedidos pelo seu endereço individual da sua localização em memória, sendo então desenhadas as figuras geométricas dos respectivos conteúdos dos arrays.
+
+No OpenGl, qualquer inteiro sem sinal pode ser usado como um identificador de buffer objecto. Para tal é necessário alocar uma estrutura para esses identificadores, gerar buffers para os vértices, um buffer para cada array com vértices (glGenBuffers) e ativar cada buffer pelo seu identificado (glBindBuffer) e preencher o buffer com os dados de cada array de vértices previamente mencionados.
+
+Para desenhar é necessário definir a semântica, ou seja, definir o offset relativo ao inicio do buffer (glVertexPoint), fazer o bind do objecto apropriado para fazer a renderização  e renderizar os arrays de vertices usando a função adequada (glDrawnArrays ou glDrawElements).
