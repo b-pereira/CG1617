@@ -1,0 +1,180 @@
+\section{algoritmo}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%   MULTMATRIXVECTOR   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{algorithm}
+\caption{Função QUE FAZ......}
+\label{alg:ssec2:leitura} 
+\footnotesize %% Smaller font size.
+\begin{algorithmic}[1]
+\Procedure{multMatrixVector}{$float *m$, $Mfloat *v$, $float *res$}
+\State $j\gets 0$
+\While{$j<4$}\Comment{só se quer 4 pontos}
+\State $res[j]\gets 0$ 
+\State $k\gets 0$
+\While{$k<4$}
+\State $res[j]\gets res[j] += v[k] * m[j * 4 + k]$ \Comment{O QUE FAZ ISTO??}
+\State $k\gets k+1$
+\EndWhile
+\State $j\gets j+1$
+\EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%   GETCATMULLROMPOINT %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{algorithm}
+\caption{Função QUE FAZ.....}
+\label{alg:ssec2:leitura} 
+\footnotesize %% Smaller font size.
+\begin{algorithmic}[1]
+\Procedure{getCatmullRomPoint}{$float t$, $float *p0$, $float *p1$,$float *p2$,$float *p3$,$float *pos$}
+\State $M[4][4]\gets  \begin{bmatrix}
+		       -0.5f & 1.5f & -1.5f  & 0.5f           \\[0.3em]
+		        1.0f & -2.5f &  2.0f & -0.5f   \\[0.3em]
+		       -0.5f & 0.0f & 0.5f & 0.0f \\[0.3em]
+		       0.0f & 1.0f & 0.0f & 0.0f   
+		     \end{bmatrix}$ \Comment{inicialização da matriz quê????}
+		     
+\State $P_{x}[4] \gets P_{0,1,2,3}[0]$ 
+\State $P_{y}[4] \gets P_{0,1,2,3}[1]$ 
+\State $P_{z}[4] \gets P_{0,1,2,3}[2]$ \Comment{Matriz \textbf{P} com coordenadas dos pontos de controlo}
+\State $tee[4] \gets \{t^{3},t^{2},t,1\}$ \Comment{Matriz CHAMADA???}
+\State $A_{x} \gets M*P_{x} $
+\State $A_{y} \gets M*P_{y} $
+\State $A_{z} \gets M*P_{z} $  \Comment{\textbf{A=M*P}} recorrendo à \textit{multMatrixVector} 
+\State $pos[0] \gets \sum_{i=0}^{2}tee[i]*A_{x}[i] $
+\State $pos[1] \gets \sum_{i=0}^{2}tee[i]*A_{y}[i] $
+\State $pos[2] \gets \sum_{i=0}^{2}tee[i]*A_{z}[i] $  \Comment{\textbf{pos=T*A}  EXPLICAR MELHOR?}
+\end{algorithmic}
+\end{algorithm}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%   getGlobalCatmullRomPoint   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass{minimal}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\begin{algorithm}
+\caption{Função que recebe o t global e retorna o ponto na curva}
+\label{alg:ssec2:leitura} 
+\footnotesize %% Smaller font size.
+\begin{algorithmic}[1]
+\Procedure{getGlobalCatmullRomPoint}{$float gt$, $float *pos$, $ftd::vector<Point3d> points)$}
+\State $t \gets gt tamanho do vector points $  \Comment{gt*points.size()}
+\State $index \gets \floor{t} $  \Comment{valor arredondado maix baixo de t para o index}
+\State $ t \gets t-index $   \Comment{?????????}
+\State $ indices[0] \gets (index + points.size()- 1) \% points.size()$ \Comment{????}
+\State $ indices[1] \gets (indices[0] +1) \% points.size()$ \Comment{????}
+\State $ indices[2] \gets (indices[1] +1) \% points.size()$ \Comment{????}
+\State $ indices[3] \gets (indices[2] +1) \% points.size()$ \Comment{????}
+
+\State $ i \gets 0 $
+\While{$i<tamanho $}\Comment{tamanho -> tamanho do vector points}
+\State $ P[i]_{0,1,2} \gets points[i]_{X,Y,Z} $ \Comment{por cada iteração $P[i][0] P[i][1] P[i][2]$ atribui-se a coordenada X, Y e Z de $points[i]$ respectivamente}
+
+\State $\textbf{getCatmullRomPoint}(t, p[indices[0]], p[indices[1]], p[indices[2]], p[indices[3]], pos)$
+\end{algorithmic}
+\end{algorithm}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%  multMatrix  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{algorithm}
+\caption{Multiplica duas matrizes}
+\label{alg:ssec2:leitura} 
+\footnotesize %% Smaller font size.
+\begin{algorithmic}[1]
+\Procedure{gmultMatrix}{$MatrixF m1$, $MatrixF m2$}
+
+\State $ m \gets tamanho de m1 $ \Comment{m1.size()}
+\State $ n \gets tamanho de m1[0] $ \Comment{m1[0].size()}
+\State $ p \gets tamanho de m2 $ \Comment{m2.size()}
+\State $ q \gets tamanho de m2[0] $ \Comment{m2[0].size()}
+\State $ MatrixF \gets res(m,Rowf(q)$ \Comment{?????????}
+\State $i \gets 0$
+\While{$i<M$}
+\State $j \gets 0 $
+\While{$j<q$}
+\State $product \gets 0$
+\State $k \gets 0 $
+\While{$k<p$}
+\State $ product \gets product + m1[i][k] * m2[k][j] $
+\EndWhile
+\State $res[i][j] = product $
+\State $state \gets 0$
+\State $ j \gets j+1$
+\EndWhile
+\State $i \gets i+1$
+\EndWhile
+\State $\textbf{return} res $
+\end{algorithmic}
+\end{algorithm}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%getBezierPatchPoint %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{algorithm}
+\caption{Obtém Ponto da superfície Bezier}
+\label{alg:ssec2:leitura} 
+\footnotesize %% Smaller font size.
+\begin{algorithmic}[1]
+\Procedure{getBezierPatchPoint}{$float \ u$, $float \ v$,$MatrixP \ P$}
+
+\State $ MatrixF \ U \gets \{u^{3},u^{2},u,1\} $
+\State $ MatrixF \ V \gets \{\{u^{3}\},\{u^{2}\},\{u\},\{1\}\} $
+\State $ MatrixF \ A_{1} \gets U*M $ \Comment{MatrixF A1 = multMatrix(U, M)}
+\State $ MatrixF \ A_{2} \gets M*V $ \Comment{MatrixF A2 = multMatrix(M, V)}
+\State $ MatrixF \ P_{x} \gets P.getCoordX $ \Comment{MatrixF PX = matrixPointToScalar(P, X)}
+\State $ MatrixF \ P_{Y} \gets P.getCoordY $ \Comment{MatrixF PY = matrixPointToScalar(P, Y)}
+\State $ MatrixF \ P_{Z} \gets P.getCoordZ $ \Comment{MatrixF PZ = matrixPointToScalar(P, Z)}
+\State $ MatrixF \ B_{XA} \gets A_{1}*P_{X} $
+\State $ MatrixF \ B_{YA} \gets A_{1}*P_{Y} $
+\State $ MatrixF \ B_{ZA} \gets A_{1}*P_{Z} $   \Comment{até agora calculou-se $ U * M * P(x, y, z)$}
+\State $ MatrixF \ B_{X} \gets B_{XA}*A_{2} $
+\State $ MatrixF \ B_{Y} \gets B_{YA}*A_{2} $
+\State $ MatrixF \ B_{Z} \gets B_{ZA}*A_{2} $   \Comment{e finalmente $B(X,Y,Z)A * M^tV$}
+
+\State $ Point3d \ point(B_{X}[0][0],B_{Y}[0][0],B_{Z}[0][0]) $
+\State \textbf{return} point
+\end{algorithmic}
+\end{algorithm}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%  drawPatch  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{algorithm}
+\caption{Desenha Superficie}
+\label{alg:ssec2:leitura} 
+\footnotesize %% Smaller font size.
+\begin{algorithmic}[1]
+\Procedure{getBezierPatchPoint}{$string \ file_patch$ , $float \ tesselation$,$String \ out_file$}
+
+\ForEach {$vector<Point3d> \ tm \textbf{\in} patches $}
+\State $MatrixP \ t \gets 4*t^{4} $ \Comment{??????????}
+\ForEach {$Point3d \ pt \textbf{\in} tm $}
+\State $ t[i][j] = pt $
+\State $ j \gets (j+1) \% 4 $
+\State $ i \gets (j>0) ? i : (i+1) \%4 $
+\EndFor
+\State $ ps.\textbf{push_back}(t) $   \Comment{?????????????????}
+
+
+\ForEach {$MatrixP \ mat \textbf{\in} ps $}
+\State $ i \gets 0 $
+\While{$i<tesselation$}
+\State $ j \gets 0 $
+\While{$j<tesselation$}
+\State $ Point3d pointA \gets Ponto da superfície Bezier com ?????? $
+\State $ Point3d pointB \gets Ponto da superfície Bezier com ?????? $
+\State $ Point3d pointC\gets Ponto da superfície Bezier com ?????? $
+\State $ Point3d pointD \gets Ponto da superfície Bezier com ?????? $
+
+\State $Triângulo (pointA,pointB,pointD)\textbf{->} ficheiro$
+\State $Triângulo (pointB,pointC,pointD)\textbf{->} ficheiro$
+
+\end{algorithmic}
+\end{algorithm}
