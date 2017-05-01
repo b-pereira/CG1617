@@ -21,10 +21,6 @@
 
 
 
-#define BUFFER_OFFSET(bytes) ((GLubyte*) NULL + (bytes))
-#define VERTICES 0
-#define NUM_BUFFERS 5
-
 #include "Transformation.h"
 #include "Rotation.h"
 #include "Translation.h"
@@ -73,7 +69,6 @@ void initBuffers(Models *, VBO, vector<float>);
 void drawVBO(Models *, VBO);
 
 void drawElement(Models *, Group *);
-const vector<string> explode(const string&, const char&);
 void readFile(Models *, string file);
 Models * readXMLDoc(const char *);
 void readXMLFromRootElement(XMLElement *, Models *, Group *);
