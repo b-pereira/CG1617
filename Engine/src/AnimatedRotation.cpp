@@ -29,7 +29,6 @@ const Point3d& AnimatedRotation::getPoint() const {
 
 void AnimatedRotation::applyTransformation() const {
 
-	float degree_delta = 360/time;
 
 	float t = ((glutGet(GLUT_ELAPSED_TIME))%(int)(time*1000))/(time*1000);
 
@@ -37,14 +36,6 @@ void AnimatedRotation::applyTransformation() const {
 	glRotatef(t*360, point.getXCoord(),
 				point.getYCoord(), point.getZCoord());
 
-//	std::cout << "rotation"
-//			  << " time =" << time
-//			  << " axisX =" << point.getXCoord()
-//			  << " axisY =" << point.getYCoord()
-//			  << " axisZ =" << point.getZCoord()
-//			  << std::endl;
-//	glRotatef(0,point.getXCoord(),
-//			point.getYCoord(), point.getZCoord());
 }
 
 AnimatedRotation::~AnimatedRotation() {
