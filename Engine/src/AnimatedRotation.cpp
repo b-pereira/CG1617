@@ -29,7 +29,6 @@ const Point3d& AnimatedRotation::getPoint() const {
 
 void AnimatedRotation::applyTransformation() const {
 
-	float degree_delta = 360/time;
 
 	float t = ((glutGet(GLUT_ELAPSED_TIME))%(int)(time*1000))/(time*1000);
 
