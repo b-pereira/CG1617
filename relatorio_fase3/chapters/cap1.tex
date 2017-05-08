@@ -371,3 +371,287 @@ ficheiro}
 
 \end{landscape}
 \restoregeometry{}
+
+\subsection{\emph{Patch} de Bézier baseado em ficheiro de pontos de controlo}
+
+\subsubsection{Análise do Problema}
+
+Para este projeto, requere-se que se obtenha pontos de controlo de uma
+superfície de Bézier, através de uma ficheiro \emph{teapot.patch}, para
+a construção de um bule de chá, para a representação de um cometa. O formato de
+ficheiro é o que se segue:
+\begin{enumerate}
+	\item Número de \emph{patches};
+	\item Índices para \emph{patches} (16 por linha, tantas linhas como nº de
+		\emph{patches});
+	\item Número de pontos de controlo;
+	\item Ponto de controlo (coord.\ x, y, z) por linha, tantas linhas como nº de
+		pontos de controlo;
+\end{enumerate}
+
+Para armazenar os dados do ficheiro, criou-se uma estrutura com dois valores
+inteiros (nº \emph{patches} e nº de pontos), um vetor de vetores de inteiros,
+para armazenar os valores dos índices e um vetor de \texttt{Point3d} para
+armazenar os pontos de controlo. Além do mais, requere-se que se passe um valor
+de tecelagem (\emph{tesselation}), para controlo da malha a criar.
+
+A função de leitura separa o \emph{parsing} de cada elemento no formato descrito
+atrás à custa de uma \emph{flag}. Note-se que o ficheiro original tinha os todos
+os valores separados por vírgulas, pelo que, por uma questão de eficiência,
+removeram-se as vírgulas, deixando os valores separados por espaços. Deste modo,
+é possível utilizar as funcionalidades da linguagem de programação em uso
+\texttt{C++} e saltar espaços a ler o ficheiro. Uma outra nota sobre o uso de
+funcionalidades da linguagem, dado que se está a usar \texttt{vector} para
+armazenamento de pontos e índices, o nº de \emph{patches} e o nº de pontos,
+recebidos do ficheiro não são utilizados.  
+
+Além do mais, por uma questão de legibilidade e facilidade de manutenção do
+código, foram criados dois tipos de dados (\texttt{MatrixF} e \texttt{MatrixP},
+escalares de vírgula flutuante e pontos 3D), criados às custas de vetores de
+vetores, para guardar valores na forma matricial. Com efeito, uma
+\texttt{MatrixP} guarda os pontos de controlo de uma superfície de Bézier
+(matriz de pontos 4 $\times$ 4). 
+
+A função \texttt{drawPatch}, trata do processamento de leitura de transformação
+dos valores lidos em ficheiro num vetor de \texttt{MatrixP}, onde por último,
+para cada matriz armazenada no vetor anterior, para um valor de $i$ e um valor
+de $j$ dividido pela tecelagem, iterando cada um desses valor entre 0 e o valor
+da tecelagem, cria-se 4 pontos da superfície de Bézier, para cada iteração, que
+formem uma quadricula conforme mostra a \emph{Figura~\ref{}}, onde são retirados
+os triângulos e armazenados num ficheiro \.3d, todos os vértices calculados.
+Para calcular cada ponto da superfície de Bézier, é utilizada a função
+\texttt{getBezierPatchPoint}, que recebe um valor de $u$, $v$ e uma matriz de
+pontos de controlo. 
+
+\paragraph{Curvas de Bézier}
+
+Uma curva Bézier pode ser definida por um qualquer numero de pontos, pontos
+estes chamados pontos de controlo da curva. Transformações como translação
+e rotação podem ser aplicadas na curva manipulando estes pontos. 
+
+O algoritmo de \emph{De Casteljeau} oferece uma forma de calcular uma curva,
+baseada em 4 pontos de controlo, onde um parâmetro $t \in [0,1]$ varia, e um
+ponto é obtido $t$ e $1-t$ entre cada reta de cada ponto de controlo. Cada ponto
+intermédio (3 pontos em simultâneo, um em cada reta, para cada variação de $t$),
+conecta com cada um dos 3 pontos anteriormente mencionados, criando duas retas
+com $t$ a variar de igual modo, nas retas como nas retas dos pontos iniciais. Em
+seguida, para cada variação de $t$ das duas retas, dois pontos intersetam-se, e,
+por último, para cada variação de $t$, nesta última reta, temos um ponto da
+curva de Bézier. Note-se que $t$ varia em simultâneo, para todas as retas
+iniciais e intermédias. A \emph{Figura~\ref{fig:casteljeaut}},
+e \emph{Figura~\ref{fig:casteljeautree}} ilustram esta explicação.  
+
+\begin{center}	
+ 	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{resources/casteljou.png}
+ 	\captionsetup{type=figure, width=0.8\linewidth}
+	\caption{Algoritmo geométrico \emph{De Casteljeau}}
+\label{fig:casteljeaut} 
+\end{center}
+
+
+\begin{center}	
+ 	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{resources/casteljeau2.png}
+ 	\captionsetup{type=figure, width=0.8\linewidth}
+	\caption{Representação da iteração em cada reta entre pontos referente
+		à \emph{Figura~\ref{fig:casteljeaut}}}
+\label{fig:casteljeautree} 
+\end{center}
+
+A partir da \emph{Figura~\ref{fig:casteljeautree}} é derivada
+a \emph{Equação~\ref{eq:beziercurve}}.
+
+\begin{equation}
+B(t)=t^{3}P_{3}+3t^{2}(1-t)P_{2}+3t{(1-t)}^{2}P_{1}+{(1-t)}^{3}P_{0}
+\label{eq:beziercurve}
+\end{equation}
+
+De uma forma mais condensada, a equação anterior pode ser representada como na
+\emph{Equação~\ref{eq:beziercurvecondensed}} 
+
+
+\begin{equation}
+B(t)=\sum_{k=0}^{3}B_{3,k}(t)P_{k}
+\label{eq:beziercurvecondensed}
+\end{equation}
+
+
+Note-se que a equação anterior é uma particularização de curva cúbica de Bézier,
+podendo uma curva de Bézier, ter $n$ graus  onde n corresponde a ($\text{nº
+pontos de controlo} - 1$), e $t \in [0,1]$ e o seu somatório é sempre igual a 1,
+tomando a forma genérica da \emph{Equação~\ref{eq:beziercurvegenerica}}. 
+
+
+\begin{equation}
+B(t)=\sum_{k=0}^{n}B_{n,k}(t)P_{k}
+\label{eq:beziercurvegenerica}
+\end{equation}
+
+\begin{center}
+ 	
+ 	\includegraphics[scale=0.5,keepaspectratio]{resources/exemplos1Bezier.png}
+ 	\captionsetup{type=figure, width=0.8\linewidth}
+	\caption{Curvas exemplo de Bézier}
+\label{fig:beziercubicexamples} 
+\end{center}
+
+
+A \emph{Equação~\ref{eq:beziercurve}} pode ser representada na forma matricial
+segundo a \emph{Equação~\ref{eq:beziercurvematrix}}. 
+
+\begin{equation}
+B(t)= \begin{bmatrix}
+       t^{3} & t^{2} & t & 1          
+		\end{bmatrix}
+		\begin{bmatrix}
+		       -1 & 3 & -3  & 1 \\
+		        3 & -6 &  3 & 0 \\
+		       -3 & 3 & 0 & 0   \\
+		        1 & 0 & 0 & 0
+		\end{bmatrix}
+		 \begin{bmatrix}
+		       P_{0}   \\
+		       P_{1}   \\
+		       P_{2}   \\
+		       P_{3}
+		     \end{bmatrix}
+\label{eq:beziercurvematrix}
+\end{equation}
+
+\newpage
+\paragraph{Superfícies de Bézier (\emph{patches} de Bézier)}
+
+Se se tiver um \emph{array} bi-dimensional de pontos
+$P_{i,j}$, com $i\in[0, m]$, e $j\in[0,n]$, então pode-se
+construir uma superfície Bézier da mesma forma usando um método similar a uma
+curva cúbica de Bézier. Neste caso, ao invés de um parâmetro, existem dois
+($u$ e $v$), onde $u\in[0,1]$ e $v\in[0,1]$.
+Uma superfície de Bézier bi-cúbica (m=n=3), dado que tem por base curvas cúbicas
+de Bézier definidas por 4 pontos de controlo, uma vez que é bi-dimensional, é definida por 16 pontos de
+controlo $P_{i,j}$, e  representa-se pela \emph{Equação~\ref{eq:bezierpatch}}. Um
+exemplo de uma superfície de Bézier está na \emph{Figura~\ref{fig:patchexample}} 
+
+\begin{equation}
+B(u,v)=\sum_{j=0}^{3}\sum_{i=0}^{3}B_{i}(u)P_{i,j}B{j}(v)
+\label{eq:bezierpatch}
+\end{equation}
+
+
+
+\begin{center}
+ 	
+ 	\includegraphics[width=0.5\textwidth,height=0.5\textheight,keepaspectratio]{resources/beziersupf.png}
+ 	\captionsetup{type=figure, width=0.8\linewidth}
+	\caption{Superfície de Bézier bi-cúbica}
+\label{fig:patchexample} 
+\end{center}
+Temos que:
+\begin{gather*}
+M = \begin{bmatrix}
+-1 &  3 & -3 & 1  \\
+ 3 & -6 & 3  & 0  \\
+-3 &  3 & 0  & 0  \\
+1  &  0 & 0  & 0  \\
+\end{bmatrix}
+\end{gather*}
+
+O parâmetros $u$ e $v$ estão entre 0 e 1, à semelhança do parâmetro $t$ da
+função para uma curva de Bézier, onde $M$ é a matriz dos coeficientes obtida da
+\emph{Equação~\ref{eq:beziercurve}}. A explicação para a obtenção de um ponto
+numa superfície de Bézier, e, grosso modo, análoga à obtenção de um ponto numa
+curva de Bézier, sendo que neste caso, estão dois parâmetros a variar entre
+0 e 1, criando uma malha de com curvas de Bézier, conforme está na
+\emph{Figura~\ref{fig:patchexample}}. Derivando
+a \emph{Equação~\ref{eq:bezierpatch}} obtém-se
+a representação matricial na \emph{Equação~\ref{eq:bezierpatchmatrix}}.
+
+\begin{equation}
+B(u,v) = \begin{bmatrix}
+       u^{4} & u^{2} & u & 1          \\
+		\end{bmatrix}
+		M\begin{bmatrix}
+		       P_{00} & P_{01} & P_{02} & P_{03}   \\
+		       P_{10} & P_{11} & P_{12} & P_{13}   \\
+		       P_{20} & P_{21} & P_{22} & P_{23}   \\
+		       P_{30} & P_{31} & P_{32} & P_{33}
+		     \end{bmatrix}
+		M^{T} \begin{bmatrix}
+		       v^{3} \\
+		       v^{2} \\
+		       v^{1} \\
+		       v^{0}
+		     \end{bmatrix}
+\label{eq:bezierpatchmatrix}				 
+\end{equation}
+
+\paragraph{Função \texttt{getBezierPatchPoint}}
+
+Antes de descrever a função \texttt{getBezierPatchPoint} é necessário descrever
+algumas funções cridas par utilizar nessa função. 
+
+Para cálculos com valores escalares de vírgula flutuante, nomeadamente
+multiplicação de matrizes, criou-se a função \texttt{multMatrix} que multiplica
+duas matrizes. Para obter um cálculo correto, são obtidas as dimensões das
+matrizes (nº de linhas e nº de colunas), tal que, as dimensões para uma dada
+matriz M1 são m $\times$ n, e as dimensões para uma dada 
+matriz M2 são p $\times$ q. Para obtenção da matriz resultado, tem-se em conta
+o nº de linhas da matriz M1 (m) e o nº de colunas da matriz M2 (q), onde
+a matriz resultante terá um dimensão m $\times$ q. Note-se que os valores n ---
+nº de colunas da matriz M1 --- e p --- nº de linhas da matriz M2 têm que ser
+iguais. No entanto, essa verificação não é feita no código, no entanto,
+assume-se que o programador sabe da especificação desta função. Para guardar
+o valor da multiplicação de matrizes (somatório da multiplicação das linhas com
+as colunas), usa-se um acumulador de resultado, fazendo variar um índice k,
+entre 0 e p (que poderia ser n).
+
+A função \texttt{matrixPointToScalar} obtém as coordenadas de x, ou de y, ou de
+z, da matriz de pontos de controlo e armazena esses valores numa matriz de
+escalares.
+
+
+A função \texttt{getBezierPatchPoint} utiliza
+a \emph{Equação~\ref{eq:bezierpatchmatrix}}, sendo o código amigável na sua
+leitura e interpretação, uma vez que abstrai detalhes de implementação através
+dos tipos de matrizes já mencionados. Em primeiro lugar,  a função calcula
+a matriz U e a matriz V, com os parâmetros $u$ e $v$ respetivos, conforme
+a equação. A segunda parte do algoritmo é multiplicar a matriz U por M, e matriz
+$M^T$ por V e guarda cada resultado numa matriz. Note-se que, $M = M^T$, então
+a matriz M é reutilizada.
+
+Para calcular o ponto da superfície de Bézier, é necessário obter cada
+coordenada dos pontos de controlo, sendo que a matriz de escalares da coordenada
+x será para calcular a coordenada x do ponto da superfície, a matriz de
+escalares da coordenada y será para calcular a coordenada y do ponto da
+superfície e  a matriz de escalares da coordenada z será para calcular
+a coordenada z do ponto da superfície. Cada matriz de escalares é multiplicada
+pelo resultado de $UM$, e o resultado desta, com o resultado de $M^{T}V$ ou $MV$.
+As matrizes resultantes destas operações são matrizes com dimensão $1\times1$,
+com cada valor da coordenada x, y e z do ponto da superfície. Essas coordenadas
+são guardadas num \texttt{Point3d} que é retornado pela função. 
+
+Os resultados da aplicação do algoritmo para uma tecelagem de 50 podem ser
+vistos nas figuras abaixo.
+
+\begin{center}	
+ 	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{resources/teapotBaixo.png}
+ 	\captionsetup{type=figure, width=0.8\linewidth}
+	\caption{Bule visto de baixo}
+\label{fig:teapotbottom} 
+\end{center}
+
+\begin{center}	
+ 	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{resources/teapotCima.png}
+ 	\captionsetup{type=figure, width=0.8\linewidth}
+	\caption{Bule visto de cima}
+\label{fig:teapotabove} 
+\end{center}
+
+
+\begin{center}	
+ 	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{resources/teapotPontos}
+ 	\captionsetup{type=figure, width=0.8\linewidth}
+	\caption{Pontos da superfície do bule}
+\label{fig:teapotpoints} 
+\end{center}
+
+
+
