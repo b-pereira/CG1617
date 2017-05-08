@@ -17,13 +17,13 @@ class Scale: public Transformation {
 public:
 	Scale();
 	Scale(float x, float y, float z);
-	const Point3d& getPoint() const;
+	const Point2d& getPoint() const;
 	void applyTransformation() const;
 	~Scale();
 
 private:
 
-	Point3d point;
+	Point2d point;
 
 };
 

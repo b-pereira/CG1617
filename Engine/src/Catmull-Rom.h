@@ -21,9 +21,9 @@ void getCatmullRomPoint(float t, float *p0, float *p1, float *p2, float *p3,
 		float *pos);
 
 void getGlobalCatmullRomPoint(float gt, float *pos,
-		std::vector<Point3d> points);
+		std::vector<Point2d> points);
 
-void renderCatmullRomCurve(std::vector<Point3d> points);
+void renderCatmullRomCurve(std::vector<Point2d> points);
 
 #endif /* SRC_CATMULL_ROM_H_ */
 

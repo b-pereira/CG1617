@@ -23,7 +23,7 @@ float AnimatedRotation::getTime() const {
 	return time;
 }
 
-const Point3d& AnimatedRotation::getPoint() const {
+const Point2d& AnimatedRotation::getPoint() const {
 	return point;
 }
 

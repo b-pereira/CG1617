@@ -20,7 +20,7 @@ public:
 	AnimatedTranslation();
 	AnimatedTranslation(float tim);
 
-	const vector<Point3d>&getVector() const;
+	const vector<Point2d>&getVector() const;
 	const float getTime() const;
 	void applyTransformation() const;
 	void addPointCoords(float x, float y, float z);
@@ -29,7 +29,7 @@ public:
 private:
 
 	//Point3d point;
-	vector<Point3d> points;
+	vector<Point2d> points;
 	float time;
 
 };

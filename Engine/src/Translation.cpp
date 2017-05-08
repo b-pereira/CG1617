@@ -19,7 +19,7 @@ Translation::Translation(float x, float y, float z) :
 
 }
 
-const Point3d&Translation::getPoint() const {
+const Point2d&Translation::getPoint() const {
 	return point;
 }
 

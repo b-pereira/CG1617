@@ -24,13 +24,13 @@ public:
 	~Rotation();
 
 	float getAngle() const;
-	const Point3d& getPoint() const;
+	const Point2d& getPoint() const;
 
 
 
 private:
 	float angle;
-	Point3d point;
+	Point2d point;
 
 };
 

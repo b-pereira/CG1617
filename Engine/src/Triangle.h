@@ -17,18 +17,18 @@ public:
 	Triangle(float xA, float yA, float zA, float xB, float yB, float zB,
 			float xC, float yC, float zC);
 
-	const Point3d& getA() const;
-	void setA(const Point3d& a);
-	const Point3d& getB() const;
-	void setB(const Point3d& b);
-	const Point3d& getC() const;
-	void setC(const Point3d& c);
+	const Point2d& getA() const;
+	void setA(const Point2d& a);
+	const Point2d& getB() const;
+	void setB(const Point2d& b);
+	const Point2d& getC() const;
+	void setC(const Point2d& c);
 	~Triangle();
 
 private:
-	Point3d a;
-	Point3d b;
-	Point3d c;
+	Point2d a;
+	Point2d b;
+	Point2d c;
 };
 
 #endif /* TRIANGLE_H_ */

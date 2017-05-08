@@ -16,13 +16,13 @@ class Translation: public Transformation {
 public:
 	Translation();
 	Translation(float x, float y, float z);
-	const Point3d& getPoint() const;
+	const Point2d& getPoint() const;
 	void applyTransformation() const;
 	~Translation();
 
 private:
 
-	Point3d point;
+	Point2d point;
 
 };
 

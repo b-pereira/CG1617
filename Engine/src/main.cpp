@@ -204,7 +204,7 @@ int main(int argc, char **argv) {
 
 	if (argv[1] == NULL) {
 
-		models = readXMLDoc("resources/sistema.xml");
+		models = readXMLDoc("resources/sistema3.xml");
 	} else {
 
 		models = readXMLDoc(argv[1]);

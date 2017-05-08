@@ -9,13 +9,13 @@
 #define POINT3D_H_
 
 
-class Point3d
+class Point2d
 {
 public:
 
-    Point3d();
+    Point2d();
 
-    Point3d(float x, float y, float z);
+    Point2d(float x, float y, float z);
 
     float getXCoord() const;
     void setXCoord(float coord);
@@ -30,11 +30,11 @@ public:
     void decrementXCoordBy(float value);
     void decrementYCoordBy(float value);
     void decrementZCoordBy(float value);
-    Point3d addTo(Point3d point);;
-    Point3d multiplyBy(float k);
-    Point3d & operator= (const Point3d & other);
-    Point3d crossProduct(Point3d& u, Point3d &v);
-    ~Point3d();
+    Point2d addTo(Point2d point);;
+    Point2d multiplyBy(float k);
+    Point2d & operator= (const Point2d & other);
+    Point2d crossProduct(Point2d& u, Point2d &v);
+    ~Point2d();
 
 private:
 

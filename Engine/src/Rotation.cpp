@@ -22,7 +22,7 @@ float Rotation::getAngle() const {
 	return angle;
 }
 
-const Point3d& Rotation::getPoint() const {
+const Point2d& Rotation::getPoint() const {
 	return point;
 }
 
