@@ -4,6 +4,8 @@
  *  Created on: 29/03/2017
  *      Author: bpereira
  */
+
+#include <IL/il.h>
 #include <sstream>
 #include "Group.h"
 #include "Constantes.h"
@@ -11,9 +13,48 @@
 #include <GL/glut.h>
 #include <stdio.h>
 
-void initBuffers(Models * models, VBO vbo, vector<float> array) {
+int loadTexture(std::string s) {
 
-	float *a = &array[0];
+	unsigned int t, tw, th;
+	unsigned char *texData;
+	unsigned int texID;
+
+	ilInit();
+	ilEnable(IL_ORIGIN_SET);
+	ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
+	ilGenImages(1, &t);
+	ilBindImage(t);
+	ilLoadImage((ILstring) s.c_str());
+	tw = ilGetInteger(IL_IMAGE_WIDTH);
+	th = ilGetInteger(IL_IMAGE_HEIGHT);
+	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+	texData = ilGetData();
+
+	glGenTextures(1, &texID);
+
+	glBindTexture(GL_TEXTURE_2D, texID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+	GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+	GL_LINEAR_MIPMAP_LINEAR);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tw, th, 0, GL_RGBA,
+	GL_UNSIGNED_BYTE, texData);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	return texID;
+
+}
+
+void initBuffers(Models * models, VBO vbo, vector<float> points,
+		vector<float> normals, vector<float> textCoords) {
+
+	float *a = &points[0];
 
 	/**
 	 * Buffer Initialization
@@ -22,7 +63,17 @@ void initBuffers(Models * models, VBO vbo, vector<float> array) {
 
 	glGenBuffers(1, &models->buffers[vbo.index]);
 	glBindBuffer(GL_ARRAY_BUFFER, models->buffers[vbo.index]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vbo.size, a, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vbo.size*3, &points[0],
+	GL_STATIC_DRAW);
+
+	glGenBuffers(1, &models->normals[vbo.index]);
+	glBindBuffer(GL_ARRAY_BUFFER, models->normals[vbo.index]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vbo.size*3, &normals[0],
+	GL_STATIC_DRAW);
+	glGenBuffers(1, &models->textCoords[vbo.indexTextID]);
+	glBindBuffer(GL_ARRAY_BUFFER, models->textCoords[vbo.index]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vbo.size * 2, &textCoords[0],
+	GL_STATIC_DRAW);
 
 }
 
@@ -31,10 +82,17 @@ void drawVBO(Models * models, VBO vbo) {
 	/**
 	 * VBOs - Drawing
 	 */
-
+	glBindTexture(GL_TEXTURE_2D, models->textIDs[vbo.indexTextID]);
 	glBindBuffer(GL_ARRAY_BUFFER, models->buffers[vbo.index]);
 	glVertexPointer(3, GL_FLOAT, 0, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, models->normals[vbo.index]);
+	glNormalPointer(GL_FLOAT, 0, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, models->textCoords[vbo.index]);
+	glTexCoordPointer(2, GL_FLOAT, 0, 0);
+
 	glDrawArrays(GL_TRIANGLES, 0, vbo.size);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 }
 
@@ -58,23 +116,37 @@ void readFile(Models * models, string file) {
 
 	string line;
 
-	vector<float> lst;
+	vector<float> lstPts;
+	vector<float> lstNrms;
+	vector<float> lstTxts;
 	VBO vbo;
 	vbo.size = 0;
+
 
 	ifstream myfile("resources/" + file, ios::in);
 	if (myfile.is_open()) {
 		while (getline(myfile, line)) {
 
 			std::stringstream is(line);
-			float x, y, z;
+			float x, y, z, nx, ny, nz, tx, ty;
 			is >> x;
 			is >> y;
 			is >> z;
+			is >> nx;
+			is >> ny;
+			is >> nz;
+			is >> tx;
+			is >> ty;
 
-			lst.push_back(x);
-			lst.push_back(y);
-			lst.push_back(z);
+			lstPts.push_back(x);
+			lstPts.push_back(y);
+			lstPts.push_back(z);
+			lstNrms.push_back(nx);
+			lstNrms.push_back(ny);
+			lstNrms.push_back(nz);
+			lstTxts.push_back(tx);
+			lstTxts.push_back(ty);
+			vbo.size++;
 
 		}
 		myfile.close();
@@ -82,13 +154,16 @@ void readFile(Models * models, string file) {
 		auto entry = models->figures.find(file);
 
 		if (entry == models->figures.end()) {
-			vbo.size = lst.size();
+
 			vbo.index = models->n_buffers;
+
 			models->buffers.push_back(0);
+			models->normals.push_back(0);
+			models->textCoords.push_back(0);
 
 			models->figures.insert(std::pair<string, VBO>(file, vbo));
 
-			initBuffers(models, vbo, lst);
+			initBuffers(models, vbo, lstPts, lstNrms, lstTxts);
 			models->n_buffers++;
 
 		}
@@ -118,11 +193,7 @@ void readXMLFromRootElement(XMLElement * element, Models * models,
 		if ((name.compare(TRANSLATE) == 0) || (name.compare(SCALE) == 0)) {
 			float x, y, z;
 
-
-
 			if (name.compare(TRANSLATE) == 0) {
-
-
 
 				if (element->Attribute(TIME)) {
 
@@ -144,7 +215,7 @@ void readXMLFromRootElement(XMLElement * element, Models * models,
 						z = (crawlPoint->Attribute(Z)) ?
 								atof(crawlPoint->Attribute(Z)) : 0;
 
-						cout << "X: "  << x  << "Y: "  << y << "Z: " << z << endl;
+						cout << "X: " << x << "Y: " << y << "Z: " << z << endl;
 
 						at->addPointCoords(x, y, z);
 
@@ -231,6 +302,8 @@ void readXMLFromRootElement(XMLElement * element, Models * models,
 			/**
 			 * Iterar sobre os ficheiros de modelos
 			 */
+
+			//TODO: Adicionar elementos para texturas e materiais
 			for (auto crawl = element->FirstChildElement(MODEL);
 					crawl != nullptr;
 					crawl = crawl->NextSiblingElement(MODEL)) {

@@ -1,3 +1,5 @@
+
+#include <IL/il.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
 
@@ -181,6 +183,25 @@ void menu(int op) {
 	}
 	glutPostRedisplay();
 }
+void initGL() {
+
+// alguns settings para OpenGL
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glClearColor(0, 0, 0, 0);
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+
+	glEnable(GL_TEXTURE_2D);
+
+}
 
 int main(int argc, char **argv) {
 
@@ -199,6 +220,8 @@ int main(int argc, char **argv) {
 
 	}
 	fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+
+	initGL();
 
 	if (argv[1] == NULL) {
 

@@ -51,6 +51,7 @@ typedef struct vbos {
 
 
 	int index;
+	int indexTextID;
 	int size;
 
 
@@ -60,7 +61,11 @@ typedef struct modl {
 
 	Group * g;
 	int n_buffers;
+
 	vector<GLuint> buffers ;
+	vector<GLuint> normals ;
+	vector<GLuint> textCoords ;
+	vector<GLuint> textIDs ;
 	map<string, VBO> figures;
 
 } Models;
