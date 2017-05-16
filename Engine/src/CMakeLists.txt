@@ -31,28 +31,32 @@ if(NOT OPENGL_FOUND)
 endif(NOT OPENGL_FOUND)
 
 add_executable(${PROJECT_NAME} main.cpp 
-                              Group.h   
+                              tinyxml2.cpp
+                              tinyxml2.h
+                              Group.h  
+                              Group.cpp   
                               Point3d.cpp  
-                              Rotation.cpp
-	                          Scale.cpp  
-	                          tinyxml2.cpp  
-	                          Transformation.cpp  
-	                          Translation.cpp  
-	                          Translation.h  
-	                          Triangle.h
-                              Group.cpp  
-                              Point3d.h    
-                              Rotation.h    
-                              Scale.h    
-                              tinyxml2.h    
-                              Transformation.h    
+                              Point3d.h 
+                              Point4d.cpp  
+                              Point4d.h 
+                              RGBA.cpp 
+                              RGBA.h
+                              Triangle.h
                               Triangle.cpp
+                              Transformation.h 
+                              Transformation.cpp 
+                              Translation.h  
+                              Translation.cpp  
+                              Rotation.h
+                              Rotation.cpp
+                              Scale.h
+                              Scale.cpp 
                               AnimatedRotation.h 
-                              AnimatedRotation.cpp 
-                              AnimatedTranslation.cpp  
+                              AnimatedRotation.cpp
                               AnimatedTranslation.h 
+                              AnimatedTranslation.cpp  
+                              Catmull-Rom.h
                               Catmull-Rom.cpp 
-                              Catmull-Rom.h 
                               MatDiffuse.cpp 
                               MatDiffuse.h 
                               MatSpecular.cpp 
@@ -63,8 +67,22 @@ add_executable(${PROJECT_NAME} main.cpp
                               MatAmbient.h 
                               Materials.cpp 
                               Materials.h 
-                              RGBA.cpp 
-                              RGBA.h
+                              LightDiffuse.cpp 
+                              LightDiffuse.h 
+                              LightSpecular.cpp 
+                              LightSpecular.h 
+                              LightAmbient.cpp 
+                              LightAmbient.h
+                              LightProperty.cpp 
+                              LightProperty.h
+                              Light.h 
+                              Light.cpp
+                              DirectionalLight.h 
+                              DirectionalLight.cpp
+                              FixedLight.h 
+                              FixedLight.cpp
+                              Spotlight.h 
+                              Spotlight.cpp
                               )
 
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
