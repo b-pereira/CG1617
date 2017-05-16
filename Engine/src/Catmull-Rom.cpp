@@ -57,7 +57,7 @@ void getCatmullRomPoint(float t, float *p0, float *p1, float *p2, float *p3,
 }
 
 // given  global t, returns the point in the curve
-void getGlobalCatmullRomPoint(float gt, float *pos, std::vector<Point2d> points) {
+void getGlobalCatmullRomPoint(float gt, float *pos, std::vector<Point3d> points) {
 
 	float t = gt * points.size(); // this is the real global t
 	int index = floor(t);  // which segment
@@ -84,7 +84,7 @@ void getGlobalCatmullRomPoint(float gt, float *pos, std::vector<Point2d> points)
 			p[indices[3]], pos);
 }
 
-void renderCatmullRomCurve(std::vector<Point2d> points) {
+void renderCatmullRomCurve(std::vector<Point3d> points) {
 
 	float pos[3];
 	float deriv[3];

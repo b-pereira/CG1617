@@ -19,7 +19,7 @@ Scale::Scale(float x, float y, float z) :
 
 }
 
-const Point2d&Scale::getPoint() const {
+const Point3d&Scale::getPoint() const {
 	return point;
 }
 void Scale::applyTransformation() const {

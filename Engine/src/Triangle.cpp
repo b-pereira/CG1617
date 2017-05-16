@@ -19,30 +19,29 @@ Triangle::Triangle(float xA, float yA, float zA, float xB, float yB,
 }
 
 Triangle::~Triangle() {
-	// TODO Auto-generated destructor stub
 }
 
-const Point2d& Triangle::getA() const {
+const Point3d& Triangle::getA() const {
 	return a;
 }
 
-void Triangle::setA(const Point2d& a) {
+void Triangle::setA(const Point3d& a) {
 	this->a = a;
 }
 
-const Point2d& Triangle::getB() const {
+const Point3d& Triangle::getB() const {
 	return b;
 }
 
-void Triangle::setB(const Point2d& b) {
+void Triangle::setB(const Point3d& b) {
 	this->b = b;
 }
 
-const Point2d& Triangle::getC() const {
+const Point3d& Triangle::getC() const {
 	return c;
 }
 
-void Triangle::setC(const Point2d& c) {
+void Triangle::setC(const Point3d& c) {
 	this->c = c;
 }
 

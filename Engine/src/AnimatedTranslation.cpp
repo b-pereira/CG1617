@@ -24,12 +24,12 @@ AnimatedTranslation::AnimatedTranslation(float tim) :
 
 void AnimatedTranslation::addPointCoords(float x, float y, float z) {
 
-	Point2d pt(x, y, z);
+	Point3d pt(x, y, z);
 
 	points.push_back(pt);
 }
 
-const vector<Point2d>&AnimatedTranslation::getVector() const {
+const vector<Point3d>&AnimatedTranslation::getVector() const {
 	return points;
 }
 

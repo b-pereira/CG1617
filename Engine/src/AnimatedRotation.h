@@ -24,13 +24,13 @@ public:
 	~AnimatedRotation();
 
 	float getTime() const;
-	const Point2d& getPoint() const;
+	const Point3d& getPoint() const;
 
 
 
 private:
 	float time;
-	Point2d point;
+	Point3d point;
 
 };
 
