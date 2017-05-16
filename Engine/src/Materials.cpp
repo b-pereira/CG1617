@@ -7,7 +7,11 @@
 
 #include "Materials.h"
 
+
+void Materials::applyProperties() const{
+
+}
+
 Materials::~Materials() {
-	// TODO Auto-generated destructor stub
 }
 
