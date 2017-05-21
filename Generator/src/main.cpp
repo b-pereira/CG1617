@@ -179,10 +179,10 @@ void cross(vector<float> &a, vector<float> &b, vector<float> &res) {
 
 void normalize(vector<float> & a) {
 
-	if (a[0] == 0 && a[1] == 0 && a[2] == 0)
-		return;
-
 	float l = sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+
+	if (l == 0)
+		return;
 	a[0] = a[0] / l;
 	a[1] = a[1] / l;
 	a[2] = a[2] / l;
@@ -315,7 +315,7 @@ Point3d getNormalBezierPatchPoint(float u, float v, MatrixP P) {
 	vector<float> derivV = getPartialDerivativeBezierPatchPointParamV(u, v, P);
 
 	vector<float> normal_tmp(3);
-	cross(derivU, derivV, normal_tmp);
+	cross(derivV, derivU, normal_tmp);
 
 	cout << "\nnormal :" << normal_tmp[0] << " " << normal_tmp[1] << " "
 			<< normal_tmp[3] << endl;
@@ -505,11 +505,14 @@ void drawSphere(float radius, int slices, int stacks, char* filename) {
 						radius * sin(current_phi),
 						radius * cos(current_phi) * cos(current_theta));
 
-				Point2d textA(i / (float) stacks, j / (float) slices);
-				Point2d textB((i + 1) / (float) stacks, j / (float) slices);
-				Point2d textC((i + 1) / (float) stacks,
-						(j + 1) / (float) slices);
-				Point2d textD(i / (float) stacks, (j + 1) / (float) slices);
+				Point2d textA(1 - (j / (float) slices),
+						1 - (i / (float) stacks));
+				Point2d textB(1 - (j / (float) slices),
+						(1 - (i + 1) / (float) stacks));
+				Point2d textC((1 - (j + 1) / (float) slices),
+						1 - ((i + 1) / (float) stacks));
+				Point2d textD(1 - ((j + 1) / (float) slices),
+						1 - (i / (float) stacks));
 
 				ficheiro
 						<< triangle_to_string(pointA, pointB, pointD, normalA,
@@ -595,35 +598,35 @@ void drawAnel(float raioIn, float raioOut, int slices, char * filename) {
 			Point3d normalUp(0, 1, 0);
 			Point3d normalDown(0, -1, 0);
 
-			Point2d texA(1, 1);
 
-			Point2d texB(1, 0);
+			Point2d texA(1, 0);
 
-			Point2d texC(0, 0);
+			Point2d texB(0, 0);
+			Point2d texC(0, 1);
+			Point2d texD(1, 1);
 
-			Point2d texD(0, 1);
 
-			//TODO: Verificar parte de baixo do disco se implmenta a textura corretamente
+			Point2d texA2(1, 0);
 
-			Point2d texA2(1, 1);
 
-			Point2d texB2(1, 0);
 
-			Point2d texC2(0, 0);
+			Point2d texB2(0, 0);
 
-			Point2d texD2(0, 1);
+			Point2d texC2(0, 1);
 
-			Point2d textLadoC2(0, 0);
-			Point2d textLadoB2(0, 1);
+			Point2d texD2(1, 1);
+
+			Point2d textLadoC2(0, 1);
+			Point2d textLadoB2(0, 0);
 			Point2d textLadoC(0.005, 1);
-			Point2d textLadoB(0.005, 1);
+			Point2d textLadoB(0.005, 0);
 
-			Point2d textLadoD(0.995, 0);
+			Point2d textLadoD(0.995, 1);
 
-			Point2d textLadoA(0.995, 1);
+			Point2d textLadoA(0.995, 0);
 
-			Point2d textLadoD2(1, 0);
-			Point2d textLadoA2(1, 1);
+			Point2d textLadoD2(1, 1);
+			Point2d textLadoA2(1, 0);
 
 			// Disco de baixo
 			ficheiro
@@ -643,7 +646,7 @@ void drawAnel(float raioIn, float raioOut, int slices, char * filename) {
 
 			ficheiro
 					<< triangle_to_string(pontoC, pontoB, pontoD, normalUp,
-							normalUp, normalUp, texD, texB, texA) << endl;
+							normalUp, normalUp, texC, texB, texA) << endl;
 
 			// Lado externo
 			ficheiro
@@ -803,8 +806,8 @@ void drawPatch(string file_patch, float tesselation, string out_file) {
 		ficheiro.clear();
 
 		for (MatrixP mat : ps) {
-			for (i = 0; i < tesselation; ++i) {
-				for (j = 0; j < tesselation; ++j) {
+			for (i = 0; i < tesselation; i++) {
+				for (j = 0; j < tesselation; j++) {
 					Point3d pointA = getBezierPatchPoint(i / tesselation,
 							j / tesselation, mat);
 					Point3d pointB = getBezierPatchPoint(i / tesselation,
