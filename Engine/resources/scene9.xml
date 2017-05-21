@@ -1,8 +1,14 @@
 <scene>
 	<group>
-
+	<rotate time="10" axisY="1"/>
+<scale X="2" Y="2" Z="2"/>
 		<models>
-			<model file="sphereLight.3d" />
+			<model file="teapotLight.3d">
+			 <diffuse R="0.68" G="0.35" B="0.26"/>
+			 
+			 <ambient R="0.68" G="0.35" B="0.26"/>
+          <specular R="0.68" G="0.35" B="0.26" shin="10"/>
+        </model>
 		</models>	
 	</group>
 </scene>

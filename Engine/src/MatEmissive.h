@@ -13,6 +13,7 @@
 
 class MatEmissive: public virtual Materials {
 public:
+	MatEmissive();
 	MatEmissive(float red, float green, float blue, float alpha);
 	void applyProperties() const;
 	~MatEmissive();

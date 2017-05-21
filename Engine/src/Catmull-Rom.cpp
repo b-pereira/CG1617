@@ -89,6 +89,11 @@ void renderCatmullRomCurve(std::vector<Point3d> points) {
 	float pos[3];
 	float deriv[3];
 
+	float color[4] = {0.4,0.4,0.4,1};
+	float color_default[4] = {0,0,0,1};
+
+	glMaterialfv(GL_FRONT, GL_EMISSION, color);
+
 	glBegin(GL_LINE_LOOP);
 
 	for (int i = 1; i < 100; ++i) {
@@ -99,6 +104,8 @@ void renderCatmullRomCurve(std::vector<Point3d> points) {
 	}
 
 	glEnd();
+
+	glMaterialfv(GL_FRONT, GL_EMISSION, color_default);
 
 }
 

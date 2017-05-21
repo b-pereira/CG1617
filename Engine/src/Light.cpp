@@ -8,6 +8,11 @@
 #include "Light.h"
 
 
+void Light::addProperty(LightProperty *) {
+
+
+}
+
 void Light::applyProperties() const {
 
 }

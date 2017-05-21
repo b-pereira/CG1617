@@ -13,6 +13,7 @@
 
 class MatSpecular: public virtual Materials {
 public:
+	MatSpecular();
 	MatSpecular(float red, float green, float blue, float alpha, float shininess);
 	void applyProperties() const;
 	~MatSpecular();

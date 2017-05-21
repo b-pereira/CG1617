@@ -26,6 +26,39 @@
 #define Z         "Z"
 #define TIME      "time"
 #define POINT     "point"
+#define DIFFUSE   "diffuse"
+#define SPECULAR  "specular"
+#define AMBIENT   "ambient"
+#define EMISSIVE  "emissive"
+#define SHININESS "shin"
+#define R         "R"
+#define G         "G"
+#define B         "B"
+#define TEXTURE  "texture"
+#define LIGHTS   "lights"
+#define LIGHT    "light"
+#define LIGHTPT  "POINT"
+#define LIGHTDIR  "DIR"
+#define SPOTLIGHT "SPOT"
+#define TYPE      "type"
+
+#define POS_X     "posX"
+#define POX_Y     "posY"
+#define POS_Z     "posZ"
+#define DIR_X     "dirX"
+#define DIR_Y     "dirY"
+#define DIR_Z     "dirZ"
+
+#define CUTOFF    "cutoff"
+
+#define EXPONENT  "exp"
+
+#define CONST_AT  "constAt"
+
+#define LIN_AT    "linAt"
+
+#define QUAD_AT   "quadAt"
+
 
 
 

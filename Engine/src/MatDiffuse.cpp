@@ -8,6 +8,10 @@
 #include "MatDiffuse.h"
 #include <GL/glut.h>
 
+MatDiffuse::MatDiffuse() :
+		diffuse(0.8, 0.8, 0.8, 1.0) {
+}
+
 MatDiffuse::MatDiffuse(float red, float green, float blue, float alpha) :
 		diffuse(red, green, blue, alpha) {
 }

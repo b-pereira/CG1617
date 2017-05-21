@@ -8,6 +8,10 @@
 #include "MatEmissive.h"
 #include <GL/glut.h>
 
+MatEmissive::MatEmissive() :
+		emissive(0, 0, 0, 1) {
+}
+
 MatEmissive::MatEmissive(float red, float green, float blue, float alpha) :
 		emissive(red, green, blue, alpha) {
 }

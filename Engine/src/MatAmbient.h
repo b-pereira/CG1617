@@ -13,6 +13,7 @@
 
 class MatAmbient: public virtual Materials {
 public:
+	MatAmbient();
 	MatAmbient(float red, float green, float blue, float alpha);
 	void applyProperties() const;
 	~MatAmbient();

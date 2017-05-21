@@ -10,10 +10,16 @@
 
 void Spotlight::applyProperties() const {
 
+
+
 	glLightfv(light, GL_POSITION, &position.getVector()[0]);
 	glLightf(light, GL_CONSTANT_ATTENUATION, const_atenuation_factor);
 	glLightf(light, GL_LINEAR_ATTENUATION, linear_atenuation_factor);
 	glLightf(light, GL_QUADRATIC_ATTENUATION, quadratic_atenuation_factor);
+
+	glEnable(light);
+
+
 
 }
 

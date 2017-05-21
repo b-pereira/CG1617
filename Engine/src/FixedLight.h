@@ -16,7 +16,7 @@
 class FixedLight: public virtual Light {
 public:
 	FixedLight();
-	FixedLight(GLenum light_n, float x_pos, float y_pos, float z_pos);
+	FixedLight(GLenum light_n, float x_pos, float y_pos, float z_pos, float const_at, float lin_at, float quad_at);
 	float getLinearAtenuationFactor() const;
 	float getConstantAtenuationFactor() const;
 	float getQuadraticAtenuationFactor() const;

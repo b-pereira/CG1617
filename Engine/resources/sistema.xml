@@ -5,7 +5,10 @@
     <rotate angle="7.25" axisZ="1"/>
     <scale X="17" Y="17" Z="17"/>
     <models>
-      <model file="sphere.3d"/>
+      <model file="sphereLight.3d">
+      <emissive R="1" G="0.78" B="0.25"/>
+      </model>
+      
     </models>
   </group>
   <!-- Mercury -->
@@ -13,7 +16,10 @@
     <translate X="23"/>
     <rotate angle="0.03" axisZ="1"/>
     <models>
-      <model file="sphere.3d"/>
+       <model file="sphereLight.3d">
+       <diffuse R="0.68" G="0.35" B="0.26" />
+       <specular R="0.68" G="0.35" B="0.26" shin="10" />
+      </model>
     </models>
   </group>
   <group>
@@ -28,7 +34,10 @@
     <scale X="2" Y="2" Z="2"/>
     <rotate angle="2.64" axisZ="1"/>
     <models>
-      <model file="sphere.3d"/>
+       <model file="sphereLight.3d">
+       <diffuse R="0.94" G="0.8" B="0.55" />
+       <specular R="0.94" G="0.8" B="0.55" shin="50" />
+      </model>
     </models>
   </group>
   <group>
@@ -43,7 +52,8 @@
     <scale X="2" Y="2" Z="2"/>
     <rotate angle="23.44" axisZ="1"/>
     <models>
-      <model file="sphere.3d"/>
+       <model file="sphereLight.3d">
+      </model>
     </models>
     <!-- Moon -->
     <group>
@@ -51,7 +61,10 @@
       <scale X="0.25" Y="0.25" Z="0.25"/>
       <rotate angle="6.68" axisX="1"/>
       <models>
-        <model file="sphere.3d"/>
+         <model file="sphereLight.3d">
+         <diffuse R="0.51" G="0.71" B="0.73" />
+<specular R="0.51" G="0.71" B="0.73" shin="5" />
+      </model>
       </models>
     </group>
   </group>
@@ -67,7 +80,10 @@
     <scale X="1.25" Y="1.25" Z="1.25"/>
     <rotate angle="25.19" axisZ="1"/>
     <models>
-      <model file="sphere.3d"/>
+       <model file="sphereLight.3d">
+       <diffuse R="0.94" G="0.32" B="0.36" />
+<specular R="0.94" G="0.32" B="0.36" shin="5" />
+      </model>
     </models>
   </group>
   <group>
@@ -88,7 +104,10 @@
     <scale X="7" Y="7" Z="7"/>
     <rotate angle="3.13" axisZ="1"/>
     <models>
-      <model file="sphere.3d"/>
+       <model file="sphereLight.3d">
+       <diffuse R="0.84" G="0.45" B="0.32" />
+       <specular R="0.84" G="0.45" B="0.32" shin="5" />
+      </model>
     </models>
   </group>
   <!-- Saturn -->
@@ -103,7 +122,10 @@
     <scale X="6" Y="6" Z="6"/>
     <rotate angle="26.63" axisZ="1"/>
     <models>
-      <model file="sphere.3d"/>
+       <model file="sphereLight.3d">
+       <diffuse R="0.82" G="0.56" B="0.31" />
+       <specular R="0.82" G="0.56" B="0.31" shin="5" />
+      </model>
       <model file="ring.3d"/>
       <model file="ring3.3d"/>
     </models>
@@ -120,7 +142,10 @@
     <scale X="5" Y="5" Z="5"/>
     <rotate angle="82.23" axisZ="1"/>
     <models>
-      <model file="sphere.3d"/>
+       <model file="sphereLight.3d">
+       <diffuse R="0.1" G="0.62" B="0.69" />
+       <specular R="0.1" G="0.62" B="0.69" shin="5" />
+      </model>
       <model file="ring2.3d"/>
     </models>
   </group>
@@ -136,7 +161,10 @@
     <scale X="5" Y="5" Z="5"/>
     <rotate angle="28.32" axisZ="1"/>
     <models>
-      <model file="sphere.3d"/>
+       <model file="sphereLight.3d">
+       <diffuse R="0.1" G="0.65" B="0.88" />
+       <specular R="0.1" G="0.65" B="0.88" shin="5" />
+      </model>
     </models>
   </group>
 </scene>

@@ -7,6 +7,12 @@
 
 #include "MatSpecular.h"
 #include <GL/glut.h>
+#include <iostream>
+
+MatSpecular::MatSpecular() :
+		specular(0, 0, 0, 1), shin(0) {
+
+}
 
 MatSpecular::MatSpecular(float red, float green, float blue, float alpha,
 		float shininess) :

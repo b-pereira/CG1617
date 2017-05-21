@@ -1,4 +1,3 @@
-
 #include <IL/il.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
@@ -26,6 +25,10 @@ float alpha = 0, beta = 0, r = 50;
 
 int frame, fps;
 float timebase, timec;
+
+GLfloat amb[4] = { 0.2, 0.2, 0.2, 1.0 };
+GLfloat diff[4] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat pos[4] = { 0.0, 0.0, 0.0, 1.0 };
 
 Models * models;
 
@@ -84,6 +87,14 @@ void renderScene(void) {
 	printInfo();
 
 	gluLookAt(camX + x, camY, camZ + z, x + lx, 1.0f, z + lz, 0.0f, 1.0f, 0.0f);
+
+
+
+	for (auto light : models->lights) {
+
+		light->applyProperties();
+
+	}
 
 	traverseTree(models, models->g);
 
@@ -188,7 +199,7 @@ void initGL() {
 // alguns settings para OpenGL
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
-
+	glEnable(GL_RESCALE_NORMAL);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
@@ -197,7 +208,6 @@ void initGL() {
 	glClearColor(0, 0, 0, 0);
 
 	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
 
 	glEnable(GL_TEXTURE_2D);
 
@@ -225,7 +235,7 @@ int main(int argc, char **argv) {
 
 	if (argv[1] == NULL) {
 
-		models = readXMLDoc("resources/sistema3.xml");
+		models = readXMLDoc("resources/scene9.xml");
 	} else {
 
 		models = readXMLDoc(argv[1]);

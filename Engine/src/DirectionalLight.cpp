@@ -14,11 +14,16 @@ void DirectionalLight::addProperty(LightProperty * property) {
 }
 void DirectionalLight::applyProperties() const {
 
+
+
 	glLightfv(light, GL_POSITION, &direction.getVector()[0]);
 	for (LightProperty * colo_props: colorProperties) {
 		colo_props->applyProperties();
 
 	}
+
+	glEnable(light);
+
 
 
 }
@@ -33,7 +38,7 @@ DirectionalLight::~DirectionalLight() {
 }
 
 DirectionalLight::DirectionalLight() :
-		light(GL_LIGHT0), direction(0.0f, 0.0f, 0.0f, 1.0f) {
+		light(GL_LIGHT0), direction(0.0f, 0.0f, 1.0f, 1.0f) {
 
 }
 

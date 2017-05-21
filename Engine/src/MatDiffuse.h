@@ -13,6 +13,7 @@
 
 class MatDiffuse: public virtual Materials {
 public:
+	MatDiffuse();
 	MatDiffuse(float red, float green, float blue, float alpha);
 	void applyProperties() const;
 	~MatDiffuse();
