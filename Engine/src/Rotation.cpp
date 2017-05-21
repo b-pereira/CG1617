@@ -9,36 +9,29 @@
 #include "GL/glut.h"
 #include <iostream>
 
-Rotation::Rotation(float ang, float x, float y, float z) :
-		point(x, y, z), angle(ang) {
-
+Rotation::Rotation ( float ang, float x, float y, float z ) :
+    point ( x, y, z ), angle ( ang )
+{
 }
 Rotation::Rotation() :
-		point(0, 0, 0), angle(0) {
-
+    point ( 0, 0, 0 ), angle ( 0 )
+{
 }
 
-float Rotation::getAngle() const {
-	return angle;
+float Rotation::getAngle() const
+{   return angle;
 }
 
-const Point3d& Rotation::getPoint() const {
-	return point;
+const Point3d &Rotation::getPoint() const
+{   return point;
 }
 
-void Rotation::applyTransformation() const {
-
-	/*std::cout << "rotation"
-			  << " angle =" << angle
-			  << " axisX =" << point.getXCoord()
-			  << " axisY =" << point.getYCoord()
-			  << " axisZ =" << point.getZCoord()
-			  << std::endl;*/
-	glRotatef(angle, point.getXCoord(),
-			point.getYCoord(), point.getZCoord());
+void Rotation::applyTransformation() const
+{   glRotatef ( angle, point.getXCoord(),
+                point.getYCoord(), point.getZCoord() );
 }
 
-Rotation::~Rotation() {
-
+Rotation::~Rotation()
+{
 }
 

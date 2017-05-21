@@ -9,19 +9,20 @@
 #include <GL/glut.h>
 
 MatEmissive::MatEmissive() :
-		emissive(0, 0, 0, 1) {
+    emissive ( 0, 0, 0, 1 )
+{
 }
 
-MatEmissive::MatEmissive(float red, float green, float blue, float alpha) :
-		emissive(red, green, blue, alpha) {
+MatEmissive::MatEmissive ( float red, float green, float blue, float alpha ) :
+    emissive ( red, green, blue, alpha )
+{
 }
 
-void MatEmissive::applyProperties() const {
-
-	glMaterialfv(GL_FRONT, GL_EMISSION, &emissive.getRGBA()[0]);
-
+void MatEmissive::applyProperties() const
+{   glMaterialfv ( GL_FRONT, GL_EMISSION, &emissive.getRGBA() [0] );
 }
 
-MatEmissive::~MatEmissive() {
+MatEmissive::~MatEmissive()
+{
 }
 

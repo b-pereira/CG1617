@@ -8,15 +8,15 @@
 #include "Light.h"
 
 
-void Light::addProperty(LightProperty *) {
-
-
+void Light::addProperty ( LightProperty * )
+{
 }
 
-void Light::applyProperties() const {
-
+void Light::applyProperties() const
+{
 }
 
-Light::~Light() {
+Light::~Light()
+{
 }
 

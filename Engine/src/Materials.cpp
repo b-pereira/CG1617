@@ -8,10 +8,11 @@
 #include "Materials.h"
 
 
-void Materials::applyProperties() const{
-
+void Materials::applyProperties() const
+{
 }
 
-Materials::~Materials() {
+Materials::~Materials()
+{
 }
 

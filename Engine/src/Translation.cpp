@@ -10,30 +10,25 @@
 #include <iostream>
 
 Translation::Translation() :
-		point(0, 0, 0) {
-
+    point ( 0, 0, 0 )
+{
 }
 
-Translation::Translation(float x, float y, float z) :
-		point(x, y, z) {
-
+Translation::Translation ( float x, float y, float z ) :
+    point ( x, y, z )
+{
 }
 
-const Point3d&Translation::getPoint() const {
-	return point;
+const Point3d &Translation::getPoint() const
+{   return point;
 }
 
-void Translation::applyTransformation() const {
-	/*std::cout << "translate"
-			  << " X =" << point.getXCoord()
-			  << " Y =" << point.getYCoord()
-			  << " Z =" << point.getZCoord()
-			  << std::endl;*/
-			glTranslatef(point.getXCoord(), point.getYCoord(),
-					point.getZCoord());
+void Translation::applyTransformation() const
+{   glTranslatef ( point.getXCoord(), point.getYCoord(),
+                   point.getZCoord() );
 }
 
-Translation::~Translation() {
-
+Translation::~Translation()
+{
 }
 

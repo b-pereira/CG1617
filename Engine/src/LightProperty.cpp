@@ -8,11 +8,11 @@
 #include "LightProperty.h"
 
 
-void LightProperty::applyProperties() const{
-
+void LightProperty::applyProperties() const
+{
 }
 
-LightProperty::~LightProperty() {
-	// TODO Auto-generated destructor stub
+LightProperty::~LightProperty()
+{
 }
 

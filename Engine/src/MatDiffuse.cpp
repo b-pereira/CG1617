@@ -9,19 +9,20 @@
 #include <GL/glut.h>
 
 MatDiffuse::MatDiffuse() :
-		diffuse(0.8, 0.8, 0.8, 1.0) {
+    diffuse ( 0.8, 0.8, 0.8, 1.0 )
+{
 }
 
-MatDiffuse::MatDiffuse(float red, float green, float blue, float alpha) :
-		diffuse(red, green, blue, alpha) {
+MatDiffuse::MatDiffuse ( float red, float green, float blue, float alpha ) :
+    diffuse ( red, green, blue, alpha )
+{
 }
 
-void MatDiffuse::applyProperties() const {
-
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, &diffuse.getRGBA()[0]);
-
+void MatDiffuse::applyProperties() const
+{   glMaterialfv ( GL_FRONT, GL_DIFFUSE, &diffuse.getRGBA() [0] );
 }
 
-MatDiffuse::~MatDiffuse() {
+MatDiffuse::~MatDiffuse()
+{
 }
 

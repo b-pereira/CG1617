@@ -10,23 +10,22 @@
 #include <iostream>
 
 MatSpecular::MatSpecular() :
-		specular(0, 0, 0, 1), shin(0) {
-
+    specular ( 0, 0, 0, 1 ), shin ( 0 )
+{
 }
 
-MatSpecular::MatSpecular(float red, float green, float blue, float alpha,
-		float shininess) :
-		specular(red, green, blue, alpha), shin(shininess) {
-
+MatSpecular::MatSpecular ( float red, float green, float blue, float alpha,
+                           float shininess ) :
+    specular ( red, green, blue, alpha ), shin ( shininess )
+{
 }
 
-void MatSpecular::applyProperties() const {
-
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, &specular.getRGBA()[0]);
-	glMaterialf(GL_FRONT, GL_SHININESS, shin);
-
+void MatSpecular::applyProperties() const
+{   glMaterialfv ( GL_FRONT, GL_DIFFUSE, &specular.getRGBA() [0] );
+    glMaterialf ( GL_FRONT, GL_SHININESS, shin );
 }
 
-MatSpecular::~MatSpecular() {
+MatSpecular::~MatSpecular()
+{
 }
 

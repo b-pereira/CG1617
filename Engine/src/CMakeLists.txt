@@ -41,8 +41,6 @@ add_executable(${PROJECT_NAME} main.cpp
                               Point4d.h 
                               RGBA.cpp 
                               RGBA.h
-                              Triangle.h
-                              Triangle.cpp
                               Transformation.h 
                               Transformation.cpp 
                               Translation.h  

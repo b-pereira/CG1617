@@ -7,12 +7,12 @@
 
 #include "Transformation.h"
 
-void Transformation::applyTransformation() const{
-
+void Transformation::applyTransformation() const
+{
 }
 
-Transformation::~Transformation() {
-	// TODO Auto-generated destructor stub
+Transformation::~Transformation()
+{
 }
 
 

@@ -1,0 +1,16 @@
+<scene>
+<lights>
+<light type="POINT" posX="0" posY="0" posZ="0" />
+<light type="POINT" posX="0" posY="0" posZ="200">
+            <diffuse R="0.2" G="0.2" B="0.2"/>
+            <specular R="1" G="1" B="1" />
+</light>
+</lights>
+<rotate time="10" axisZ="1"/>
+<scale X="2" Y="2" Z="2"/>
+   
+    <models>
+      <model file="teapotLight2.3d"/>
+    </models>
+   
+</scene>
