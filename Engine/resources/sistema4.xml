@@ -1,0 +1,353 @@
+<?xml version="1.0"?>
+<scene>
+<lights>
+<light type="POINT" posX="0" posY="0" posZ="0" />
+</lights>
+  <!-- Haley's comet -->
+  <group>
+    <rotate angle="162.26" axisX="1"/>
+    <translate Z="100"/>
+    <group>
+      <translate time="81.45">
+        <point X="0" Y="0" Z="133"/>
+        <point X="12.6286" Y="0" Z="122.876"/>
+        <point X="23.3345" Y="0" Z="94.0452"/>
+        <point X="30.488" Y="0" Z="50.8969"/>
+        <point X="33" Y="0" Z="0"/>
+        <point X="30.488" Y="0" Z="-50.8969"/>
+        <point X="23.3345" Y="0" Z="-94.0452"/>
+        <point X="12.6286" Y="0" Z="-122.876"/>
+        <point X="0" Y="0" Z="-133"/>
+        <point X="-12.6286" Y="0" Z="-122.876"/>
+        <point X="-23.3345" Y="0" Z="-94.0452"/>
+        <point X="-30.488" Y="0" Z="-50.8969"/>
+        <point X="-33" Y="0" Z="0"/>
+        <point X="-30.488" Y="0" Z="50.8969"/>
+        <point X="-23.3345" Y="0" Z="94.0452"/>
+        <point X="-12.6286" Y="0" Z="122.876"/>
+      </translate>
+      <group>
+        <rotate time="81.45" axisY="1"/>
+        <scale X="1" Y="1" Z="1"/>
+        <models>
+          <model file="teapotLight2.3d">
+            <diffuse R="0.2" G="0.2" B="0.2"/>
+            <specular R="1" G="1" B="1" shin="100"/>
+          </model>
+        </models>
+      </group>
+    </group>
+  </group>
+  <group>
+    <!-- Sun -->
+    <group>
+      <rotate angle="7.25" axisZ="1"/>
+      <scale X="17" Y="17" Z="17"/>
+      <models>
+        <model file="sphereLight.3d">
+          <emissive R="1" G="1" B="1"/>
+        </model>
+      </models>
+    </group>
+    <!-- Mercury -->
+    <group>
+      <translate time="6.69">
+        <point X="0" Y="0" Z="23"/>
+        <point X="8.8017" Y="0" Z="21.2492"/>
+        <point X="16.2635" Y="0" Z="16.2635"/>
+        <point X="21.2492" Y="0" Z="8.8017"/>
+        <point X="23" Y="0" Z="0"/>
+        <point X="21.2492" Y="0" Z="-8.8017"/>
+        <point X="16.2635" Y="0" Z="-16.2635"/>
+        <point X="8.8017" Y="0" Z="-21.2492"/>
+        <point X="0" Y="0" Z="-23"/>
+        <point X="-8.8017" Y="0" Z="-21.2492"/>
+        <point X="-16.2635" Y="0" Z="-16.2635"/>
+        <point X="-21.2492" Y="0" Z="-8.8017"/>
+        <point X="-23" Y="0" Z="0"/>
+        <point X="-21.2492" Y="0" Z="8.8017"/>
+        <point X="-16.2635" Y="0" Z="16.2635"/>
+        <point X="-8.8017" Y="0" Z="21.2492"/>
+      </translate>
+      <rotate angle="0.03" axisZ="1"/>
+      <rotate time="15.85" axisY="1"/>
+      <models>
+        <model file="sphereLight.3d">
+          <diffuse R="0.68" G="0.35" B="0.26"/>
+          <specular R="0.68" G="0.35" B="0.26" shin="10"/>
+        </model>
+      </models>
+    </group>
+    <!-- Venus -->
+    <group>
+      <translate time="11.02">
+        <point X="0" Y="0" Z="30"/>
+        <point X="11.4805" Y="0" Z="27.7164"/>
+        <point X="21.2132" Y="0" Z="21.2132"/>
+        <point X="27.7164" Y="0" Z="11.4805"/>
+        <point X="30" Y="0" Z="0"/>
+        <point X="27.7164" Y="0" Z="-11.4805"/>
+        <point X="21.2132" Y="0" Z="-21.2132"/>
+        <point X="11.4805" Y="0" Z="-27.7164"/>
+        <point X="0" Y="0" Z="-30"/>
+        <point X="-11.4805" Y="0" Z="-27.7164"/>
+        <point X="-21.2132" Y="0" Z="-21.2132"/>
+        <point X="-27.7164" Y="0" Z="-11.4805"/>
+        <point X="-30" Y="0" Z="0"/>
+        <point X="-27.7164" Y="0" Z="11.4805"/>
+        <point X="-21.2132" Y="0" Z="21.2132"/>
+        <point X="-11.4805" Y="0" Z="27.7164"/>
+      </translate>
+      <scale X="2" Y="2" Z="2"/>
+      <rotate angle="180" axisX="1"/>
+      <rotate angle="2.64" axisZ="1"/>
+      <rotate time="29.54" axisY="1"/>
+      <models>
+        <model file="sphereLight.3d">
+          <diffuse R="0.94" G="0.8" B="0.55"/>
+          <specular R="0.94" G="0.8" B="0.55" shin="50"/>
+        </model>
+      </models>
+    </group>
+    <!-- Earth -->
+    <group>
+      <translate time="13.46">
+        <point X="0" Y="0" Z="38"/>
+        <point X="14.542" Y="0" Z="35.1074"/>
+        <point X="26.8701" Y="0" Z="26.8701"/>
+        <point X="35.1074" Y="0" Z="14.542"/>
+        <point X="38" Y="0" Z="0"/>
+        <point X="35.1074" Y="0" Z="-14.542"/>
+        <point X="26.8701" Y="0" Z="-26.8701"/>
+        <point X="14.542" Y="0" Z="-35.1074"/>
+        <point X="0" Y="0" Z="-38"/>
+        <point X="-14.542" Y="0" Z="-35.1074"/>
+        <point X="-26.8701" Y="0" Z="-26.8701"/>
+        <point X="-35.1074" Y="0" Z="-14.542"/>
+        <point X="-38" Y="0" Z="0"/>
+        <point X="-35.1074" Y="0" Z="14.542"/>
+        <point X="-26.8701" Y="0" Z="26.8701"/>
+        <point X="-14.542" Y="0" Z="35.1074"/>
+      </translate>
+      <group>
+        <scale X="2" Y="2" Z="2"/>
+        <rotate angle="6.68" axisX="1"/>
+        <rotate time="2" axisY="1"/>
+        <models>
+          <model file="sphereLight.3d">
+            <diffuse R="0.8" G="0.63" B="0.73"/>
+            <specular R="0.8" G="0.63" B="0.73"/>
+          </model>
+        </models>
+      </group>
+    </group>
+    <!-- Moon -->
+    <group>
+      <translate time="13.46">
+        <point X="0" Y="0" Z="38"/>
+        <point X="14.542" Y="0" Z="35.1074"/>
+        <point X="26.8701" Y="0" Z="26.8701"/>
+        <point X="35.1074" Y="0" Z="14.542"/>
+        <point X="38" Y="0" Z="0"/>
+        <point X="35.1074" Y="0" Z="-14.542"/>
+        <point X="26.8701" Y="0" Z="-26.8701"/>
+        <point X="14.542" Y="0" Z="-35.1074"/>
+        <point X="0" Y="0" Z="-38"/>
+        <point X="-14.542" Y="0" Z="-35.1074"/>
+        <point X="-26.8701" Y="0" Z="-26.8701"/>
+        <point X="-35.1074" Y="0" Z="-14.542"/>
+        <point X="-38" Y="0" Z="0"/>
+        <point X="-35.1074" Y="0" Z="14.542"/>
+        <point X="-26.8701" Y="0" Z="26.8701"/>
+        <point X="-14.542" Y="0" Z="35.1074"/>
+      </translate>
+      <group>
+        <rotate angle="5.14" axisZ="1"/>
+        <translate time="50">
+          <point X="0" Y="0" Z="5"/>
+          <point X="1.9134" Y="0" Z="4.6194"/>
+          <point X="3.5355" Y="0" Z="3.5355"/>
+          <point X="4.6194" Y="0" Z="1.9134"/>
+          <point X="5" Y="0" Z="0"/>
+          <point X="4.6194" Y="0" Z="-1.9134"/>
+          <point X="3.5355" Y="0" Z="-3.5355"/>
+          <point X="1.9134" Y="0" Z="-4.6194"/>
+          <point X="0" Y="0" Z="-5"/>
+          <point X="-1.9134" Y="0" Z="-4.6194"/>
+          <point X="-3.5355" Y="0" Z="-3.5355"/>
+          <point X="-4.6194" Y="0" Z="-1.9134"/>
+          <point X="-5" Y="0" Z="0"/>
+          <point X="-4.6194" Y="0" Z="1.9134"/>
+          <point X="-3.5355" Y="0" Z="3.5355"/>
+          <point X="-1.9134" Y="0" Z="4.6194"/>
+        </translate>
+        <scale X="0.27" Y="0.27" Z="0.27"/>
+        <rotate angle="6.68" axisY="1"/>
+        <models>
+          <model file="sphereLight.3d">
+            <diffuse R="0.51" G="0.71" B="0.73"/>
+            <specular R="0.51" G="0.71" B="0.73" shin="5"/>
+          </model>
+        </models>
+      </group>
+    </group>
+    <!-- Mars -->
+    <group>
+      <translate time="16.4">
+        <point X="0" Y="0" Z="47"/>
+        <point X="17.9861" Y="0" Z="43.4223"/>
+        <point X="33.234" Y="0" Z="33.234"/>
+        <point X="43.4223" Y="0" Z="17.9861"/>
+        <point X="47" Y="0" Z="0"/>
+        <point X="43.4223" Y="0" Z="-17.9861"/>
+        <point X="33.234" Y="0" Z="-33.234"/>
+        <point X="17.9861" Y="0" Z="-43.4223"/>
+        <point X="0" Y="0" Z="-47"/>
+        <point X="-17.9861" Y="0" Z="-43.4223"/>
+        <point X="-33.234" Y="0" Z="-33.234"/>
+        <point X="-43.4223" Y="0" Z="-17.9861"/>
+        <point X="-47" Y="0" Z="0"/>
+        <point X="-43.4223" Y="0" Z="17.9861"/>
+        <point X="-33.234" Y="0" Z="33.234"/>
+        <point X="-17.9861" Y="0" Z="43.4223"/>
+      </translate>
+      <scale X="1.25" Y="1.25" Z="1.25"/>
+      <rotate angle="25.19" axisZ="1"/>
+      <rotate time="2.72" axisY="1"/>
+      <models>
+        <model file="sphereLight.3d">
+          <diffuse R="0.94" G="0.32" B="0.36"/>
+          <specular R="0.94" G="0.32" B="0.36" shin="5"/>
+        </model>
+      </models>
+    </group>
+    <!-- Jupiter -->
+    <group>
+      <translate time="36.6">
+        <point X="0" Y="0" Z="72"/>
+        <point X="27.5532" Y="0" Z="66.5193"/>
+        <point X="50.9117" Y="0" Z="50.9117"/>
+        <point X="66.5193" Y="0" Z="27.5532"/>
+        <point X="72" Y="0" Z="0"/>
+        <point X="66.5193" Y="0" Z="-27.5532"/>
+        <point X="50.9117" Y="0" Z="-50.9117"/>
+        <point X="27.5532" Y="0" Z="-66.5193"/>
+        <point X="0" Y="0" Z="-72"/>
+        <point X="-27.5532" Y="0" Z="-66.5193"/>
+        <point X="-50.9117" Y="0" Z="-50.9117"/>
+        <point X="-66.5193" Y="0" Z="-27.5532"/>
+        <point X="-72" Y="0" Z="0"/>
+        <point X="-66.5193" Y="0" Z="27.5532"/>
+        <point X="-50.9117" Y="0" Z="50.9117"/>
+        <point X="-27.5532" Y="0" Z="66.5193"/>
+      </translate>
+      <scale X="7" Y="7" Z="7"/>
+      <rotate angle="3.13" axisZ="1"/>
+      <rotate time="1.69" axisY="1"/>
+      <models>
+        <model file="sphereLight.3d">
+          <diffuse R="0.84" G="0.45" B="0.32"/>
+          <specular R="0.84" G="0.45" B="0.32" shin="5"/>
+        </model>
+      </models>
+    </group>
+    <!-- Saturn -->
+    <group>
+      <translate time="54.6">
+        <point X="0" Y="0" Z="105"/>
+        <point X="40.1818" Y="0" Z="97.0074"/>
+        <point X="74.2462" Y="0" Z="74.2462"/>
+        <point X="97.0074" Y="0" Z="40.1818"/>
+        <point X="105" Y="0" Z="0"/>
+        <point X="97.0074" Y="0" Z="-40.1818"/>
+        <point X="74.2462" Y="0" Z="-74.2462"/>
+        <point X="40.1818" Y="0" Z="-97.0074"/>
+        <point X="0" Y="0" Z="-105"/>
+        <point X="-40.1818" Y="0" Z="-97.0074"/>
+        <point X="-74.2462" Y="0" Z="-74.2462"/>
+        <point X="-97.0074" Y="0" Z="-40.1818"/>
+        <point X="-105" Y="0" Z="0"/>
+        <point X="-97.0074" Y="0" Z="40.1818"/>
+        <point X="-74.2462" Y="0" Z="74.2462"/>
+        <point X="-40.1818" Y="0" Z="97.0074"/>
+      </translate>
+      <scale X="6" Y="6" Z="6"/>
+      <rotate angle="26.63" axisZ="1"/>
+      <rotate time="1.83" axisY="1"/>
+      <models>
+        <model file="sphereLight.3d">
+          <diffuse R="0.82" G="0.56" B="0.31"/>
+          <specular R="0.82" G="0.56" B="0.31" shin="5"/>
+        </model>
+        <model file="ringLight.3d">
+          <diffuse R="0.82" G="0.56" B="0.31"/>
+          <specular R="0.82" G="0.56" B="0.31" shin="5"/>
+        </model>
+      </models>
+    </group>
+    <!-- Uranus -->
+    <group>
+      <translate time="90.02">
+        <point X="0" Y="0" Z="140"/>
+        <point X="53.5757" Y="0" Z="129.3431"/>
+        <point X="98.9949" Y="0" Z="98.9949"/>
+        <point X="129.3431" Y="0" Z="53.5757"/>
+        <point X="140" Y="0" Z="0"/>
+        <point X="129.3431" Y="0" Z="-53.5757"/>
+        <point X="98.9949" Y="0" Z="-98.9949"/>
+        <point X="53.5757" Y="0" Z="-129.3431"/>
+        <point X="0" Y="0" Z="-140"/>
+        <point X="-53.5757" Y="0" Z="-129.3431"/>
+        <point X="-98.9949" Y="0" Z="-98.9949"/>
+        <point X="-129.3431" Y="0" Z="-53.5757"/>
+        <point X="-140" Y="0" Z="0"/>
+        <point X="-129.3431" Y="0" Z="53.5757"/>
+        <point X="-98.9949" Y="0" Z="98.9949"/>
+        <point X="-53.5757" Y="0" Z="129.3431"/>
+      </translate>
+      <scale X="5" Y="5" Z="5"/>
+      <rotate angle="82.23" axisZ="1"/>
+      <rotate time="2.34" axisY="1"/>
+      <models>
+        <model file="sphereLight.3d">
+          <diffuse R="0.1" G="0.62" B="0.69"/>
+          <specular R="0.1" G="0.62" B="0.69" shin="5"/>
+        </model>
+        <model file="ring2Light.3d">
+          <diffuse R="0.1" G="0.62" B="0.69"/>
+          <specular R="0.1" G="0.62" B="0.69" shin="5"/>
+        </model>
+      </models>
+    </group>
+    <!-- Neptune -->
+    <group>
+      <translate time="121.51">
+        <point X="0" Y="0" Z="180"/>
+        <point X="68.883" Y="0" Z="166.2983"/>
+        <point X="127.2792" Y="0" Z="127.2792"/>
+        <point X="166.2983" Y="0" Z="68.883"/>
+        <point X="180" Y="0" Z="0"/>
+        <point X="166.2983" Y="0" Z="-68.883"/>
+        <point X="127.2792" Y="0" Z="-127.2792"/>
+        <point X="68.883" Y="0" Z="-166.2983"/>
+        <point X="0" Y="0" Z="-180"/>
+        <point X="-68.883" Y="0" Z="-166.2983"/>
+        <point X="-127.2792" Y="0" Z="-127.2792"/>
+        <point X="-166.2983" Y="0" Z="-68.883"/>
+        <point X="-180" Y="0" Z="0"/>
+        <point X="-166.2983" Y="0" Z="68.883"/>
+        <point X="-127.2792" Y="0" Z="127.2792"/>
+        <point X="-68.883" Y="0" Z="166.2983"/>
+      </translate>
+      <scale X="5" Y="5" Z="5"/>
+      <rotate angle="28.32" axisZ="1"/>
+      <rotate time="2.28" axisY="1"/>
+      <models>
+        <model file="sphereLight.3d">
+          <diffuse R="0.1" G="0.65" B="0.88"/>
+          <specular R="0.1" G="0.65" B="0.88" shin="5"/>
+        </model>
+      </models>
+    </group>
+  </group>
+</scene>
