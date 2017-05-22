@@ -1,0 +1,347 @@
+\section{Motor}
+
+Nesta secção pretende-se descrever o funcionamento do Motor \emph{Engine},
+e para tal pretende-se abordar vários aspetos desde as estruturas de dados
+auxiliares, estruturas de dados para os diferentes tipos de objetos que compõem
+o motor, descrição do processo de leitura e do processo de \emph{rendering}.
+Para este projeto usaram-se \emph{vertex array objets} para o \emph{rendering}
+das geometrias, tanto vértices, vetores normais, como também coordenadas de
+textura.
+
+
+\subsection{Estruturas de dados auxiliares}
+
+
+Para poder manipular dos dados, tanto dos vértices, normais, coordenadas de
+textura, como também informação sobre os \emph{vertex array objets --- VBOs},
+luzes com as suas propriedades, identificadores de texturas e ainda a raiz da
+estrutura de dados para armazenar informação do ficheiro XML, criou-se um tipo
+de dados \emph{Models}. 
+
+Este tipo de dados é composto por vários \texttt{vector}, dos quais um para os
+vértices, outro para os vetores normais e outro para coordenadas de textura.
+Note-se que estes vetores contêm os identificadores para a inicialização
+e \emph{rendering} dos VBO's, sendo que a informação para o \emph{rendering} dos
+VBO's se encontra num tipo de dados homónimo, com um índice para os
+\texttt{vector} para e o total de vértices. De salientar que o valor de índice
+e do número de vértices é partilhado pelos diferentes VBO's, de vértices,
+normais e texturas, uma vez que o número de ocorrência de vértices, normais
+e pontos da textura são os mesmos, e consequentemente, o acesso por índice
+a cada um dos \emph{vector} de identificadores é igual. Porém, na função de
+inicialização, no preenchimento do \emph{buffer} com os valores para cada tipo
+de objeto foi multiplicado o número de componentes (coordenadas) de cada
+vértices. Assim para normais e vértices o número de vértices foi multiplicado
+por três, e para as coordenadas das textura, o número de vértices foi
+multiplicado por 2.
+
+Para cada ficheiro com informação sobre a geometria, existe um e um só
+\texttt{VBO} (o tipo de dados), uma vez que a mesma geometria pode ser usadas
+várias vezes. Assim existe uma tabela com o nome do ficheiro como chave, tendo
+associado o tipo \texttt{VBO} a essa chave. Para as texturas, a estrutura
+é similar, só que para cada nome do ficheiro da imagem está associado um número
+inteiro não negativo para o identificador da textura. 
+
+Relativamente, à informação de luzes e suas componentes existe um vetor do tipo
+\texttt{Light*}, cujo o tipo contém informação sobre as luzes, e posteriormente
+neste documento será melhor documentado. Ainda para as luzes, dado que o OpenGL,
+na definição de propriedades materiais de cada geometria, essa propriedade
+é partilhada de forma global até ser novamente alterada, criou-se um vetor do
+tipo \texttt{Materials*} para armazenamento dos valores por defeito da
+propriedades de materiais. Assim, após a definição de uma propriedade de uma
+material de uma geometria, este vetor é percorrido aplicando as propriedades
+materiais por defeito.
+
+Por último, ainda existe uma variável do tipo inteiro par controlo da atribuição
+do índice do identificador do VBO's, e raiz para a estrutura de dados com
+a informação me memória do ficheiro XML.\ 
+
+
+\subsection{Estruturas de dados --- classes}
+
+As classes definidas neste projeto servem o propósito de abstrair os conceitos
+de computação gráfica como transformações geométricas, definição de luzes e suas
+propriedades, bem como classes auxiliares para representação de tipos
+geométricos como pontos em 3 dimensões e 4 dimensões e valores RGBA (\emph{red,
+green, blue, alpha}).
+
+
+Para definir a componente de luz material de cada geometria, para além das
+normais é necessário definir as quatro características materiais de reflexão da
+luz na geometria, tanto componente físicas reais (componente difusa
+e especular), como virtuais (ambiente e emissiva). As componentes ambiente
+e emissiva são virtuais, uma vez que, não é possível representar a luz ambiente
+de uma cena, nem se um objeto emite luz (componente emissiva) e, como tal, não
+dependem dos valores dos vetores normais à superfície da geometria.
+
+Para todas as características dos materiais foram definidas classes, numa
+hierarquia, e à exceção da componente especular, apenas aplicam um conjunto de
+valores representativo dos valores RGBA.\ No entanto, o contexto da sua aplicação
+é diferente, uma vez que é invocado a função \texttt{glMaterialfv} com
+a respetiva componente (\texttt{GL\_EMISSIVE}, \texttt{GL\_DIFFUSE},
+\texttt{GL\_AMBIENT} e \texttt{GL\_SPECULAR}) e é aplicado aquando da invocação
+do método \texttt{applyProperties} ou a partir da superclasse \emph{Materials}
+ou partir de uma instância da própria classe. A componente especular possui
+ainda o brilho da componente especular (\emph{shininess}).A Figura~\ref{ig:ssec2:mat}
+apresenta parte da hierarquia de classes mencionada.
+
+
+\begin{center} 	
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{resources/material.png}
+\captionsetup{type=figure, width=0.8\linewidth}
+\caption{Hierarquia de classes de \emph{Materials}} 
+\label{fig:ssec2:mat} 
+\end{center}
+
+Para definir as luzes, podem ser definidas até um conjunto de 8 luzes (assumindo
+uma abordagem de luzes fixas ao espaço global), podendo estas luzes posicionais 
+(\texttt{FixedLight}), direcionais (\texttt{DirectionalLight}) ou
+\emph{spotlight} \texttt{Spolight}. Cada um desde tipos de luz pode ter várias
+componentes, tais como as geometrias, neste caso apenas sendo três: difusa,
+ambiente e especular.
+
+Tal como para as caraterísticas materiais, cada classe possui um conjunto de
+valores RGBA, sendo cada característica da luz aplicada no seu contexto com
+a função \texttt{glLight}, com o identificador da luz a que estão associadas,
+com a componente correspondente (\texttt{GL\_DIFFUSE}, \texttt{GL\_AMBIENT}
+e \texttt{GL\_SPECULAR}) através da superclasse \texttt{LightProperty} ou duma
+instância da própria classe, à semelhança da hierarquia anterior. Note-se que,
+aqui não faz sentido colocar o brilho da reflexão.
+
+
+\begin{center} 	
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{resources/lightProperties.png}
+\captionsetup{type=figure, width=0.8\linewidth}
+\caption{Hierarquia de classes de \emph{LightProperty}} 
+\label{fig:ssec2:props} 
+\end{center}
+
+Relativamente ao tipo de luzes, estes podem ser de três tipos: direcional,
+posicional e \emph{spotlight}. Cada um deste tipos possui um número variado de
+parâmetros, que caraterizam cada tipo de luz. 
+
+A luz direcional apenas é parametrizada pelo identificador da luz e pela direção
+da luz, sendo 3 coordenadas do referencial ortonormado, mais a coordenada $w$
+(coordenadas homogéneas), com o valor 0, o que representa um vetor. Uma vez que
+uma luz direcional pode ser considerada com uma luz infinitamente longe, esta
+não possui parâmetros de atenuação, no entanto, possui as propriedades da luz
+mencionadas atrás.
+
+Relativamente à luz posicional, à semelhança da luz direcional, para além do
+identificador da luz, recebe as coordenadas homogêneas, no entanto a coordenada
+$w$ tem um valor de 1, dado que é um ponto. Nesta luz já se podem definir
+valores de atenuação, sendo estes valor da atenuação constante, linear ou
+quadrática. O inverso da soma deste valores, sendo o valor de atenuação
+quadrática multiplicado pelo quadrado da distância entre o ponto de luz
+e o vértice de uma geometria e valor da atenuação linear multiplicado pela
+distância, é o fator de atenuação. Esta relação está
+representada na Equação~\ref{eq:atenuation}.
+
+\begin{equation}
+	fator de atenuação = \frac{1}{k_c + k_{l}d + k_{q}d^2}
+\label{eq:atenuation}
+\end{equation}
+
+Na Equação~\ref{eq:atenuation} $k_c$ é a atenuação constante, $k_l$
+é a atenuação linear, $k_q$ é a atenuação quadrática e $d$ é a distância entre
+a posição da luz e o vértice da geometria. No OpenGL a característica da
+atenuação, pode ser definida pela função \texttt{glLightf}, com o identificador
+da luz, podendo ser \texttt{GL\_CONSTANT\_ATENUATION},
+\texttt{GL\_LINEAR\_ATENUATION} e \texttt{GL\_QUADRATIC\_ATENUATION}, para
+atenuação constante, linear e quadrática respetivamente.
+
+Por último, temos a luz do tipo \emph{spotlight}. Este tipo de luz, para além do
+identificador da luz e da posição da mesma, possui uma direção para onde o cone
+de luz está apontado e o ângulo de abertura do cone, estando este último a 180º
+por defeito, podendo ser alterado para um valor entre 0 e 45º. Adicionalmente,
+existe um expoente de concentração de luz. Do mesmo modo, que as anteriores
+luzes, possui contribuições do tipo especular, ambiente e difuso.
+
+
+As coordenadas homogéneas são representadas pela classe \texttt{Point4d}.
+À semelhança as outras hierarquias de classes já descritas, existe uma
+superclasse (\texttt{Light}) sendo as características de cada tipo de luz,
+aplicadas pela função \texttt{applyProperties} no contexto desta superclasse, ou
+numa instância de cada uma das subclasses. Cada uma das classes implementa
+a função \texttt{glLightsfv}, aplica as contribuições e ativa a luz, no método
+\texttt{applyProperties}, nesta ordem. Adicionalmente, existe uma método
+\texttt{addProperty}, que adiciona as contribuições de natureza especular,
+difusa ou ambiente. A hierarquia de classes pode ser vista em maior detalhe na
+Figura~\ref{fig:ssec2:lights}.
+
+
+\begin{center} 	
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{resources/light.png}
+\captionsetup{type=figure, width=0.8\linewidth}
+\caption{Hierarquia de classes de \emph{Light}} 
+\label{fig:ssec2:lights} 
+\end{center}
+
+
+\subsection{\emph{Vertex Array Objects}}
+
+O OpenGL possibilita dois modos de renderização: o modo imediato
+e o \emph{vertex buffer objects} (VBOs). Os VBOs permitem um ganho substancial
+de performance, uma vez que os dados são logo enviados para a memória da placa
+gráfica onde residem, e por isso podem ser renderizados diretamente da placa
+gráfica. O modo imediato usa a memória do sistema onde os dados são inseridos
+\emph{frame} a \emph{frame}, usando uma API de renderização, o que causa peso
+computacional sobre o processador.
+
+
+Para a utilização das VBO's é necessário recorrer a criação de \emph{arrays} com
+os dados para renderizar geometria, com vetores normais para as luzes
+e coordenadas de textura, para uma eventual aplicação desta. Com efeito,
+é necessário, em primeiro lugar, ativar os \emph{arrays} com os diferentes tipos
+de dados e colocar os dados num \emph{buffer object}. Estes \emph{arrays} são
+acedidos pelo seu endereço individual da sua localização em memória, sendo então
+desenhadas as figuras geométricas dos respetivos conteúdos dos \emph{arrays}.
+
+
+Note-se que, no OpenGl, qualquer inteiro sem sinal pode ser usado como um
+identificador de \emph{buffer objecto}. Estes identificadores podem-se
+armazenados numa estrutura, sendo necessário, em seguida, gerar \emph{buffers}
+para os vértices, para os vetores normais e coordenadas de textura (um
+\emph{buffer} para cada \emph{array} --- vértices, normais e coordenadas de
+textura) \texttt{glGenBuffers} e ativar cada \emph{buffer} pelo seu
+identificador (\texttt{glBindBuffer}) e preencher o \emph{buffer} com os dados
+de cada \emph{array} previamente mencionado.
+
+
+Para desenhar, a figura geométrica é necessário definir a semântica, ou seja,
+definir o \emph{offset} relativo ao inicio do buffer consoante o tipo de dados,
+fazer o bind do objeto apropriado para fazer a renderização dos \emph{arrays} de
+vértices, normais e coordenadas de textura usando a função adequada
+(\texttt{glDrawArrays} ou \texttt{glDrawElements}).De notar que, cada
+\emph{bind} é seguido da semântica. A semântica para os vértices é feita usando
+a função \texttt{glVertexPointer}, definido o valor 3 o número de elementos do
+tipo valor de vírgula flutuante, correspondente às coordenadas de cada vértice.
+Relativamente à semântica para os vetores normais, é utilizada a função
+\texttt{glNormalPointer}. Nesta função não é necessário definir o número de
+coordenadas, uma vez que a própria função já o faz. No entanto, é necessário
+definir o tipo, como valor de vírgula flutuante. Por último, para as coordenadas
+das texturas é necessário definir a semântica com a função
+\texttt{glTexCoordPointer}, onde o número de elementos para cada vértice será
+dois, dado que as textura são bidimensionais. Note-se também, que é necessário
+fazer o \emph{bind} da textura pelo identificador obtido pela
+função \texttt{loadTexture} antes de proceder ao \emph{rendering} da geometria,
+sendo invocada logo de seguida o \emph{bind} para identificador 0, para evitar
+que continua a desenhar a mesma textura. Este processo é feito na função
+\texttt{drawElement}, que será descrito mais à frente. A inicialização dos
+\emph{buffers} é feita pela função \texttt{initBuffers} e para o processo de
+\emph{rendering} utilizou-se a função \texttt{drawVBO}, que faz o \emph{bind}
+e define a semântica, que é aplicada na função \texttt{drawElement} que aplica
+outros elementos para o desenho da geometria, como o \emph{bind} da textura
+mencionado acima e aplicação de cores dos materiais, \emph{reset} do mesmos.  
+
+
+\subsection{Descrição do processo de leitura}
+
+
+A função de leitura identifica \emph{tags} correspondentes às transformações
+geométricas, sejam elas animadas ou estáticas, e à medida que se vai lendo
+o ficheiro XML, vai se construindo uma árvore n-ária do tipo \texttt{Group},
+como demonstra a Figura~\ref{fig:ssec2:strut}. No entanto, existem dois tipos de
+elementos do XML com interesse particular neste projeto, que são os
+\texttt{models} e as \texttt{lights}.  
+
+\begin{center} 	
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{resources/estrutura.png}
+\captionsetup{type=figure, width=0.8\linewidth}
+\caption{Árvore \emph{n-ária} para armazenamento de grupos}
+\label{fig:ssec2:strut} 
+\end{center}
+
+\subsubsection{Modelos}
+
+Para o caso de ocorrência da \emph{tag} \texttt{models}, para cada ocorrência de
+uma \emph{tag} filha \texttt{model}, a função \texttt{readXMLFromRootElement}
+obtém o nome do ficheiro de vértices, normais e coordenadas de textura. Se
+a \emph{tag} \texttt{model} também tiver um atributo \texttt{texture}, para cada
+propriedade material, cria a propriedade material de acordo com a ocorrência
+(\texttt{diffuse}, \texttt{ambient}, \texttt{specular} e \texttt{emissive}).
+Note-se que, se alterou o ficheiro XML para conter \emph{tags} desta forma,
+dado que:  é mais legível; mais fácil de tratar cada caso na leitura. Em
+seguida, é guardado o nome do ficheiro 3d no vetor de nomes de modelos no tipo
+\texttt{Group}, bem como o conjunto de propriedades materiais e nome do ficheio
+de textura. Note-se que, pode não existir uma ocorrência de uma textura, ou de
+propriedades materiais. No entanto, por uma questão de manter a representação
+ordenada para ser acedida por índice, caso não haja uma ocorrência de um
+ficheiro de textura, é adicionada a \emph{string} vazia ou o vetor vazio.
+
+Caso o nome da textura existir, isto é, não for uma \emph{string} vazia,
+é carregada a textura com a função \texttt{loadTexture}, que devolve um
+identificador depois de fazer o \emph{bind} da textura, que ocorre na função
+\texttt{loadTexture}. O nome do ficheiro da textura e identificador são
+guardados num par chave/valor na estrutura \texttt{Models} mencionada no início
+do capítulo. Em seguida é invocada a função \texttt{readFile}, que procederá
+a leitura do ficheiro 3d, inserirá um par chave/valor na tabela para o efeito em
+\texttt{Models}, com o nome do ficheiro 3d e o tipo \texttt{VBO}, que por sua
+vez possui o índice dos vetores de identificadores de \emph{buffers} (vértices,
+normais e coordenadas de textura) --- um índice para os três vetores, como já
+foi explicado ---, e inicializará os \emph{vertex array objects}.      
+
+
+
+\subsubsection{Luzes}
+
+Relativamente às luzes, neste modelo são descritas fora de um grupo, no entanto,
+a função de leitura permite a flexibilidade de ter luzes dentro de um grupo.
+Mesmo assim, pretende-se que as luzes sejam declaradas no inicio do ficheiro do
+documento XML, uma vez que os atributos das luzes e seus tipos são armazenados
+numa estrutura à parte (\texttt{Models}), para serem invocadas na
+\texttt{renderScene} após o \texttt{gluLookAt}, antes de quaisquer
+transformações geométricas, de forma as luzes ficarem fixas no espaço global.
+
+Com efeito, para cada ocorrência da \emph{tag} \texttt{lights}, para cada
+elemento \texttt{light} filho, se o tipo (\texttt{type}) for do valor
+\texttt{DIR}, cria uma luz direcional, se for do valor \texttt{POINT} cria uma
+luz posicional e se for do tipo \texttt{SPOT}, cria um \emph{spotlight}. Para
+cada uma desta ocorrências, se existirem propriedades da luz, à semelhança da
+propriedades materiais, cada componente é criado conforme a ocorrência
+(\texttt{diffuse}, \texttt{specular} e \texttt{ambient}). Estas
+componentes são adicionadas à luz, no entanto, podem não existir componentes da
+luz, e nesse caso nada é adicionado. A luz é adicionada ao vetor de
+\texttt{Light*} em \texttt{Models}.  
+
+
+
+\subsection{Descrição do ciclo de \emph{rendering}}
+
+
+
+Para fazer o \emph{rendering} da estrutura de dados em memória, implementou-se
+uma função de travessia da árvore, colocada na função \texttt{renderScene}, após
+a função \texttt{glLoadIndentity} e \texttt{gluLookAt}, nesta sequência.
+
+Com efeito, a primeira instrução é a \texttt{glPushMatrix}, uma vez que se
+pretende colocar uma matriz para aplicação das transformações no topo da
+\emph{stack} de matrizes do \emph{OpenGL}. Em seguida, para cada transformação
+contida num \texttt{Group}, é invocada a função \texttt{applyTrasformation}, que
+aplica as transformações as transformações geométricas.
+
+Em seguida, é invocada a função \texttt{drawElement}. Esta função especifica a primitiva
+para que será criada com os vértices, normais e coordenadas de textura em
+memória, usando a função \texttt{drawVBO}. Adicionalmente, itera pelas as
+estruturas de \texttt{Group} (vetores de nomes de ficheiros 3d, vetor de vetor
+de \texttt{Materials*}) e procura pela chave do nome do ficheiro, 3d ou textura,
+o valor do tipo \texttt{VBO} e identificador da textura, respetivamente, nas
+tabelas em \texttt{Models}. Caso o nome do ficheiro 3d existir é que invoca,
+a função \texttt{drawVBO}, e antes disso, verifica se o nome da textura existe,
+e só se existir é que faz o \emph{bind} da textura. A primeira estrutura a ser
+iterada é o vetor de vetores de \emph{Materials*}, sendo que para cada valor de
+vetor de \emph{Materials*}, as propriedades são aplicadas conforme o contexto,
+pela a invocação do método da superclasse \texttt{applyProperties}. Após
+o \emph{rendering} dos \emph{vertex array objects}, todas as propriedades
+materiais por defeito do OpenGL são aplicadas, para evitar que propriedades de
+diferentes geometrias, sejam aplicadas de forma transversal, até que sejam
+alteradas novamente, que a aplicação dos valores por defeito faz.   
+
+Como já foi mencionado, a aplicação das luzes acontece na \texttt{renderScene},
+após o \texttt{gluLookAt} e antes da função \texttt{traverseTree} que possui
+a descrição do modelo XML em memória. Para a aplicação das luzes aplica-se
+o mesmo principio de utilização da hierarquia de classes que se usou até aqui,
+e para cada ocorrência de uma instância de \texttt{Light*} no vetor em
+\texttt{Models} é invocada a função \texttt{applyProperties} de \texttt{Light},
+sendo a mesma função aplicada, no seu devido contexto nas subclasses.
+
+

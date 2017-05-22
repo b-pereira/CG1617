@@ -1,0 +1,13 @@
+%---------------------------------------------------------------------------------------------------------------%
+\section*{Introdução\markboth{\MakeUppercase{Introdução}}{}}
+\addcontentsline{toc}{section}{Introdução}
+\label{intro}
+
+
+Para esta fase deste projecto é requerido o desenvolvimento de um novo tipo de modelo geométrico baseado em superfícies de Bezier, este novo modelo vai desempenhar o papel de um asterioide no sistema solar já desenvolvido na segunda fase. Este asteroide vai ter por si só uma órbita sua, consistente com a de um asteróide real, isto é, embora elíptica, a diferença entre a distância ao sol no momento da órbita de maior proximidade e a de maior distância irá ser maior do que qualquer planeta, dando assim um toque de realismo.
+
+Adicionalmente, outra novidade irá ser as alterações relativas à translação e rotação dos planetas. As órbitas dos planetas agora irão ser sobre curvas Catmull-Rom, e as tranlações referentes a cada planeta deverão ser interpretadas do ficheiro XML em função de um ``time'' e dos seus pontos de controlo necessários para a curvatura Catmull-Rom. Quanto à rotação, nesta fase é subtituída a leitura pelo seu ``angle'' e passa ser igualmente por um ``time''. 
+
+Finalmente, nesta fase todos os modelos apresentados irão ser desenhados com VBOs, em oposição ao modo imediato usado nas fases prévias.
+
+Todas estas funcionalidades irão ser faladas em detalhe mais abaixo, dando ao leitor uma breve introdução teórica sobre cada tópico de modo a serem melhor compreendidas as decisões tomadas pelo grupo.

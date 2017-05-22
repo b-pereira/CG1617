@@ -1,0 +1,214 @@
+\documentclass[hidelinks,11pt,titlepage,a4paper]{article} %padrao letterpaper, 10pt
+
+% ----------------------------------------------
+%Letra parecida com Arial
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[T1]{fontenc}
+% ---------------------------------------------
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{amsfonts,amssymb,graphicx}
+\usepackage[centertags]{amsmath}
+\usepackage[hmargin=2.5cm,vmargin=2cm,bmargin=3cm]{geometry}
+\usepackage{fancyvrb}
+\usepackage{graphicx}
+\usepackage{eso-pic} % marca de água para logos
+\usepackage{indentfirst}
+\usepackage{mathtools}
+\usepackage{caption}
+\usepackage{cite}
+\usepackage{url}
+% clever reff %
+\usepackage{hyperref}
+\usepackage{amsmath}
+
+
+\usepackage{eqparbox,array}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\renewcommand{\listalgorithmname}{Lista de \ALG@name s}
+\makeatother
+
+\usepackage{pdflscape}
+
+\usepackage{cleveref}
+% ----------- %
+
+% ----------------------------------------------
+\usepackage{booktabs}
+% Tabelas fancy
+% ----------------------------------------------
+
+% ----------------------------------------------
+%gráficos fancy
+\usepackage{pgfplots}
+%?
+\usepackage{pgfplotstable}
+% ----------------------------------------------
+
+\usepackage{minted}
+\usemintedstyle{emacs}
+\setminted{
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+%linenos, 
+breaklines,
+breakautoindent=false,
+autogobble
+}
+
+%%%%%%%%%%%%  CABEÇALHO  %%%%%%%%%%%%%
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{\includegraphics[height=0.53in]{resources/template/logo-ee.png}}
+\rhead{\textsl{\leftmark}}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{1pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%Usado em conjunto com o comando \layout. Este último mostra todos os valores
+%dos elementos de página.
+%\usepackage{layout}
+
+%Mostra um conjunto de quadros/frames em cada página, correspondente ao tamanho
+%de cada elemento de página, como rodapé, cabeçalho, intervalos entre estes,
+%margem para notas
+%
+%\usepackage{showframe}
+
+%Ajusta cabeçalho para altura do logotipo
+\headheight= 44pt
+%Coloca margem de notas dentro da página
+\marginparwidth= 40pt
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%USADO EM CONJUNTO COM O PACOTE LAYOUT
+%%MOSTRA ELEMENTOS DA PÁGINA, COMO CABEÇALHO, RODAPÉ, MARGEM PARA NOTAS, CORPO
+%%SEPARADORES ENTRE ELEMENTOS.
+%%
+%%
+%\begin{figure}[htbp] 
+%	\begin{center} \leavevmode 
+%		\layout
+%		\vspace{3cm}
+%		\caption{Elementos da página. Os valores mostrados são aqueles que estão
+%aplicados ao presente documento, não os valores por defeito } 
+%\label{fig:layout} 
+%	\end{center} 
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%--- Quotes ---%
+%\usepackage{epigraph}
+ 
+%\setlength\epigraphwidth{12cm} % default 8
+%\setlength\epigraphrule{0pt}
+
+%\begin{quote}
+%	
+%\end{quote}
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{1em}
+\renewcommand{\baselinestretch}{1.2}
+
+
+%--- Custom Appendice ---%
+%\usepackage[titletoc,toc,title]{appendix}
+
+\pgfplotsset{compat=1.13} 
+
+
+
+%--- Custom Appendice ---%
+%\usepackage[titletoc,toc,title]{appendix}
+
+\pgfplotsset{compat=1.13} 
+
+
+
+
+\hypersetup{
+pdftitle={Trabalho 1},
+pdfauthor={Bruno Pereira},
+%pdfsubject={InvestigaÃ§Ã£o Operacional},
+%pdfkeywords={keyword1, keyword2}},
+bookmarksnumbered=true,     
+bookmarksopen=true,         
+bookmarksopenlevel=1,       
+colorlinks=true,            
+pdfstartview=Fit,           
+pdfpagemode=UseOutlines, % this is the option you were lookin for
+pdfpagelayout=TwoPageRight
+		}
+
+
+
+\newenvironment{longlisting}{\captionsetup{type=listing}}{}
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% ----------- %
+\input{chapters/title}
+% ----------- %
+\tableofcontents
+\newpage
+\listoffigures
+\newpage
+% ----------- %
+
+
+\input{chapters/introducao}
+\clearpage
+
+
+\input{chapters/cap1}
+\clearpage
+
+\input{chapters/cap2}
+\clearpage
+
+\input{chapters/cap3}
+\clearpage
+
+
+
+\input{chapters/conclusao}
+\clearpage
+% ----------- %
+%\bibauthoryear
+\nocite{*}
+\bibliography{references}
+\bibliographystyle{IEEEtran}
+%\bibliographystyle{ieeetr}
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\appendix 
+
+%\part*{ANEXOS}
+%\addcontentsline{toc}{section}{ANEXOS}
+\input{chapters/apendix}
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
