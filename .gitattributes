@@ -1,3 +1,3 @@
-relatorio_fase3/** linguist-documentation
-relatorio_fase4/** linguist-documentation
+relatorio_fase3/chapters/* linguist-documentation
+relatorio_fase4/chapters/* linguist-documentation
 *.3d linguist-vendored
